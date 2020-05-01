@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MobPhotoEdit</string>
+    <string name="takepic">Take a picture</string>
 </resources>
