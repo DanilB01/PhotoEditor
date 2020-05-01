@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
 
     private val IMAGE_CAPTURE_CODE = 1001
