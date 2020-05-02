@@ -14,22 +14,31 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
+
 class MainActivity : AppCompatActivity() {
 
-    private val IMAGE_CAPTURE_CODE = 1001
-    private val PERMISSION_CODE = 1000
-    var image_uri: Uri? = null
+   companion object {
+       private val IMAGE_CAPTURE_CODE = 1002
+       private val IMAGE_PICK_CODE = 1001
+       private val PERMISSION_CODE = 1000
+   }
+    var imageUrii: Uri? = null
+    var flagCamera: Boolean = false
+    var flagGallery: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        take_photo_button.setOnClickListener{
+        takePhotoButton.setOnClickListener{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                     //разрешение не дано
-                    val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    flagCamera = true
+                    val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    //запрос разрешения
                     requestPermissions(permission, PERMISSION_CODE)
                 }
                 else{
@@ -42,17 +51,44 @@ class MainActivity : AppCompatActivity() {
                 openCamera()
             }
         }
+
+        fromGalleryButton.setOnClickListener {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    //разрешение не дано
+                    flagGallery = true
+                    val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    //запрос разрешения
+                    requestPermissions(permission, PERMISSION_CODE)
+                }
+                else{
+                    //разрешение дано
+                    pickPhotoFromGallery()
+                }
+            }
+            else{
+                //system OS < Marshmallow
+                pickPhotoFromGallery()
+            }
+        }
     }
+
 
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
-        image_uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUrii = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUrii)
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE)
+    }
+
+    private fun pickPhotoFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
     override fun onRequestPermissionsResult(
@@ -64,7 +100,12 @@ class MainActivity : AppCompatActivity() {
             PERMISSION_CODE->{
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //разрешение получено
-                    openCamera()
+                    if(flagCamera){
+                        openCamera()
+                    }
+                    else if(flagGallery){
+                        pickPhotoFromGallery()
+                    }
                 }
                 else{
                     //разрешение не получено
@@ -78,9 +119,18 @@ class MainActivity : AppCompatActivity() {
         //вызывается когда изображение с камеры получено
         if(resultCode == Activity.RESULT_OK){
             //показать полученное изображение в Image View
-            image_view.setImageURI(image_uri)
+            if(requestCode == IMAGE_CAPTURE_CODE){
+                imageView.setImageURI(imageUrii)
+            }
+            else {
+                if(requestCode == IMAGE_PICK_CODE){
+                    imageView.setImageURI(data?.data)
+                }
+            }
         }
     }
+
+
 }
 
 
