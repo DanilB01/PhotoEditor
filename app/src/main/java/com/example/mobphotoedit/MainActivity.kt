@@ -7,13 +7,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,9 +25,25 @@ class MainActivity : AppCompatActivity() {
     var flagCamera: Boolean = false
     var flagGallery: Boolean = false
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        yes.visibility = View.GONE
+        no.visibility = View.GONE
+
+        yes.setOnClickListener {
+            val intent = Intent(MainActivity@this, DesktopActivity::class.java)
+            startActivity(intent)
+        }
+        no.setOnClickListener {
+            imageView.setImageResource(R.drawable.ic_image_black_24dp)
+            yes.visibility = View.GONE
+            no.visibility = View.GONE
+            select.visibility = View.VISIBLE
+        }
 
         takePhotoButton.setOnClickListener{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -127,8 +142,12 @@ class MainActivity : AppCompatActivity() {
                     imageView.setImageURI(data?.data)
                 }
             }
+            yes.visibility = View.VISIBLE
+            no.visibility = View.VISIBLE
+            select.visibility = View.GONE
         }
     }
+
 
 
 }

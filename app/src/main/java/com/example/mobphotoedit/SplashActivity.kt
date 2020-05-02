@@ -1,6 +1,5 @@
 package com.example.mobphotoedit
 
-import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

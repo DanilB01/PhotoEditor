@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MPE</string>
-    <string name="takepic">Take a picture</string>
+    <string name="add">Add a picture to start create!</string>
     <string name="title_activity_desktop">DesktopActivity</string>
 </resources>
