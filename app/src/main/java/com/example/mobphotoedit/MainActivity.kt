@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //вызывается когда изображение с камеры получено??
+        //вызывается когда изображение с камеры получено
         if(resultCode == Activity.RESULT_OK){
             //показать полученное изображение в Image View
             image_view.setImageURI(image_uri)

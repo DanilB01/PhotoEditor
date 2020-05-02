@@ -3,5 +3,7 @@
     <color name="colorPrimary">#121212</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="SplashScreen">#23036A</color>
+    <color name="SplashScreen">#4B336D</color>
+    <color name="colorButton">#BB86FC</color>>
+
 </resources>
