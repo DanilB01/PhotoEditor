@@ -8,7 +8,7 @@
         android:angle="180"/>
 
     <corners android:bottomRightRadius="50dp"
-        android:bottomLeftRadius="0dp"
-        android:topLeftRadius="0dp"
+        android:bottomLeftRadius="50dp"
+        android:topLeftRadius="50dp"
         android:topRightRadius="50dp"/>
 </shape>

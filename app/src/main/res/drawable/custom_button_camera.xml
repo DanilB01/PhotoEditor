@@ -7,8 +7,8 @@
         android:type="linear"
         android:angle="180"/>
 
-    <corners android:bottomRightRadius="0dp"
+    <corners android:bottomRightRadius="50dp"
         android:bottomLeftRadius="50dp"
         android:topLeftRadius="50dp"
-        android:topRightRadius="0dp"/>
+        android:topRightRadius="50dp"/>
 </shape>
