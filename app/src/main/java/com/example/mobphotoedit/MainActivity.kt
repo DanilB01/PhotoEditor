@@ -7,14 +7,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -133,7 +131,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         //вызывается когда изображение с камеры получено
@@ -154,6 +151,7 @@ class MainActivity : AppCompatActivity() {
             message.text = getString(R.string.cont)
         }
     }
+
 
 
 }
