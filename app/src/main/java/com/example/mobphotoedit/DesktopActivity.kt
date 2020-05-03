@@ -18,15 +18,15 @@ class DesktopActivity : AppCompatActivity() {
             item_list.smoothScrollToPosition(position) //сглаживание анимации
         } }
     private val possibleItems = listOf( //список возможных иконок
-        Item("Image Rotation", R.drawable.ic_check_black_24dp),
-        Item("Effects & Color Correction", R.drawable.ic_check_black_24dp),
-        Item("Image Scaling", R.drawable.ic_check_black_24dp),
-        Item("Segmentation", R.drawable.ic_check_black_24dp),
-        Item("Line Drawing", R.drawable.ic_check_black_24dp),
-        Item("Retouching", R.drawable.ic_check_black_24dp),
-        Item("Unsharp Masking", R.drawable.ic_check_black_24dp),
-        Item("Bilinear & Trilinear Filtering", R.drawable.ic_check_black_24dp),
-        Item("3D Cube", R.drawable.ic_check_black_24dp)
+        Item("Image Rotation", R.drawable.ic_crop_rotate),
+        Item("Effects", R.drawable.ic_photo_filter),
+        Item("Image Scaling", R.drawable.ic_image_scaling),
+        Item("Segmentation", R.drawable.ic_segmentation),
+        Item("Line Drawing", R.drawable.ic_line_drawing),
+        Item("Retouching", R.drawable.ic_retoushing),
+        Item("Unsharp Masking", R.drawable.ic_unsharp_masking),
+        Item("Filtering", R.drawable.ic_filtering),
+        Item("3D Cube", R.drawable.ic_3d_cube)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) { //создание макета
