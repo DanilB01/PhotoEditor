@@ -25,8 +25,6 @@ class MainActivity : AppCompatActivity() {
     var flagCamera: Boolean = false
     var flagGallery: Boolean = false
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +38,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         no.setOnClickListener {
-            //imageView.setImageResource(R.drawable.ic_image_black_24dp)
+            imageUri = null
+            pic.setImageResource(R.drawable.ic_image_black_24dp)
             yes.visibility = View.GONE
             no.visibility = View.GONE
             message.text = getString(R.string.add)
@@ -89,7 +88,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
@@ -135,25 +133,15 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         //вызывается когда изображение с камеры получено
         if(resultCode == Activity.RESULT_OK){
-            //показать полученное изображение в Image View
-            if(requestCode == IMAGE_CAPTURE_CODE){
-                //imageView.setImageURI(imageUri)
+            if(requestCode == IMAGE_PICK_CODE){
+                imageUri = data?.data
             }
-            else {
-                if(requestCode == IMAGE_PICK_CODE){
-                    imageUri = data?.data
-                    //imageView.setImageURI(imageUri)
-                }
-            }
-
+            pic.setImageURI(imageUri)
             yes.visibility = View.VISIBLE
             no.visibility = View.VISIBLE
             message.text = getString(R.string.cont)
         }
     }
-
-
-
 }
 
 
