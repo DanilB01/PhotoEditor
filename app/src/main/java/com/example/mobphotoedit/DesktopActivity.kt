@@ -33,20 +33,22 @@ class DesktopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_desktop)
 
+        var string: String? = intent.getStringExtra("ImageUri")
+        var imageUri: Uri? = Uri.parse(string)
+        photo.setImageURI(imageUri)
+
         item_list.initialize(itemAdapter)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())
 
-        var string: String? = intent.getStringExtra("ImageUri")
-        var imageUri: Uri? = string?.toUri()
 
-
-        photo.setImageURI(imageUri)
     }
 
     private fun getLargeListOfItems(): List<Item> {
         val items = mutableListOf<Item>()
-        (0..40).map { items.add(possibleItems.random()) }
+        for(i in 0..8){
+            items.add(possibleItems[i])
+        }
         return items
     }
 }
