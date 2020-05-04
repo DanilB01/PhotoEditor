@@ -13,15 +13,15 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CubeActivity"></activity>
+        <activity android:name=".CubeActivity"/>
         <activity android:name=".FilteringActivity" />
         <activity android:name=".UnsharpMaskingActivity" />
         <activity android:name=".RetouchingActivity" />
         <activity android:name=".LineDrawingActivity" />
         <activity android:name=".SegmentationActivity" />
-        <activity android:name=".ImageScallingActivity" />
+        <activity android:name=".ImageScalingActivity" />
         <activity android:name=".CorrectionActivity" />
-        <activity android:name=".Image_Rotation_Activity" />
+        <activity android:name=".ImageRotationActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

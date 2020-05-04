@@ -36,10 +36,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(MainActivity@this, DesktopActivity::class.java)
             intent.putExtra("ImageUri", imageUri.toString())
             startActivity(intent)
-            pic.setImageResource(R.drawable.ic_image_black_24dp)
-            yes.visibility = View.GONE
-            no.visibility = View.GONE
-            message.text = getString(R.string.add)
         }
         no.setOnClickListener {
             imageUri = null
@@ -90,6 +86,14 @@ class MainActivity : AppCompatActivity() {
                 pickPhotoFromGallery()
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        pic.setImageResource(R.drawable.ic_image_black_24dp)
+        yes.visibility = View.GONE
+        no.visibility = View.GONE
+        message.text = getString(R.string.add)
     }
 
     private fun openCamera() {

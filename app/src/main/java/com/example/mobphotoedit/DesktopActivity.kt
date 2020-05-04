@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_desktop.*
 
 class DesktopActivity : AppCompatActivity() {
-
+    private var imageUri: Uri? = null
     private val itemAdapter by lazy {
         ItemAdapter { position: Int, item: Item ->
             var intent: Intent? = null
@@ -27,6 +27,7 @@ class DesktopActivity : AppCompatActivity() {
                 7 -> intent = Intent(DesktopActivity@this, FilteringActivity::class.java)
                 8 -> intent = Intent(DesktopActivity@this, CubeActivity::class.java)
             }
+            intent?.putExtra("ImageUri", imageUri.toString())
             startActivity(intent)
             item_list.smoothScrollToPosition(position) //сглаживание анимации
         } }
@@ -47,7 +48,7 @@ class DesktopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_desktop)
 
         var string: String? = intent.getStringExtra("ImageUri")
-        var imageUri: Uri? = Uri.parse(string)
+        imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
 
         item_list.initialize(itemAdapter)
