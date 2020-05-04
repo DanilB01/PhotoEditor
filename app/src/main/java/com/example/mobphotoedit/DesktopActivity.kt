@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.content.Intent
 import android.net.Uri
 import androidx.core.net.toUri
 import android.os.Bundle
@@ -14,7 +15,19 @@ class DesktopActivity : AppCompatActivity() {
 
     private val itemAdapter by lazy {
         ItemAdapter { position: Int, item: Item ->
-            Toast.makeText(this@DesktopActivity, "Pos ${position}", Toast.LENGTH_LONG).show() //показывает позицию и выводит юзеру
+            var intent: Intent? = null
+            when(position) {
+                0 -> intent = Intent(DesktopActivity@this, ImageRotationActivity::class.java)
+                1 -> intent = Intent(DesktopActivity@this, CorrectionActivity::class.java)
+                2 -> intent = Intent(DesktopActivity@this, ImageScalingActivity::class.java)
+                3 -> intent = Intent(DesktopActivity@this, SegmentationActivity::class.java)
+                4 -> intent = Intent(DesktopActivity@this, LineDrawingActivity::class.java)
+                5 -> intent = Intent(DesktopActivity@this, RetouchingActivity::class.java)
+                6 -> intent = Intent(DesktopActivity@this, UnsharpMaskingActivity::class.java)
+                7 -> intent = Intent(DesktopActivity@this, FilteringActivity::class.java)
+                8 -> intent = Intent(DesktopActivity@this, CubeActivity::class.java)
+            }
+            startActivity(intent)
             item_list.smoothScrollToPosition(position) //сглаживание анимации
         } }
     private val possibleItems = listOf( //список возможных иконок

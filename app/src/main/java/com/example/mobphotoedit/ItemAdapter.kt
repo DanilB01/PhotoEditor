@@ -10,21 +10,21 @@ class ItemAdapter(val itemClick: (position: Int,item: Item) -> Unit) : RecyclerV
 
     private var items: List<Item> = listOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =  // возвращает объект ViewHolder, который будет хранить данные по одному объекту Phone
         ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {  // выполняет привязку объекта ViewHolder к объекту Phone по определенной позиции
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
-            itemClick(position,items[position])
+            itemClick(position, items[position])
         }
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = items.size  // возвращает количество объектов в списке
 
     fun setItems(newItems: List<Item>) {
         items = newItems
-        notifyDataSetChanged()
+        notifyDataSetChanged() // уведомляет список об изменении данных для обновления списка на экране
     }
 }
 

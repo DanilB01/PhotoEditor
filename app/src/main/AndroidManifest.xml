@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mobphotoedit">
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,15 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CubeActivity"></activity>
+        <activity android:name=".FilteringActivity" />
+        <activity android:name=".UnsharpMaskingActivity" />
+        <activity android:name=".RetouchingActivity" />
+        <activity android:name=".LineDrawingActivity" />
+        <activity android:name=".SegmentationActivity" />
+        <activity android:name=".ImageScallingActivity" />
+        <activity android:name=".CorrectionActivity" />
+        <activity android:name=".Image_Rotation_Activity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +31,6 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".DesktopActivity" />
-
     </application>
 
 </manifest>
