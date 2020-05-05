@@ -48,11 +48,10 @@ class MainActivity : AppCompatActivity() {
         takePhotoButton.setOnClickListener{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                     //разрешение не дано
                     flagCamera = true
-                    val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     //запрос разрешения
                     requestPermissions(permission, PERMISSION_CODE)
                 }
@@ -69,10 +68,11 @@ class MainActivity : AppCompatActivity() {
 
         fromGalleryButton.setOnClickListener {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                     //разрешение не дано
                     flagGallery = true
-                    val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     //запрос разрешения
                     requestPermissions(permission, PERMISSION_CODE)
                 }
