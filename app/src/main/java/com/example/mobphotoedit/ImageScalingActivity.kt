@@ -26,7 +26,7 @@ class ImageScalingActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(ImageRotationActivity@this, DesktopActivity::class.java)
+        val i = Intent(ImageScalingActivity@this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }

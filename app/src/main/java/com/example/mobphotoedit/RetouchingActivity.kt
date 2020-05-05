@@ -26,7 +26,7 @@ class RetouchingActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(ImageRotationActivity@this, DesktopActivity::class.java)
+        val i = Intent(RetouchingActivity@this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }

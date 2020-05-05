@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.*
 
 
-@Suppress("DEPRECATION")
 class DesktopActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
     private val itemAdapter by lazy {
@@ -88,6 +87,11 @@ class DesktopActivity : AppCompatActivity() {
             items.add(possibleItems[i])
         }
         return items
+    }
+
+    private fun switchActivity(){
+        val i = Intent(DesktopActivity@this, DesktopActivity::class.java)
+        startActivity(i)
     }
 }
 
