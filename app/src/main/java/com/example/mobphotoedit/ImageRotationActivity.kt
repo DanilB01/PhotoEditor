@@ -44,7 +44,7 @@ class ImageRotationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_rotation)
 
-        var mTextView = findViewById<TextView>(R.id.textView);
+        var mTextView = findViewById<TextView>(R.id.Angle_Text);
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
 
