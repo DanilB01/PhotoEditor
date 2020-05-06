@@ -55,6 +55,7 @@ class DesktopActivity : AppCompatActivity() {
         item_list.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())
 
+        itemAdapter.itemClick
 
     }
 
@@ -65,6 +66,7 @@ class DesktopActivity : AppCompatActivity() {
         }
         return items
     }
+
 }
 
 data class Item( //класс объекта
