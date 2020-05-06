@@ -1,13 +1,10 @@
 package com.example.mobphotoedit
 
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.Images
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -75,6 +72,7 @@ class DesktopActivity : AppCompatActivity() {
             val bitmap = (photo.drawable as BitmapDrawable).bitmap
             MediaStore.Images.Media.insertImage(contentResolver, bitmap, "New Photo" , "New Changed Image");
             Toast.makeText(this, "Photo has been saved", Toast.LENGTH_LONG).show()
+            switchActivity()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -90,7 +88,7 @@ class DesktopActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(){
-        val i = Intent(DesktopActivity@this, DesktopActivity::class.java)
+        val i = Intent(DesktopActivity@this, LastActivity::class.java)
         startActivity(i)
     }
 }

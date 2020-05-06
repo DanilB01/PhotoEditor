@@ -11,7 +11,7 @@ class CorrectionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_rotation)
+        setContentView(R.layout.activity_correction)
 
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
