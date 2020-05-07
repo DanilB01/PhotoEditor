@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#292929</color>
+    <color name="colorPrimary">#DBB2FF</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#D81B60</color>
     <color name="SplashScreen">#4B336D</color>
-    <color name="colorButton">#BB86FC</color>>
+    <color name="colorButton">#BB86FC</color>
+    <color name="background">#292929</color>
+    <color name="lightPink">#F2E7FE</color>
 
 </resources>

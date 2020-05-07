@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
@@ -9,7 +10,11 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import android.content.Intent
+import android.view.View
+
 import kotlinx.android.synthetic.main.activity_desktop.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 fun ReloadImage(skbar:SeekBar, image1: ImageView, b_p:Bitmap)
 {
@@ -50,6 +55,7 @@ class ImageRotationActivity : AppCompatActivity() {
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
+      
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
@@ -64,6 +70,23 @@ class ImageRotationActivity : AppCompatActivity() {
         }
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
         ReloadImage(skbar,photo,b_p)
+
+
+        yes.setOnClickListener {
+            switchActivity(imageUri)
+        }
+        no.setOnClickListener {
+            switchActivity(imageUri)
+        }
     }
+
+    private fun switchActivity(imageUri: Uri){
+        val i = Intent(ImageRotationActivity@this, DesktopActivity::class.java)
+        i.putExtra("ImageUri", imageUri.toString())
+        startActivity(i)
+
+    }
+
+
 }
 

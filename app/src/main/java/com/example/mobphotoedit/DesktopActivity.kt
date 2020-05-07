@@ -1,15 +1,17 @@
 package com.example.mobphotoedit
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import androidx.core.net.toUri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_desktop.*
+
 
 class DesktopActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
@@ -47,6 +49,7 @@ class DesktopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_desktop)
 
+
         var string: String? = intent.getStringExtra("ImageUri")
         imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
@@ -54,8 +57,26 @@ class DesktopActivity : AppCompatActivity() {
         item_list.initialize(itemAdapter)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())
+    }
 
-        itemAdapter.itemClick
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Добавление иконок на ActionBar из menu.xml
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Назначение действий на кнопки ActionBar
+        val id = item.getItemId()
+        if (id == R.id.action_one) {
+            val bitmap = (photo.drawable as BitmapDrawable).bitmap
+            MediaStore.Images.Media.insertImage(contentResolver, bitmap, "New Photo" , "New Changed Image");
+            Toast.makeText(this, "Photo has been saved", Toast.LENGTH_LONG).show()
+            switchActivity()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+
 
     }
 
@@ -67,6 +88,10 @@ class DesktopActivity : AppCompatActivity() {
         return items
     }
 
+    private fun switchActivity(){
+        val i = Intent(DesktopActivity@this, LastActivity::class.java)
+        startActivity(i)
+    }
 }
 
 data class Item( //класс объекта

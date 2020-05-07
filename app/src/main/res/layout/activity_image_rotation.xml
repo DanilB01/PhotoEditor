@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ImageRotationActivity">
 
-
     <ImageView
         android:id="@+id/photo"
         android:layout_width="0dp"
@@ -28,6 +27,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.121751025" />
+
+    <ImageButton
+        android:id="@+id/yes"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_button_yes"
+        android:src="@drawable/ic_check_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline15"
+        app:layout_constraintTop_toTopOf="@+id/guideline17" />
+
+    <ImageButton
+        android:id="@+id/no"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_button_no"
+        android:src="@drawable/ic_clear_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline18"
+        app:layout_constraintEnd_toEndOf="@+id/photo"
+        app:layout_constraintStart_toStartOf="@+id/guideline15"
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
     <TextView
         android:id="@+id/Angle_Text"
@@ -63,5 +84,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/lower_guideline"
         app:layout_constraintVertical_bias="0.55" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
