@@ -3,4 +3,8 @@
     <string name="add">Add a picture to start create!</string>
     <string name="cont">Ready to continue?</string>
     <string name="title_activity_desktop">DesktopActivity</string>
+    <string name="name_txt">Name</string>
+    <string name="accept_txt">accept</string>
+    <string name="_3_text">3</string>
+    <string name="filtering_txt">Filtering</string>
 </resources>

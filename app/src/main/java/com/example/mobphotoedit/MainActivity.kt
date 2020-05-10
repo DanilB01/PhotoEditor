@@ -150,6 +150,10 @@ class MainActivity : AppCompatActivity() {
             message.text = getString(R.string.cont)
         }
     }
+
+
+
+
 }
 
 
