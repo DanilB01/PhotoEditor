@@ -21,4 +21,14 @@ class LastActivity : AppCompatActivity() {
         val i = Intent(LastActivity@this, MainActivity::class.java)
         startActivity(i)
     }
+
+    override fun onStart() {
+        super.onStart()
+        stars.onStart()
+    }
+
+    override fun onStop() {
+        stars.onStop()
+        super.onStop()
+    }
 }

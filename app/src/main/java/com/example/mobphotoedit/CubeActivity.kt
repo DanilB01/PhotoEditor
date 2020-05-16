@@ -16,6 +16,7 @@ class CubeActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        string = imageUri.path
 
         yes.setOnClickListener {
             switchActivity(imageUri)

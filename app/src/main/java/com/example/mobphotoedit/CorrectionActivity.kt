@@ -6,8 +6,8 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_desktop.*
-import kotlinx.android.synthetic.main.activity_main.*
+//import kotlinx.android.synthetic.main.activity_desktop.*
+//import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -16,34 +16,6 @@ import kotlinx.android.synthetic.main.activity_correction.*
 
 
 class CorrectionActivity : AppCompatActivity() {
-
-
-    private val itemAdapter2 by lazy {
-        ItemAdapter2 { position: Int, item: Item1 ->
-
-            when (position) {
-                0 -> filter1(photo)
-                1 -> changeBrightness(imageView2Bitmap(photo), 100F, photo)
-                2 -> adjustSaturation(imageView2Bitmap(photo), 50F, photo)
-                3 -> updateSaturation(imageView2Bitmap(photo),10F,photo)
-            }
-
-            item_list.smoothScrollToPosition(position) //сглаживание анимации
-        }
-    }
-
-
-
-
-
-    private val possibleItems = listOf( //список возможных иконок
-        Item1("Filter1", R.drawable.ic_photo_filter),
-        Item1("Filter2", R.drawable.ic_photo_filter),
-        Item1("Filter3", R.drawable.ic_photo_filter),
-        Item1("Filter4", R.drawable.ic_photo_filter)
-
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correction)
@@ -72,6 +44,32 @@ class CorrectionActivity : AppCompatActivity() {
 
       
     }
+
+    private val itemAdapter2 by lazy {
+        ItemAdapter2 { position: Int, item: Item1 ->
+
+            when (position) {
+                0 -> filter1(photo)
+                1 -> changeBrightness(imageView2Bitmap(photo), 100F, photo)
+                2 -> adjustSaturation(imageView2Bitmap(photo), 50F, photo)
+                3 -> updateSaturation(imageView2Bitmap(photo),10F,photo)
+            }
+
+            item_list.smoothScrollToPosition(position) //сглаживание анимации
+        }
+    }
+
+
+
+
+
+    private val possibleItems = listOf( //список возможных иконок
+        Item1("Filter1", R.drawable.ic_photo_filter),
+        Item1("Filter2", R.drawable.ic_photo_filter),
+        Item1("Filter3", R.drawable.ic_photo_filter),
+        Item1("Filter4", R.drawable.ic_photo_filter)
+
+    )
 
     private fun switchActivity(imageUri: Uri){
         val i = Intent(CorrectionActivity@this, DesktopActivity::class.java)

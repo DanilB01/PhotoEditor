@@ -14,8 +14,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_desktop.*
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_image_scalling.*
+
+//import kotlinx.android.synthetic.main.activity_desktop.*
+//import kotlinx.android.synthetic.main.activity_main.*
 
 class ImageScalingActivity : AppCompatActivity() {
 
