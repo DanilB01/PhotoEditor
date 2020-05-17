@@ -10,12 +10,14 @@
         android:id="@+id/photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scaleType="matrix"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:scaleType="matrix"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName" />
+        app:layout_constraintTop_toBottomOf="@+id/activityName"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/yes"
@@ -70,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.500684" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline17"
@@ -84,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.6019152" />
 
     <EditText
         android:id="@+id/editText"
