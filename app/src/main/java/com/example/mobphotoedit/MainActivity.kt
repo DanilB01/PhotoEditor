@@ -88,7 +88,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        stars.onStart()
+    }
+
     override fun onStop() {
+        stars.onStop()
         super.onStop()
         pic.setImageResource(R.drawable.ic_image_black_24dp)
         yes.visibility = View.GONE
@@ -150,6 +156,10 @@ class MainActivity : AppCompatActivity() {
             message.text = getString(R.string.cont)
         }
     }
+
+
+
+
 }
 
 

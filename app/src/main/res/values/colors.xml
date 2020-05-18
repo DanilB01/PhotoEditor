@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#DBB2FF</color>
+    <color name="colorPrimary">#000A2F</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#D81B60</color>
     <color name="SplashScreen">#4B336D</color>
     <color name="colorButton">#BB86FC</color>
-    <color name="background">#292929</color>
+    <color name="background">#212121</color>
     <color name="lightPink">#F2E7FE</color>
+
+    <color name="starColor1">#ffffff</color>
+    <color name="starColor2">#25ADFF</color>
+    <color name="starColor3">#FFC100</color>
+    <color name="starColor4">#FF3800</color>
 
 </resources>

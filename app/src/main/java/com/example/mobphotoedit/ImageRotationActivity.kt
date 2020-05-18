@@ -15,33 +15,28 @@ import android.view.View
 
 import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Math.cos
+import java.lang.Math.sin
 
-fun ReloadImage(skbar:SeekBar, image1: ImageView, b_p:Bitmap)
+fun ReloadImage(skbar:SeekBar, photo_image_view: ImageView, b_p:Bitmap)
 {
-    val degrees: Float = (skbar.getProgress() - 180).toFloat()
-    var radDegrees: Double = (degrees  * Math.PI) / 180.0
-    val matrix = Matrix()
-    var drawable_w = image1.drawable.intrinsicWidth
-    var drawable_h = image1.drawable.intrinsicHeight
+    val degrees: Float = (skbar.getProgress()-180).toFloat()
+    var rads: Double = (degrees*Math.PI) / 180.0
+    val r_matrix = Matrix()
+    val src_W:Int = b_p.getWidth()
+    val src_H:Int = b_p.getHeight()
 
-    var mRotated_w = (Math.abs(Math.sin(radDegrees)) * drawable_h
-            + Math.abs(Math.cos(radDegrees)) * drawable_w);
-    var mRotated_h = (Math.abs(Math.cos(radDegrees)) * drawable_h
-            + Math.abs(Math.sin(radDegrees)) * drawable_w);
-
-
-
-    matrix.postRotate(
-        degrees,
-        b_p.getWidth().toFloat() / 2, b_p.getHeight().toFloat() / 2
-    )
+    var rotate_arr:FloatArray = floatArrayOf(cos(rads).toFloat(), -sin(rads).toFloat(),src_W.toFloat() / 2,
+        sin(rads).toFloat(), cos(rads).toFloat(), src_H.toFloat() / 2,
+        0.0f, 0.0f, 1.0f)
+    r_matrix.setValues(rotate_arr)
     var new_b_p: Bitmap = Bitmap.createBitmap(
         b_p,
         0, 0,
-        b_p.getWidth(), b_p.getHeight(),
-        matrix, true
+        src_W, src_H,
+        r_matrix, false
     )
-    image1.setImageBitmap(new_b_p)
+    photo_image_view.setImageBitmap(new_b_p)
 }
 
 class ImageRotationActivity : AppCompatActivity() {
@@ -55,7 +50,7 @@ class ImageRotationActivity : AppCompatActivity() {
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
-      
+
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
@@ -86,7 +81,4 @@ class ImageRotationActivity : AppCompatActivity() {
         startActivity(i)
 
     }
-
-
 }
-
