@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ImageRotationActivity">
+    tools:context="ImageRotationActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline29"
@@ -55,16 +55,16 @@
         android:id="@+id/photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="20dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
+        android:layout_margin="20dp"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/lower_guideline"
         app:layout_constraintEnd_toStartOf="@+id/guideline31"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.574"
+        app:layout_constraintStart_toStartOf="@+id/guideline30"
         app:layout_constraintTop_toTopOf="@+id/high_guideline"
-        app:layout_constraintVertical_bias="0.829" />
+        app:layout_constraintVertical_bias="0.43" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/high_guideline"
@@ -113,7 +113,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.93" />
+        app:layout_constraintGuide_percent="0.9294404" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.08" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

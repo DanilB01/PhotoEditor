@@ -1,84 +1,133 @@
 package com.example.mobphotoedit
 
-
+import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity.apply
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import android.content.Intent
-import android.view.View
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat.apply
 import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Math.cos
-import java.lang.Math.sin
+import java.lang.Math.*
 
-fun ReloadImage(skbar:SeekBar, photo_image_view: ImageView, b_p:Bitmap)
+fun  getRotated(src:Bitmap, degrees:Double):Bitmap
 {
-    val degrees: Float = (skbar.getProgress()-180).toFloat()
     var rads: Double = (degrees*Math.PI) / 180.0
-    val r_matrix = Matrix()
-    val src_W:Int = b_p.getWidth()
-    val src_H:Int = b_p.getHeight()
+    val width:Int = src.width
+    val height:Int = src.height
 
-    var rotate_arr:FloatArray = floatArrayOf(cos(rads).toFloat(), -sin(rads).toFloat(),src_W.toFloat() / 2,
-        sin(rads).toFloat(), cos(rads).toFloat(), src_H.toFloat() / 2,
-        0.0f, 0.0f, 1.0f)
-    r_matrix.setValues(rotate_arr)
-    var new_b_p: Bitmap = Bitmap.createBitmap(
-        b_p,
-        0, 0,
-        src_W, src_H,
-        r_matrix, false
-    )
-    photo_image_view.setImageBitmap(new_b_p)
+    var cosa = cos(rads)
+    var sina = sin(rads)
+
+    var x1 = (-height*sina).toInt()
+    var y1 = (height*cosa).toInt()
+    var x2 = (width*cosa - height*sina).toInt()
+    var y2 = (height*cosa + width*sina).toInt()
+    var x3 = (width*cosa).toInt()
+    var y3 = (width*sina).toInt()
+
+    var minX = min(0, min(x1, min(x2, x3)))
+    var minY = min(0, min(y1, min(y2, y3)))
+    var maxX = max(x1, max(x2, x3))
+    var maxY = max(y1, max(y2, y3))
+
+
+    var curWidth:Int = maxX - minX
+    var curHeight:Int = maxY - minY
+    var rotatedBitmap = Bitmap.createBitmap(curWidth,  curHeight, src.config)
+
+    val pixels = IntArray(height*width)
+    src.getPixels(pixels,0,width,0,0,width,height)
+    val newPixels = IntArray(curHeight*curWidth)
+    for (y in 0 until curHeight)
+    {
+        for(x in 0 until curWidth)
+        {
+            var src_x:Int = ((x+minX)*cosa + (y+minY)*sina ).toInt()
+            var src_y:Int = ((y+minY)*cosa - (x+minX)*sina ).toInt()
+            var ind = src_y * width + src_x
+            if (src_x >= 0 && src_x < width && src_y >= 0 && src_y < height) {
+                newPixels[y*curWidth + x] = pixels[ind]
+            }
+            else {
+                newPixels[y*curWidth + x] = 0
+            }
+        }
+    }
+    rotatedBitmap.setPixels(newPixels,0,curWidth,0,0,curWidth,curHeight)
+    return rotatedBitmap
 }
 
-class ImageRotationActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_rotation)
+fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap) {
+    var degrees: Double = (skbar.getProgress() - 180).toDouble()
+    var workBP = b_p.copy(b_p.config,true)
+    if (abs(degrees) > 90)
+    {
+        if(degrees > 0) {
+            degrees -= 90.0
+            workBP = getRotated(workBP,90.0)
+        }
+        else {
+            degrees += 90.0
+            workBP = getRotated(workBP,-90.0)
+        }
 
-        var mTextView = findViewById<TextView>(R.id.Angle_Text);
-        var string: String? = intent.getStringExtra("ImageUri")
-        var imageUri = Uri.parse(string)
+    }
+    var newBitmap: Bitmap = getRotated(workBP, degrees)
+    var w = currentImage.width
+    var h = currentImage.height
+    Log.d("W","WIDTH:${w}")
+    Log.d("H","HEIGHT:${h}")
+    currentImage.setImageBitmap(newBitmap)
+}
 
-        val skbar = findViewById<SeekBar>(R.id.seekBar)
-        photo.setImageURI(imageUri)
+    class ImageRotationActivity : AppCompatActivity() {
 
-        var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_image_rotation)
 
-        var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                mTextView.setText("Angle: ${(skbar.getProgress().toFloat() - 180).toString()}°")
+            var mTextView = findViewById<TextView>(R.id.Angle_Text);
+            var string: String? = intent.getStringExtra("ImageUri")
+            var imageUri = Uri.parse(string)
+
+            val skbar = findViewById<SeekBar>(R.id.seekBar)
+            photo.setImageURI(imageUri)
+
+            var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+            var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
+                SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    mTextView.setText("Angle: ${(skbar.getProgress().toFloat() - 180).toString()}°")
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    rotateImage(skbar, photo, b_p)
+                }
             }
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                ReloadImage(skbar,photo,b_p)
+            skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
+
+            yes.setOnClickListener {
+                switchActivity(imageUri)
+            }
+            no.setOnClickListener {
+                switchActivity(imageUri)
             }
         }
-        skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
-        ReloadImage(skbar,photo,b_p)
 
-
-        yes.setOnClickListener {
-            switchActivity(imageUri)
-        }
-        no.setOnClickListener {
-            switchActivity(imageUri)
+        private fun switchActivity(imageUri: Uri) {
+            val i = Intent(ImageRotationActivity@ this, DesktopActivity::class.java)
+            i.putExtra("ImageUri", imageUri.toString())
+            startActivity(i)
         }
     }
 
-    private fun switchActivity(imageUri: Uri){
-        val i = Intent(ImageRotationActivity@this, DesktopActivity::class.java)
-        i.putExtra("ImageUri", imageUri.toString())
-        startActivity(i)
-
-    }
-}
