@@ -17,7 +17,7 @@ class HorizontalCarouselRecyclerView(
     attrs: AttributeSet
 ) : RecyclerView(context, attrs) {
 
-    private val activeColor by lazy { ContextCompat.getColor(context, R.color.colorPrimary) }
+    private val activeColor by lazy { ContextCompat.getColor(context, R.color.lightPink) }
     private val inactiveColor by lazy { ContextCompat.getColor(context, R.color.SplashScreen) }
     private var viewsToChangeColor: List<Int> = listOf()
 

@@ -32,7 +32,7 @@ class CorrectionActivity : AppCompatActivity() {
         }
       
       item_list.initialize(itemAdapter2)
-        item_list.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
+        item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter2.setItems(getLargeListOfItems())
        // filter2(photo)
        // val bitmap2 = imageView2Bitmap(photo)

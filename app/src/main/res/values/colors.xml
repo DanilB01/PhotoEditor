@@ -13,4 +13,10 @@
     <color name="starColor3">#FFC100</color>
     <color name="starColor4">#FF3800</color>
 
+    <color name="surfPlane1">#01b5ac</color>
+    <color name="surfPlane2">#ffd832</color>
+    <color name="surfPlane3">#fe7c00</color>
+    <color name="surfPlane4">#fe5f97</color>
+    <color name="surfPlane5">#0468a6</color>
+    <color name="surfPlane6">#cee38e</color>
 </resources>
