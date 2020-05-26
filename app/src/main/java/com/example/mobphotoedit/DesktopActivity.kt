@@ -27,6 +27,7 @@ import java.net.URLConnection
 
 class DesktopActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
+    private var imagePath: String? = null
     private val itemAdapter by lazy {
         ItemAdapter { position: Int, item: Item ->
             var intent: Intent? = null
@@ -42,6 +43,7 @@ class DesktopActivity : AppCompatActivity() {
                 8 -> intent = Intent(DesktopActivity@ this, CubeActivity::class.java)
             }
             intent?.putExtra("ImageUri", imageUri.toString())
+            intent?.putExtra("ImagePath", imagePath)
             startActivity(intent)
             item_list.smoothScrollToPosition(position) //сглаживание анимации
         }
@@ -62,7 +64,7 @@ class DesktopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_desktop)
 
-
+        imagePath = intent.getStringExtra("ImagePath")
         var string: String? = intent.getStringExtra("ImageUri")
         imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
@@ -108,8 +110,6 @@ class DesktopActivity : AppCompatActivity() {
         startActivity(i)
     }
 }
-
-
 
 data class Item( //класс объекта
     val title: String,

@@ -7,6 +7,8 @@
     <color name="colorButton">#BB86FC</color>
     <color name="background">#212121</color>
     <color name="lightPink">#F2E7FE</color>
+    <color name="knot_in">#6F35A3</color>
+    <color name="knot_out">#A86DD5</color>
 
     <color name="starColor1">#ffffff</color>
     <color name="starColor2">#25ADFF</color>

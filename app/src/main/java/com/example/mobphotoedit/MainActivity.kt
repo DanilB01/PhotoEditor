@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     var imageUri: Uri? = null
     var flagCamera: Boolean = false
     var flagGallery: Boolean = false
+    var imagePath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         yes.setOnClickListener {
             val intent = Intent(MainActivity@this, DesktopActivity::class.java)
             intent.putExtra("ImageUri", imageUri.toString())
+            intent.putExtra("ImagePath", imagePath)
             startActivity(intent)
         }
         no.setOnClickListener {
@@ -107,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
         imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imagePath = imageUri?.path
 
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
@@ -149,6 +152,7 @@ class MainActivity : AppCompatActivity() {
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == IMAGE_PICK_CODE){
                 imageUri = data?.data
+                imagePath = data?.data?.path
             }
             pic.setImageURI(imageUri)
             yes.visibility = View.VISIBLE
