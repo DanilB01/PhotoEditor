@@ -7,4 +7,9 @@
     <string name="accept_txt">accept</string>
     <string name="_3_text">3</string>
     <string name="filtering_txt">Filtering</string>
+
+    <string name="button_txt">Button</string>
+    <string name="_0_txt">0</string>
+    <string name="rand_txt">rand</string>
+    <string name="_1_txt">1</string>
 </resources>

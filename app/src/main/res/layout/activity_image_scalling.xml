@@ -9,13 +9,14 @@
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName" />
+        app:layout_constraintTop_toBottomOf="@+id/activityName"
+        tools:visibility="visible" />
 
     <TextView
         style="@style/textStyle"
@@ -35,16 +36,32 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1" />
 
-    <Button
-        android:id="@+id/button2"
+    <EditText
+        android:id="@+id/editText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:onClick="test2"
-        app:layout_constraintBottom_toBottomOf="@+id/photo"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/_0_txt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/activityName"
+        app:layout_constraintVertical_bias="0.04"
+        tools:text="0" />
+
+    <Button
+        android:id="@+id/buttonsc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rand_txt"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/photo"
-        app:layout_constraintVertical_bias="0.859" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/activityName"
+    app:layout_constraintVertical_bias="0.436" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

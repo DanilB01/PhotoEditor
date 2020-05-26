@@ -4,8 +4,8 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_correction.*
@@ -22,6 +22,10 @@ class CorrectionActivity : AppCompatActivity() {
                 1 -> changeBrightness(imageView2Bitmap(photo), 100F, photo)
                 2 -> adjustSaturation(imageView2Bitmap(photo), 50F, photo)
                 3 -> updateSaturation(imageView2Bitmap(photo),10F,photo)
+                4 -> grassFilter(imageView2Bitmap(photo),photo)
+                5 -> movieFilter(imageView2Bitmap(photo), photo)
+                6 -> rubyFilter(imageView2Bitmap(photo),photo)
+                7 -> lagunaFilter(imageView2Bitmap(photo),photo)
             }
 
             item_list.smoothScrollToPosition(position) //сглаживание анимации
@@ -33,11 +37,14 @@ class CorrectionActivity : AppCompatActivity() {
 
 
     private val possibleItems = listOf( //список возможных иконок
-        Item1("Filter1", R.drawable.ic_photo_filter),
-        Item1("Filter2", R.drawable.ic_photo_filter),
-        Item1("Filter3", R.drawable.ic_photo_filter),
-        Item1("Filter4", R.drawable.ic_photo_filter)
-
+        Item1("negative", R.drawable.ic_photo_filter),
+        Item1("brightness", R.drawable.ic_photo_filter),
+        Item1("saturation", R.drawable.ic_photo_filter),
+        Item1("saturation2", R.drawable.ic_photo_filter),
+        Item1("grass", R.drawable.ic_photo_filter),
+        Item1("movie", R.drawable.ic_photo_filter),
+        Item1("ruby", R.drawable.ic_photo_filter),
+        Item1("laguna", R.drawable.ic_photo_filter)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +54,7 @@ class CorrectionActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        val dontforgetfirstbit = imageView2Bitmap(photo)
 
         item_list.initialize(itemAdapter2)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
@@ -64,7 +72,7 @@ class CorrectionActivity : AppCompatActivity() {
 
     private fun getLargeListOfItems(): List<Item1> {
         val items = mutableListOf<Item1>()
-        for (i in 0..3) {
+        for (i in 0..7) {
             items.add(possibleItems[i])
         }
         return items
@@ -213,4 +221,76 @@ fun adjustSaturation(bmp: Bitmap, value: Float, photo: ImageView) {
     paint.colorFilter = filter
     canvasResult.drawBitmap(src, 0F, 0F, paint)
     photo.setImageBitmap(bitmapResult)
+}
+
+fun grassFilter(sentBitmap: Bitmap, photo: ImageView) {
+    val bufBitmap =
+        Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
+    for (i in 0 until sentBitmap.width) {
+        for (j in 0 until sentBitmap.height) {
+            val p = sentBitmap.getPixel(i, j)
+            var r = Color.red(p)
+            var g = Color.green(p)
+            var b = Color.blue(p)
+            r = (r * 0.9).toInt()
+            b = (b * 0.9).toInt()
+            g = (g * 1.2).toInt()
+            if (g > 255) g = 255
+            bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
+        }
+    }
+    photo.setImageBitmap(bufBitmap)
+}
+
+fun movieFilter(sentBitmap: Bitmap, photo: ImageView) {
+    val bufBitmap =
+        Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
+    for (i in 0 until sentBitmap.width) {
+        for (j in 0 until sentBitmap.height) {
+            val p = sentBitmap.getPixel(i, j)
+            val r = Color.red(p)
+            var g = Color.green(p)
+            var b = Color.blue(p)
+            b = (b * 0.8).toInt()
+            g = (g * 0.9).toInt()
+            bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
+        }
+    }
+    photo.setImageBitmap(bufBitmap)
+}
+
+fun lagunaFilter(sentBitmap: Bitmap, photo:ImageView) {
+    val bufBitmap =
+        Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
+    for (i in 0 until sentBitmap.width) {
+        for (j in 0 until sentBitmap.height) {
+            val p = sentBitmap.getPixel(i, j)
+            var r = Color.red(p)
+            val g = Color.green(p)
+            var b = Color.blue(p)
+            r = (r * 0.9).toInt()
+            b = (b * 1.2).toInt()
+            if (b > 255) b = 255
+            bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
+        }
+    }
+    photo.setImageBitmap(bufBitmap)
+}
+
+fun rubyFilter(sentBitmap: Bitmap,photo: ImageView) {
+    val bufBitmap =
+        Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
+    for (i in 0 until sentBitmap.width) {
+        for (j in 0 until sentBitmap.height) {
+            val p = sentBitmap.getPixel(i, j)
+            var r = Color.red(p)
+            var g = Color.green(p)
+            val b = Color.blue(p)
+            g = (g * 0.8).toInt()
+            r = (r * 1.2).toInt()
+            if (r > 255) r = 255
+            bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
+        }
+    }
+    photo.setImageBitmap(bufBitmap)
 }
