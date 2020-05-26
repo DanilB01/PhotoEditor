@@ -2,20 +2,18 @@ package com.example.mobphotoedit
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_cube.*
 import kotlinx.android.synthetic.main.activity_cube.view.*
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 class CubeActivity : AppCompatActivity() {
 
@@ -23,36 +21,28 @@ class CubeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cube)
 
-        /*turnRight.setOnClickListener {
-            (cubeView as MySurfaceView).rotateCubPos = 1
-            cubeView.invalidate()
-        }
-        turnLeft.setOnClickListener {
-            (cubeView as MySurfaceView).rotateCubPos = 2
-            cubeView.invalidate()
-        }
-        turnUp.setOnClickListener {
-            (cubeView as MySurfaceView).rotateCubPos = 3
-            cubeView.invalidate()
-        }
-        turnDown.setOnClickListener {
-            (cubeView as MySurfaceView).rotateCubPos = 4
-            cubeView.invalidate()
-        }*/
         turnClockwise.setOnClickListener {
-            (cubeView as MySurfaceView).rotateCubPos = 5
+            (cubeView as MySurfaceView).rotationPos = 5
             cubeView.invalidate()
         }
         turnСounterСlockwise.setOnClickListener {
-            (cubeView as MySurfaceView).rotateCubPos = 6
+            (cubeView as MySurfaceView).rotationPos = 6
+            cubeView.invalidate()
+        }
+
+        changeView.setOnClickListener{
+            (cubeView as MySurfaceView).figure++
+            if ((cubeView as MySurfaceView).figure == 3)
+                (cubeView as MySurfaceView).figure = 0
             cubeView.invalidate()
         }
 
     }
 
     class MySurfaceView (context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), SurfaceHolder.Callback {
-        var rotateCubPos = 0
-        private val nodes = arrayOf(
+        var figure = 0 // 0 - cube, 1 - tetrahedron, 2 - octahedron
+        var rotationPos = 0
+        private val cubeNodes = arrayOf(
             floatArrayOf(-200f, -200f, -200f),
             floatArrayOf(-200f, -200f,  200f),
             floatArrayOf(-200f,  200f, -200f),
@@ -62,7 +52,7 @@ class CubeActivity : AppCompatActivity() {
             floatArrayOf( 200f,  200f, -200f),
             floatArrayOf( 200f,  200f,  200f)
         )
-        val edges = arrayOf(
+        val cubeEdges = arrayOf(
             intArrayOf(0, 1),
             intArrayOf(1, 3),
             intArrayOf(3, 2),
@@ -89,8 +79,47 @@ class CubeActivity : AppCompatActivity() {
             pathCharacteristic(Path(), Paint()),
             pathCharacteristic(Path(), Paint())
         )
+        var a = 500f // side length
+        var tetraNodes = arrayOf(
+            floatArrayOf(-a/6*sqrt(3f), -a/2, -a/3*sqrt(2/3f)),
+            floatArrayOf(-a/6*sqrt(3f), a/2, -a/3*sqrt(2/3f)),
+            floatArrayOf(a/3*sqrt(3f), 0f, -a/3*sqrt(2/3f)),
+            floatArrayOf(0f, 0f, 2*a/3*sqrt(2/3f))
+        )
+        var tetraEdges = arrayOf(
+            intArrayOf(0, 1),
+            intArrayOf(1, 2),
+            intArrayOf(2, 0),
+            intArrayOf(3, 0),
+            intArrayOf(3, 1),
+            intArrayOf(3, 2)
+        )
 
-        var angle: Float = (PI / 48).toFloat()
+        var octNodes = arrayOf(//tetra nodes, fig[1][0]
+            floatArrayOf(200f, 200f, 0f),
+            floatArrayOf(200f, -200f, 0f),
+            floatArrayOf(-200f, -200f, 0f),
+            floatArrayOf(-200f, 200f, 0f),
+            floatArrayOf(0f, 0f, 200f*sqrt(2f)),
+            floatArrayOf(0f, 0f, -200f*sqrt(2f))
+        )
+
+        var octEdges = arrayOf(
+            intArrayOf(0, 1),
+            intArrayOf(1, 2),
+            intArrayOf(2, 3),
+            intArrayOf(3, 0),
+            intArrayOf(4, 0),
+            intArrayOf(4, 1),
+            intArrayOf(4, 2),
+            intArrayOf(4, 3),
+            intArrayOf(5, 0),
+            intArrayOf(5, 1),
+            intArrayOf(5, 2),
+            intArrayOf(5, 3)
+        )
+
+        var angle = (PI / 48).toFloat()
         override fun surfaceChanged(
             holder: SurfaceHolder, format: Int, width: Int,
             height: Int
@@ -105,7 +134,6 @@ class CubeActivity : AppCompatActivity() {
 
         }
 
-
         var curX: Float = 0f
         var curY: Float = 0f
 
@@ -116,158 +144,311 @@ class CubeActivity : AppCompatActivity() {
                     curY = event.y
                 }
                 MotionEvent.ACTION_MOVE -> {
-                        if(abs(event.x - curX) > 10 && abs(event.y - curY) > 10){
-                            if(event.x > curX){
-                                changeRotationY(1)//right
-                                if(event.y > curY)
-                                    (cubeView as MySurfaceView).rotateCubPos = 4
-                                else
-                                    (cubeView as MySurfaceView).rotateCubPos = 3
-                            }
-                            else{
-                                changeRotationY(0)//left
-                                if(event.y > curY)
-                                    (cubeView as MySurfaceView).rotateCubPos = 4
-                                else
-                                    (cubeView as MySurfaceView).rotateCubPos = 3
-                            }
-                            invalidate()
-                            curX = event.x
-                            curY = event.y
-                        }
-                        else if (abs(event.x - curX) > 10) {
-                            if (event.x > curX)
-                                (cubeView as MySurfaceView).rotateCubPos = 1
+                    if(abs(event.x - curX) > 10 && abs(event.y - curY) > 10){
+                        if(event.x > curX){
+                            changeRotationY(1)//right
+                            if(event.y > curY)
+                                (cubeView as MySurfaceView).rotationPos = 4
                             else
-                                (cubeView as MySurfaceView).rotateCubPos = 2
-                            invalidate()
-                            curX = event.x
-                            curY = event.y
+                                (cubeView as MySurfaceView).rotationPos = 3
                         }
-                        else if (abs(event.y - curY) > 10) {
-                            if (event.y > curY)
-                                (cubeView as MySurfaceView).rotateCubPos = 4
+                        else{
+                            changeRotationY(0)//left
+                            if(event.y > curY)
+                                (cubeView as MySurfaceView).rotationPos = 4
                             else
-                                (cubeView as MySurfaceView).rotateCubPos = 3
-                            invalidate()
-                            curX = event.x
-                            curY = event.y
+                                (cubeView as MySurfaceView).rotationPos = 3
                         }
+                        invalidate()
+                        curX = event.x
+                        curY = event.y
+                    }
+                    else if (abs(event.x - curX) > 10) {
+                        if (event.x > curX)
+                            (cubeView as MySurfaceView).rotationPos = 1
+                        else
+                            (cubeView as MySurfaceView).rotationPos = 2
+                        invalidate()
+                        curX = event.x
+                        curY = event.y
+                    }
+                    else if (abs(event.y - curY) > 10) {
+                        if (event.y > curY)
+                            (cubeView as MySurfaceView).rotationPos = 4
+                        else
+                            (cubeView as MySurfaceView).rotationPos = 3
+                        invalidate()
+                        curX = event.x
+                        curY = event.y
+                    }
                 }
             }
             return true
         }
-
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
             val transX = (width * 0.5).toFloat()
             val transY = (height * 0.5).toFloat()
             canvas?.translate(transX, transY)
-            when(this.rotateCubPos){ //rotate left, down, counterclockwise = 0, rotate right, up, clockwise = 1
-                1 -> changeRotationY(1)
-                2 -> changeRotationY(0)
-                3 -> changeRotationX(1)
-                4 -> changeRotationX(0)
-                5 -> {
-                    angle = (PI / 16).toFloat()
-                    changeRotationZ(1)
-                    angle = (PI / 48).toFloat()
-                }
-                6 -> {
-                    angle = (PI / 16).toFloat()
-                    changeRotationZ(0)
-                    angle = (PI / 48).toFloat()
-                }
+            val p = Paint()
+            p.color = resources.getColor(R.color.lightPink)
+            p.strokeWidth = 5f
+            when(this.rotationPos){
+                1 -> changeRotationY(1)//right
+                2 -> changeRotationY(0)//left
+                3 -> changeRotationX(1)//up
+                4 -> changeRotationX(0)//down
+                5 -> changeRotationZ(1)//clockwise
+                6 -> changeRotationZ(0)//counterclockwise
             }
-            var curMin = 0f
-            var curMinIndex = 0
-            for(i in 0..7){
-                if(nodes[i][2] < curMin){
-                    curMin = nodes[i][2]
-                    curMinIndex = i
+            rotationPos = 0
+            when(figure){
+                0->{
+                    var curMin = 0f
+                    var curMinIndex = 0
+                    for(i in 0..7){
+                        if(cubeNodes[i][2] < curMin){
+                            curMin = cubeNodes[i][2]
+                            curMinIndex = i
+                        }
+                    }
+                    when(curMinIndex){
+                        0->drawFilledPath(arrayOf(1,3,4))
+                        1->drawFilledPath(arrayOf(1,3,5))
+                        2->drawFilledPath(arrayOf(1,2,4))
+                        3->drawFilledPath(arrayOf(1,2,5))
+                        4->drawFilledPath(arrayOf(0,3,4))
+                        5->drawFilledPath(arrayOf(0,3,5))
+                        6->drawFilledPath(arrayOf(0,2,4))
+                        7->drawFilledPath(arrayOf(0,2,5))
+                    }
+                    for(i in 0..2){
+                        canvas?.drawPath(this.pathes[i].path, this.pathes[i].paint)
+                        pathes[i].path.reset()
+                    }
                 }
-            }
-            when(curMinIndex){
-                0->drawFilledPath(arrayOf(1,3,4))
-                1->drawFilledPath(arrayOf(1,3,5))
-                2->drawFilledPath(arrayOf(1,2,4))
-                3->drawFilledPath(arrayOf(1,2,5))
-                4->drawFilledPath(arrayOf(0,3,4))
-                5->drawFilledPath(arrayOf(0,3,5))
-                6->drawFilledPath(arrayOf(0,2,4))
-                7->drawFilledPath(arrayOf(0,2,5))
-            }
-            for(i in 0..2){
-                canvas?.drawPath(this.pathes[i].path, this.pathes[i].paint)
-                pathes[i].path.reset()
+                1->{
+                    for (edge in tetraEdges) {
+                        val xy1 = tetraNodes[edge[0]]
+                        val xy2 = tetraNodes[edge[1]]
+                        canvas?.drawLine(xy1[0], xy1[1], xy2[0], xy2[1], p)
+                    }
+                }
+                2->{
+                    for (edge in octEdges) {
+                        val xy1 = octNodes[edge[0]]
+                        val xy2 = octNodes[edge[1]]
+                        canvas?.drawLine(xy1[0], xy1[1], xy2[0], xy2[1], p)
+                    }
+                }
             }
         }
 
         fun changeRotationX(side:Int){
-            if(side == 1){
-                for (node in this.nodes) {
-                    val x = node[0]
-                    val y = node[1]
-                    val z = node[2]
-                    node[0] = x
-                    node[1] = y * cos(this.angle) - z * sin(this.angle)
-                    node[2] = y * sin(this.angle) + z * cos(this.angle)
+            when(figure){
+                0->{
+                    if(side == 1){
+                        for (node in this.cubeNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x
+                            node[1] = y * cos(this.angle) - z * sin(this.angle)
+                            node[2] = y * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                    else{
+                        for (node in this.cubeNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x
+                            node[1] = y * cos(this.angle) + z * sin(this.angle)
+                            node[2] = - y * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
                 }
-            }
-            else{
-                for (node in this.nodes) {
-                    val x = node[0]
-                    val y = node[1]
-                    val z = node[2]
-                    node[0] = x
-                    node[1] = y * cos(this.angle) + z * sin(this.angle)
-                    node[2] = - y * sin(this.angle) + z * cos(this.angle)
+                1->{
+                    if(side == 1){
+                        for (node in this.tetraNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x
+                            node[1] = y * cos(this.angle) - z * sin(this.angle)
+                            node[2] = y * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                    else{
+                        for (node in this.tetraNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x
+                            node[1] = y * cos(this.angle) + z * sin(this.angle)
+                            node[2] = - y * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                }
+                2->{
+                    if(side == 1){
+                        for (node in this.octNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x
+                            node[1] = y * cos(this.angle) - z * sin(this.angle)
+                            node[2] = y * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                    else{
+                        for (node in this.octNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x
+                            node[1] = y * cos(this.angle) + z * sin(this.angle)
+                            node[2] = - y * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
                 }
             }
         }
 
         fun changeRotationY(side:Int){
-            if(side == 1){
-                for (node in this.nodes) {
-                    val x = node[0]
-                    val y = node[1]
-                    val z = node[2]
-                    node[0] = x * cos(this.angle) + z * sin(this.angle)
-                    node[1] = y
-                    node[2] = - x * sin(this.angle) + z * cos(this.angle)
+            when(figure) {
+                0 -> {
+                    if (side == 1) {
+                        for (node in this.cubeNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) + z * sin(this.angle)
+                            node[1] = y
+                            node[2] = -x * sin(this.angle) + z * cos(this.angle)
+                        }
+                    } else {
+                        for (node in this.cubeNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) - z * sin(this.angle)
+                            node[1] = y
+                            node[2] = x * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
                 }
-            }
-            else{
-                for (node in this.nodes) {
-                    val x = node[0]
-                    val y = node[1]
-                    val z = node[2]
-                    node[0] = x * cos(this.angle) - z * sin(this.angle)
-                    node[1] = y
-                    node[2] = x * sin(this.angle) + z * cos(this.angle)
+                1 -> {
+                    if (side == 1) {
+                        for (node in this.tetraNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) + z * sin(this.angle)
+                            node[1] = y
+                            node[2] = -x * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                    else {
+                        for (node in this.tetraNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) - z * sin(this.angle)
+                            node[1] = y
+                            node[2] = x * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                }
+                2->{
+                    if (side == 1) {
+                        for (node in this.octNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) + z * sin(this.angle)
+                            node[1] = y
+                            node[2] = -x * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
+                    else {
+                        for (node in this.octNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) - z * sin(this.angle)
+                            node[1] = y
+                            node[2] = x * sin(this.angle) + z * cos(this.angle)
+                        }
+                    }
                 }
             }
         }
 
         fun changeRotationZ(side:Int){
-            if(side == 1){
-                for (node in this.nodes) {
-                    val x = node[0]
-                    val y = node[1]
-                    val z = node[2]
-                    node[0] = x * cos(this.angle) - y * sin(this.angle)
-                    node[1] = x * sin(this.angle) + y * cos(this.angle)
-                    node[2] = z
+            when(figure) {
+                0 -> {
+                    if (side == 1) {
+                        for (node in this.cubeNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) - y * sin(this.angle)
+                            node[1] = x * sin(this.angle) + y * cos(this.angle)
+                            node[2] = z
+                        }
+                    } else {
+                        for (node in this.cubeNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) + y * sin(this.angle)
+                            node[1] = -x * sin(this.angle) + y * cos(this.angle)
+                            node[2] = z
+                        }
+                    }
                 }
-            }
-            else{
-                for (node in this.nodes) {
-                    val x = node[0]
-                    val y = node[1]
-                    val z = node[2]
-                    node[0] = x * cos(this.angle) + y * sin(this.angle)
-                    node[1] = - x * sin(this.angle) + y * cos(this.angle)
-                    node[2] = z
+                1 -> {
+                    if (side == 1) {
+                        for (node in this.tetraNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) - y * sin(this.angle)
+                            node[1] = x * sin(this.angle) + y * cos(this.angle)
+                            node[2] = z
+                        }
+                    } else {
+                        for (node in this.tetraNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) + y * sin(this.angle)
+                            node[1] = -x * sin(this.angle) + y * cos(this.angle)
+                            node[2] = z
+                        }
+                    }
+                }
+                2 -> {
+                    if (side == 1) {
+                        for (node in this.octNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) - y * sin(this.angle)
+                            node[1] = x * sin(this.angle) + y * cos(this.angle)
+                            node[2] = z
+                        }
+                    } else {
+                        for (node in this.octNodes) {
+                            val x = node[0]
+                            val y = node[1]
+                            val z = node[2]
+                            node[0] = x * cos(this.angle) + y * sin(this.angle)
+                            node[1] = -x * sin(this.angle) + y * cos(this.angle)
+                            node[2] = z
+                        }
+                    }
                 }
             }
         }
@@ -275,12 +456,12 @@ class CubeActivity : AppCompatActivity() {
         fun drawFilledPath(planes: Array<Int>){
             for(i in 0..2){
                 pathes[i].paint = cube[planes[i]].curPaint
-                var kx = nodes[cube[planes[i]].nodeList[0]][0]
-                var ky = nodes[cube[planes[i]].nodeList[0]][1]
+                var kx = cubeNodes[cube[planes[i]].nodeList[0]][0]
+                var ky = cubeNodes[cube[planes[i]].nodeList[0]][1]
                 pathes[i].path.moveTo(kx, ky)
                 for(j in 1..4){
-                    kx = nodes[cube[planes[i]].nodeList[j%4]][0]
-                    ky = nodes[cube[planes[i]].nodeList[j%4]][1]
+                    kx = cubeNodes[cube[planes[i]].nodeList[j%4]][0]
+                    ky = cubeNodes[cube[planes[i]].nodeList[j%4]][1]
                     pathes[i].path.lineTo(kx, ky)
                 }
                 pathes[i].path.close()
@@ -294,7 +475,6 @@ class CubeActivity : AppCompatActivity() {
             cube[3].curPaint.color = resources.getColor(R.color.surfPlane4)
             cube[4].curPaint.color = resources.getColor(R.color.surfPlane5)
             cube[5].curPaint.color = resources.getColor(R.color.surfPlane6)
-
             holder.addCallback(this)
             setWillNotDraw(false)
         }
