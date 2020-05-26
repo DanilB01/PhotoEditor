@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class SegmentationActivity : AppCompatActivity() {
+    //simple shape detection!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,15 +19,15 @@ class SegmentationActivity : AppCompatActivity() {
         photo.setImageURI(imageUri)
 
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             switchActivity(imageUri)
         }
     }
-
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(SegmentationActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }

@@ -74,7 +74,7 @@
         app:layout_constraintGuide_percent="0.121751025" />
 
     <TextView
-        android:id="@+id/Angle_Text"
+        android:id="@+id/Scale_Text"
         android:layout_width="179dp"
         android:layout_height="30dp"
         android:fontFamily="monospace"
@@ -97,30 +97,31 @@
     <SeekBar
         android:id="@+id/seekBar"
         style="@style/Widget.AppCompat.SeekBar"
-        android:layout_width="295dp"
-        android:layout_height="28dp"
+        android:layout_width="152dp"
+        android:layout_height="35dp"
         android:max="360"
         android:progress="180"
         android:progressTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/lower_guideline"
-        app:layout_constraintVertical_bias="0.55" />
+        app:layout_constraintVertical_bias="0.442" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline31"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9294404" />
+        app:layout_constraintGuide_begin="382dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.08" />
+        app:layout_constraintGuide_percent="0.08272506" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

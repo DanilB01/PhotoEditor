@@ -1,6 +1,5 @@
 package com.example.mobphotoedit
 
-
 import android.content.Intent
 
 import android.graphics.drawable.BitmapDrawable

@@ -18,15 +18,15 @@ class RetouchingActivity : AppCompatActivity() {
         photo.setImageURI(imageUri)
 
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             switchActivity(imageUri)
         }
     }
-
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(RetouchingActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }

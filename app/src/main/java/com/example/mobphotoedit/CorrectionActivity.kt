@@ -13,6 +13,12 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_correction.*
+import kotlinx.android.synthetic.main.activity_correction.item_list
+import kotlinx.android.synthetic.main.activity_correction.no
+import kotlinx.android.synthetic.main.activity_correction.photo
+import kotlinx.android.synthetic.main.activity_correction.yes
+import kotlinx.android.synthetic.main.activity_desktop.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class CorrectionActivity : AppCompatActivity() {
@@ -25,7 +31,8 @@ class CorrectionActivity : AppCompatActivity() {
         photo.setImageURI(imageUri)
 
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             switchActivity(imageUri)
@@ -59,10 +66,6 @@ class CorrectionActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     private val possibleItems = listOf( //список возможных иконок
         Item1("Filter1", R.drawable.ic_photo_filter),
         Item1("Filter2", R.drawable.ic_photo_filter),
@@ -72,7 +75,7 @@ class CorrectionActivity : AppCompatActivity() {
     )
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(CorrectionActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }
