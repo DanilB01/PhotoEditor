@@ -5,8 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.transition.Scene
-import android.util.Log
+import android.view.KeyEvent
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -122,6 +121,12 @@ class ImageRotationActivity : AppCompatActivity() {
         val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
 

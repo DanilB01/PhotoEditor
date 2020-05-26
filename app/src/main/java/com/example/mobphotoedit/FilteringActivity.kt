@@ -70,6 +70,12 @@ class FilteringActivity : AppCompatActivity() {
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
 }
 
