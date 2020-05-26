@@ -43,3 +43,76 @@ fun saveImageToInternalStorage(currentImage: ImageView, appContext: Context): Ur
     return Uri.parse(file.absolutePath)
 }
 
+// class to work with bitmap history
+class BitmapStore {
+
+    private val mHistory: Stack<Bitmap>
+    private val mBuffer: Stack<Bitmap>
+    private var mOriginalBitmap: Bitmap? = null
+    private var mCounter = 0
+
+    fun addBitmap(bitmap: Bitmap) {
+        mHistory.push(bitmap.copy(Bitmap.Config.ARGB_8888, true))
+        mCounter += 1
+        if (mCounter == STACK_SIZE) dropStack()
+        mBuffer.clear()
+    }
+
+    // put current bitmap in mBuffer
+    fun popBitmap(): Bitmap? {
+        val bitmap: Bitmap
+        bitmap = try {
+            mHistory.pop() // if mHistory is empty
+        } // return original
+        catch (e: EmptyStackException) {
+            return mOriginalBitmap
+        }
+        mBuffer.push(bitmap)
+        mCounter -= 1
+        return bitmap
+    }
+
+    fun takeFromBuffer(): Bitmap? {
+        val bitmap: Bitmap
+        bitmap = try {
+            mBuffer.pop()
+        } catch (e: EmptyStackException) {
+            return null
+        }
+        mHistory.push(bitmap.copy(Bitmap.Config.ARGB_8888, true))
+        mCounter += 1
+        if (mCounter == STACK_SIZE) dropStack()
+        return bitmap
+    }
+
+    fun showHead(): Bitmap? {
+        val bitmap: Bitmap
+        bitmap = try {
+            mHistory.peek()
+        } catch (e: EmptyStackException) {
+            return mOriginalBitmap
+        }
+        return bitmap
+    }
+
+    fun clearAllAndSetOriginal(bitmap: Bitmap) {
+        mHistory.clear()
+        mBuffer.clear()
+        mOriginalBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        mCounter = 1
+    }
+
+    private fun dropStack() {
+        mOriginalBitmap = mHistory.removeAt(0)
+        mCounter -= 1
+    }
+
+    companion object {
+        private const val STACK_SIZE = 9
+    }
+
+    init {
+        mHistory = Stack()
+        mBuffer = Stack()
+    }
+}
