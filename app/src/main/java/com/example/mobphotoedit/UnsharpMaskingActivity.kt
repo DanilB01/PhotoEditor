@@ -1,6 +1,5 @@
 package com.example.mobphotoedit
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,10 +7,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.lang.Math.abs
 import kotlinx.android.synthetic.main.activity_desktop.*
-import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Math.abs
+
 
 class UnsharpMaskingActivity : AppCompatActivity() {
 
@@ -22,7 +23,6 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
-
         yes.setOnClickListener {
             switchActivity(imageUri)
         }
@@ -32,6 +32,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         val kick808 = imageView2Bitmap(photo)
         val imgWidth = kick808.width
         val imgHeight = kick808.height
+        /*
         val blurredPixels =
             Array(imgWidth) { IntArray(imgHeight) }
         val boxWidth = 20
@@ -42,21 +43,44 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         val bottom = imgHeight - top
         val usmAmount = 0.6F
         val usmThrehold = 3
+
+         */
+        val skbar = findViewById<SeekBar>(R.id.seek_bar)
+        val skbarrad = findViewById<SeekBar>(R.id.seek_bar2)
+
+        var OnUnsharpChangeListener: SeekBar.OnSeekBarChangeListener = object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                val znachsik = skbar.progress.toFloat()
+                val rad = skbarrad.progress
+                unsharp(kick808,rad,znachsik,3,photo)
+                // ReloadImage(skbar,photo,b_p)
+                //CheckSize(photo,b_p)
+            }
+        }
+        skbar.setOnSeekBarChangeListener(OnUnsharpChangeListener)
+        skbarrad.setOnSeekBarChangeListener(OnUnsharpChangeListener)
         // boxCar(kick808,blurredPixels,left,top,right,bottom,boxWidth,boxHeight)
         //  val skimaskbit = unsharpMask(kick808,blurredPixels,left,top,right,bottom,usmAmount,usmThrehold)
         //  photo.setImageBitmap(skimaskbit)
-        unsharp(kick808, 200,2F,3,photo)
+
+        //unsharp(kick808, 200,2F,3,photo)
 
         //  val kick809 = unsharpMask(kick808,50,50,kick808.width-50,kick808.height-50,0.6F,3)
         //  photo.setImageBitmap(kick809)
     }
-
     private fun switchActivity(imageUri: Uri){
         val i = Intent(UnsharpMaskingActivity@this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }
 }
+
 
 private fun unsharp(ivPhoto: Bitmap, radius: Int, amount:Float, threshold: Int, photomy : ImageView){
     val blurredPhoto = boxBlur(ivPhoto!!, radius)
