@@ -41,6 +41,7 @@ class CubeActivity : AppCompatActivity() {
 
     class MySurfaceView (context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), SurfaceHolder.Callback {
         var figure = 0 // 0 - cube, 1 - tetrahedron, 2 - octahedron
+        var a = 550f // side length
         var rotationPos = 0
         private val cubeNodes = arrayOf(
             floatArrayOf(-200f, -200f, -200f),
@@ -79,7 +80,7 @@ class CubeActivity : AppCompatActivity() {
             pathCharacteristic(Path(), Paint()),
             pathCharacteristic(Path(), Paint())
         )
-        var a = 500f // side length
+
         var tetraNodes = arrayOf(
             floatArrayOf(-a/6*sqrt(3f), -a/2, -a/3*sqrt(2/3f)),
             floatArrayOf(-a/6*sqrt(3f), a/2, -a/3*sqrt(2/3f)),
@@ -96,12 +97,12 @@ class CubeActivity : AppCompatActivity() {
         )
 
         var octNodes = arrayOf(//tetra nodes, fig[1][0]
-            floatArrayOf(200f, 200f, 0f),
-            floatArrayOf(200f, -200f, 0f),
-            floatArrayOf(-200f, -200f, 0f),
-            floatArrayOf(-200f, 200f, 0f),
-            floatArrayOf(0f, 0f, 200f*sqrt(2f)),
-            floatArrayOf(0f, 0f, -200f*sqrt(2f))
+            floatArrayOf(230f, 230f, 0f),
+            floatArrayOf(230f, -230f, 0f),
+            floatArrayOf(-230f, -230f, 0f),
+            floatArrayOf(-230f, 230f, 0f),
+            floatArrayOf(0f, 0f, 230f*sqrt(2f)),
+            floatArrayOf(0f, 0f, -230f*sqrt(2f))
         )
 
         var octEdges = arrayOf(
@@ -198,8 +199,16 @@ class CubeActivity : AppCompatActivity() {
                 2 -> changeRotationY(0)//left
                 3 -> changeRotationX(1)//up
                 4 -> changeRotationX(0)//down
-                5 -> changeRotationZ(1)//clockwise
-                6 -> changeRotationZ(0)//counterclockwise
+                5 -> {//clockwise
+                    angle = (PI / 16).toFloat()
+                    changeRotationZ(1)
+                    angle = (PI / 48).toFloat()
+                }
+                6 -> {//counterclockwise
+                    angle = (PI / 16).toFloat()
+                    changeRotationZ(0)
+                    angle = (PI / 48).toFloat()
+                }
             }
             rotationPos = 0
             when(figure){
