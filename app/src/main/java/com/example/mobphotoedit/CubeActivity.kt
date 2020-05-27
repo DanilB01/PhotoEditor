@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_cube.*
 import kotlinx.android.synthetic.main.activity_cube.view.*
 import kotlin.math.*
+import android.view.KeyEvent
 
 class CubeActivity : AppCompatActivity() {
 
@@ -37,6 +38,13 @@ class CubeActivity : AppCompatActivity() {
             cubeView.invalidate()
         }
 
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     class MySurfaceView (context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), SurfaceHolder.Callback {

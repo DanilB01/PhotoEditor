@@ -23,9 +23,17 @@ class FilteringActivity : AppCompatActivity() {
         }
 
     }
+
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(FilteringActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }

@@ -20,6 +20,13 @@ class LineDrawingActivity : AppCompatActivity(){
         setContentView(R.layout.activity_line_drawing)
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
     class MySurfaceView (context: Context, attrs: AttributeSet? = null) : View(context, attrs){
         private val cur = mutableListOf<DPoint>() // массив точек
         private var flag : Boolean = false

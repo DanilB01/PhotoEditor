@@ -2,21 +2,18 @@ package com.example.mobphotoedit
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity.apply
+import android.view.KeyEvent
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat.apply
 import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Math.*
+
 
 fun  getRotated(src:Bitmap, degrees:Double):Bitmap
 {
@@ -82,52 +79,54 @@ fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap) {
 
     }
     var newBitmap: Bitmap = getRotated(workBP, degrees)
-    var w = currentImage.width
-    var h = currentImage.height
-    Log.d("W","WIDTH:${w}")
-    Log.d("H","HEIGHT:${h}")
     currentImage.setImageBitmap(newBitmap)
 }
 
-    class ImageRotationActivity : AppCompatActivity() {
+class ImageRotationActivity : AppCompatActivity() {
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_image_rotation)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_image_rotation)
 
-            var mTextView = findViewById<TextView>(R.id.Angle_Text);
-            var string: String? = intent.getStringExtra("ImageUri")
-            var imageUri = Uri.parse(string)
+        var mTextView = findViewById<TextView>(R.id.Scale_Text);
+        var string: String? = intent.getStringExtra("ImageUri")
+        var imageUri = Uri.parse(string)
 
-            val skbar = findViewById<SeekBar>(R.id.seekBar)
-            photo.setImageURI(imageUri)
+        val skbar = findViewById<SeekBar>(R.id.seekBar)
+        photo.setImageURI(imageUri)
 
-            var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
-            var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    mTextView.setText("Angle: ${(skbar.getProgress().toFloat() - 180).toString()}°")
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-                    rotateImage(skbar, photo, b_p)
-                }
+        var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+        var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                mTextView.setText("Angle: ${(skbar.getProgress().toFloat() - 180).toString()}°")
             }
-            skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
-
-            yes.setOnClickListener {
-                switchActivity(imageUri)
-            }
-            no.setOnClickListener {
-                switchActivity(imageUri)
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                rotateImage(skbar, photo, b_p)
             }
         }
 
-        private fun switchActivity(imageUri: Uri) {
-            val i = Intent(ImageRotationActivity@ this, DesktopActivity::class.java)
-            i.putExtra("ImageUri", imageUri.toString())
-            startActivity(i)
+        skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
+
+        yes.setOnClickListener {
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
+        }
+        no.setOnClickListener {
+            switchActivity(imageUri)
         }
     }
+    private fun switchActivity(imageUri: Uri){
+        val i = Intent(this, DesktopActivity::class.java)
+        i.putExtra("ImageUri", imageUri.toString())
+        startActivity(i)
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+}
 

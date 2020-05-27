@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,8 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             switchActivity(imageUri)
@@ -76,9 +78,15 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         //  photo.setImageBitmap(kick809)
     }
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(UnsharpMaskingActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
 

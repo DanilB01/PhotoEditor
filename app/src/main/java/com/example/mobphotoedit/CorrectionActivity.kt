@@ -51,8 +51,10 @@ class CorrectionActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             switchActivity(imageUri)
@@ -62,13 +64,13 @@ class CorrectionActivity : AppCompatActivity() {
         item_list.initialize(itemAdapter2)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter2.setItems(getLargeListOfItems())
-       // filter2(photo)
-       // val bitmap2 = imageView2Bitmap(photo)
-       // val bitmap3= changeBrightness(bitmap2,100F)
-       // photo.setImageBitmap(bitmap3)
+        // filter2(photo)
+        // val bitmap2 = imageView2Bitmap(photo)
+        // val bitmap3= changeBrightness(bitmap2,100F)
+        // photo.setImageBitmap(bitmap3)
         //adjustSaturation(bitmap2,300F)
-       // val bitmap4 = updateSaturation(bitmap2, 20F)
-      //  photo.setImageBitmap(bitmap4)
+        // val bitmap4 = updateSaturation(bitmap2, 20F)
+        //  photo.setImageBitmap(bitmap4)
 
 
     }
@@ -82,30 +84,30 @@ class CorrectionActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(ImageScalingActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
     }
 
 }
 //negative
- fun filter1(photo: ImageView) {
-     var bitmold = imageView2Bitmap(photo)
-     var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
-     for (y in 0 until bitmold.height) {
-         for (x in 0 until bitmold.width) {
-             val oldPixel = bitmold.getPixel(x, y)
+fun filter1(photo: ImageView) {
+    var bitmold = imageView2Bitmap(photo)
+    var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
+    for (y in 0 until bitmold.height) {
+        for (x in 0 until bitmold.width) {
+            val oldPixel = bitmold.getPixel(x, y)
 
-             val r = 255 - Color.red(oldPixel)
-             val g = 255 - Color.green(oldPixel)
-             val b = 255 - Color.blue(oldPixel)
+            val r = 255 - Color.red(oldPixel)
+            val g = 255 - Color.green(oldPixel)
+            val b = 255 - Color.blue(oldPixel)
 
-             bitmnew.setPixel(x, y, Color.rgb(r, g ,b))
-         }
-     }
+            bitmnew.setPixel(x, y, Color.rgb(r, g ,b))
+        }
+    }
 
-     photo.setImageBitmap(bitmnew)
- }
+    photo.setImageBitmap(bitmnew)
+}
 //yellow filter
 fun filter2(photo: ImageView) {
     var bitmold = imageView2Bitmap(photo)
@@ -166,7 +168,7 @@ fun changeBrightness(bmp: Bitmap, brightness: Float, photo: ImageView) {
     val canvas = Canvas(ret)
     val paint = Paint()
     paint.setColorFilter(ColorMatrixColorFilter(cm))
-   // canvas.drawBitmap(bmp, 0, 0, paint)
+    // canvas.drawBitmap(bmp, 0, 0, paint)
 
 
     canvas.drawBitmap(bmp,0F,0F,paint)
@@ -216,7 +218,7 @@ fun adjustSaturation(bmp: Bitmap, value: Float, photo: ImageView) {
     photo.setImageBitmap(ret)
 }
 
-  fun updateSaturation(src: Bitmap, settingSat: Float, photo: ImageView) {
+fun updateSaturation(src: Bitmap, settingSat: Float, photo: ImageView) {
     val width = src.width
     val height = src.height
     val bitmapResult = Bitmap

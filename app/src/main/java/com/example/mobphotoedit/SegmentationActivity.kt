@@ -30,7 +30,7 @@ class SegmentationActivity : AppCompatActivity() {
 
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
-       override fun onManagerConnected(status: Int) {
+        override fun onManagerConnected(status: Int) {
             when (status) {
                 LoaderCallbackInterface.SUCCESS -> {
                 }
@@ -38,7 +38,7 @@ class SegmentationActivity : AppCompatActivity() {
                     super.onManagerConnected(status)
                 }
             }
-       }
+        }
     }
 
     override fun onCreate(savedInstanceState : Bundle?) {
@@ -105,7 +105,8 @@ class SegmentationActivity : AppCompatActivity() {
         }
 
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             switchActivity(imageUri)
@@ -119,9 +120,15 @@ class SegmentationActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(SegmentationActivity@this, DesktopActivity::class.java)
+        val i = Intent(this, DesktopActivity::class.java)
         i.putExtra("ImageUri", imageUri.toString())
         startActivity(i)
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish()
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
 
