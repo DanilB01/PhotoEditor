@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_correction.*
 
 class CorrectionActivity : AppCompatActivity() {
 
-
     private val itemAdapter2 by lazy {
         ItemAdapter2 { position: Int, item: Item1 ->
 

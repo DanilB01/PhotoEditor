@@ -12,4 +12,9 @@
     <string name="_0_txt">0</string>
     <string name="rand_txt">rand</string>
     <string name="_1_txt">1</string>
+
+    <string name="exit">Are you sure you want to exit?</string>
+    <string name="undo">Are you sure you want to undo the latest changes?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

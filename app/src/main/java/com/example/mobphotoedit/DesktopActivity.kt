@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -59,6 +60,7 @@ class DesktopActivity : AppCompatActivity() {
         item_list.initialize(itemAdapter)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -78,7 +80,7 @@ class DesktopActivity : AppCompatActivity() {
             return true
         }
         if(id == R.id.actionTwo){
-
+            undoDialog()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -106,8 +108,40 @@ class DesktopActivity : AppCompatActivity() {
             return
         }
         val str = data.getStringExtra("newImageUri")
-        val newImage = Uri.parse(str)
-        photo.setImageURI(newImage)
+        imageUri = Uri.parse(str)
+        photo.setImageURI(imageUri)
+    }
+
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.exit))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> finish()
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
+    private fun undoDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.undo))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which ->
+            {
+                //Здесь прописать, куда переходить и что делать при откате изменений назад!!!!!!!
+            }
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
     }
 }
 
@@ -115,12 +149,4 @@ data class Item( //класс объекта
     val title: String,
     @DrawableRes val icon: Int
 )
-
-
-
-
-
-
-
-
 
