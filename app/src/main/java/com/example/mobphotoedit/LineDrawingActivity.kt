@@ -7,9 +7,11 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_line_drawing.*
 import kotlin.math.*
 import java.util.*
 
@@ -18,6 +20,10 @@ class LineDrawingActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_line_drawing)
+
+        trash.setOnClickListener {
+            (LineDrawing as MySurfaceView).removePoints()
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -41,6 +47,16 @@ class LineDrawingActivity : AppCompatActivity(){
         private var pw = 0f
         private var ph = 0f
         var ind = -1
+
+        fun removePoints(){
+            cur.clear()
+            flag = false
+            count = 0
+            path?.reset()
+            path1?.reset()
+            path2?.reset()
+            invalidate()
+        }
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
             pw = (width - paddingLeft - paddingRight).toFloat()

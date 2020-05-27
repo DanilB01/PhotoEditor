@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -77,10 +78,12 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         //  val kick809 = unsharpMask(kick808,50,50,kick808.width-50,kick808.height-50,0.6F,3)
         //  photo.setImageBitmap(kick809)
     }
+
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(this, DesktopActivity::class.java)
-        i.putExtra("ImageUri", imageUri.toString())
-        startActivity(i)
+        val i = Intent()
+        i.putExtra("newImageUri", imageUri.toString())
+        setResult(Activity.RESULT_OK, i)
+        finish()
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

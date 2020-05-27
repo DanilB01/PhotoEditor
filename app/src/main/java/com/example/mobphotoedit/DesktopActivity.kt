@@ -1,27 +1,16 @@
 package com.example.mobphotoedit
 
 import android.content.Intent
-
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
-
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import androidx.core.net.toUri
-import android.widget.ImageView
-
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.*
-import java.io.*
-import java.net.URL
-import java.net.URLConnection
 
 
 class DesktopActivity : AppCompatActivity() {
@@ -43,7 +32,7 @@ class DesktopActivity : AppCompatActivity() {
             }
             intent?.putExtra("ImageUri", imageUri.toString())
             intent?.putExtra("ImagePath", imagePath)
-            startActivity(intent)
+            startActivityForResult(intent, 1)
             item_list.smoothScrollToPosition(position) //сглаживание анимации
         }
     }
@@ -67,8 +56,6 @@ class DesktopActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
-
-
         item_list.initialize(itemAdapter)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())
@@ -83,16 +70,17 @@ class DesktopActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Назначение действий на кнопки ActionBar
         val id = item.getItemId()
-        if (id == R.id.action_one) {
+        if (id == R.id.actionOne) {
             val bitmap = (photo.drawable as BitmapDrawable).bitmap
             MediaStore.Images.Media.insertImage(contentResolver, bitmap, "New Photo" , "New Changed Image");
             Toast.makeText(this, "Photo has been saved", Toast.LENGTH_LONG).show()
             switchActivity()
             return true
         }
+        if(id == R.id.actionTwo){
+
+        }
         return super.onOptionsItemSelected(item)
-
-
     }
 
 
@@ -105,8 +93,21 @@ class DesktopActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(){
-        val i = Intent(DesktopActivity@this, LastActivity::class.java)
+        val i = Intent(this, LastActivity::class.java)
         startActivity(i)
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        if (data == null) {
+            return
+        }
+        val str = data.getStringExtra("newImageUri")
+        val newImage = Uri.parse(str)
+        photo.setImageURI(newImage)
     }
 }
 

@@ -2,7 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_one"
+        android:id="@+id/actionTwo"
+        android:icon="@drawable/ic_undo_black_24dp"
+        app:showAsAction="always"
+        android:title="Save"/>
+    <item
+        android:id="@+id/actionOne"
         android:icon="@drawable/ic_save"
         app:showAsAction="always"
         android:title="Save"/>

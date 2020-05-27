@@ -1,11 +1,13 @@
 package com.example.mobphotoedit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_segmentation.*
@@ -120,9 +122,10 @@ class SegmentationActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(this, DesktopActivity::class.java)
-        i.putExtra("ImageUri", imageUri.toString())
-        startActivity(i)
+        val i = Intent()
+        i.putExtra("newImageUri", imageUri.toString())
+        setResult(Activity.RESULT_OK, i)
+        finish()
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
@@ -74,7 +75,6 @@ class CorrectionActivity : AppCompatActivity() {
 
 
     }
-
     private fun getLargeListOfItems(): List<Item1> {
         val items = mutableListOf<Item1>()
         for (i in 0..7) {
@@ -84,11 +84,11 @@ class CorrectionActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(imageUri: Uri){
-        val i = Intent(this, DesktopActivity::class.java)
-        i.putExtra("ImageUri", imageUri.toString())
-        startActivity(i)
+        val i = Intent()
+        i.putExtra("newImageUri", imageUri.toString())
+        setResult(Activity.RESULT_OK, i)
+        finish()
     }
-
 }
 //negative
 fun filter1(photo: ImageView) {
