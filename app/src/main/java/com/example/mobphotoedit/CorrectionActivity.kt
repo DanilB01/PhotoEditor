@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -32,10 +33,6 @@ class CorrectionActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     private val possibleItems = listOf( //список возможных иконок
         Item1("negative", R.drawable.ic_photo_filter),
         Item1("brightness", R.drawable.ic_photo_filter),
@@ -54,10 +51,16 @@ class CorrectionActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        yes.setOnClickListener {
+            switchActivity(imageUri)
+        }
+        no.setOnClickListener {
+            switchActivity(imageUri)
+        }
         val dontforgetfirstbit = imageView2Bitmap(photo)
 
         item_list.initialize(itemAdapter2)
-        item_list.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
+        item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter2.setItems(getLargeListOfItems())
        // filter2(photo)
        // val bitmap2 = imageView2Bitmap(photo)
@@ -78,6 +81,11 @@ class CorrectionActivity : AppCompatActivity() {
         return items
     }
 
+    private fun switchActivity(imageUri: Uri){
+        val i = Intent(ImageScalingActivity@this, DesktopActivity::class.java)
+        i.putExtra("ImageUri", imageUri.toString())
+        startActivity(i)
+    }
 
 }
 //negative

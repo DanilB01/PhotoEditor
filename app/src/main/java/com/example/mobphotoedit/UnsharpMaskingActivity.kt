@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,9 +9,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_desktop.*
+import kotlinx.android.synthetic.main.activity_desktop.photo
+import kotlinx.android.synthetic.main.activity_unsharp_masking.*
 import java.lang.Math.abs
 
 

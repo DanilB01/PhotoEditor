@@ -10,15 +10,11 @@
         android:id="@+id/photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="matrix"
         android:src="@drawable/ic_image_black_24dp"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/activityName" />
 
     <ImageButton
         android:id="@+id/yes"
@@ -47,7 +43,7 @@
         style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="@string/filtering_txt"
+        android:text="Filtering"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,29 +84,5 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6019152" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/_1_txt"
-        app:layout_constraintBottom_toBottomOf="@+id/photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/activityName"
-        app:layout_constraintVertical_bias="0.832" />
-
-    <Button
-        android:id="@+id/button20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/accept_txt"
-        app:layout_constraintBottom_toBottomOf="@+id/photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

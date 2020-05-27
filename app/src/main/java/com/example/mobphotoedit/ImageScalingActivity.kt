@@ -1,37 +1,20 @@
 package com.example.mobphotoedit
 
-import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.ImageDecoder
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.DisplayMetrics
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.SeekBar
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-
-import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_desktop.photo
-import kotlinx.android.synthetic.main.activity_filtering.*
 import kotlinx.android.synthetic.main.activity_image_scalling.*
-
-import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.pow
-import kotlin.math.roundToInt
-
-//private var curBitmap:Bitmap
-//private var newBitmap:Bitmap
-
 
 class ImageScalingActivity : AppCompatActivity() {
 
@@ -48,55 +31,17 @@ class ImageScalingActivity : AppCompatActivity() {
         no.setOnClickListener {
             switchActivity(imageUri)
         }
-        var curBitmap: Bitmap=imageView2Bitmap(photo)
-        /*
-        var butforscal:Button = findViewById(R.id.buttonsc)
-        butforscal.setOnClickListener{
-            val frts = editText2.text.toString()
-            val koefnew = frts.toFloat()
-            bigpicture(koefnew,photo,curBitmap)
-        }
 
-         */
+        var curBitmap = imageView2Bitmap(photo)
+        val but1: Button = findViewById(R.id.button20)
 
-/*
-        val buttonscal = findViewById<Button>(R.id.button)
-        buttonscal.setOnClickListener {
-            val mykoefstring2 = editText2.text.toString()
+        but1.setOnClickListener {
+            val mykoefstring2 = editText.text.toString()
             val mykoefnorm2 = mykoefstring2.toFloat()
-            bigpicture(mykoefnorm2,photo,curBitmap)
-
-            Toast.makeText(this, "$mykoefnorm2",Toast.LENGTH_LONG).show()
+            bigpicture(mykoefnorm2, photo, curBitmap )
+            Toast.makeText(this, "$mykoefnorm2", Toast.LENGTH_LONG).show()
+            curBitmap = imageView2Bitmap(photo)
         }
-
- */
-
-/*
-        val seekbar = findViewById<SeekBar>(R.id.seekBar)
-        var OnScalingChangeListener:SeekBar.OnSeekBarChangeListener = object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                val koef = seekBar.progress.toFloat()
-               bigpicture(koef/100,photo,curBitmap)
-
-            }
-        }
-        seekbar.setOnSeekBarChangeListener(OnScalingChangeListener)
-
- */
-
-
-
-
-        // bigpicture(4F, photo, curBitmap)
-
-
-
     }
     private fun switchActivity(imageUri: Uri){
         val i = Intent(ImageScalingActivity@this, DesktopActivity::class.java)
@@ -105,8 +50,7 @@ class ImageScalingActivity : AppCompatActivity() {
     }
 }
 
-
-private fun imageView2Bitmap(view: ImageView ):Bitmap{
+private fun imageView2Bitmap(view: ImageView): Bitmap {
     var bitmap: Bitmap
     bitmap =(view.getDrawable() as BitmapDrawable).bitmap
     return bitmap
@@ -134,7 +78,7 @@ private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap){
     val oldw:Int = (neww.toFloat()/koef).toInt()
 
          */
-        val finishbit = Bitmap.createBitmap(neww, newh, Bitmap.Config.ARGB_8888)
+        var finishbit = Bitmap.createBitmap(neww, newh, Bitmap.Config.ARGB_8888)
         for (i in 0 until newh){
             var tmp = i.toFloat()/((newh-1).toFloat())*(oldh-1)
             var h = floor(tmp).toInt()
@@ -162,19 +106,22 @@ private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap){
                 val p3 = curBitmap.getPixel(w,h+1)
                 val p4 = curBitmap.getPixel(w+1,h+1)
 
-                val blue = (Color.blue(p1)*d1 + Color.blue(p2)*d2 +Color.blue(p3)*d3 +Color.blue(p4)*d4).toInt()
+                val blue = (Color.blue(p1)*d1 + Color.blue(p2)*d2 + Color.blue(p3)*d3 + Color.blue(p4)*d4).toInt()
                 val green = (Color.green(p1)*d1 + Color.green(p1)*d2 + Color.green(p3)*d3 + Color.green(p4)*d4).toInt()
                 val red = (Color.red(p1)*d1 + Color.red(p1)*d2 + Color.red(p1)*d3 + Color.red(p1)*d4).toInt()
                 finishbit.setPixel(j,i, Color.rgb(red, green, blue))
 
             }
         }
-        photo.setImageBitmap(finishbit)}
+        photo.setImageBitmap(finishbit)
+
+
+    }
 }
 
 
 
-private fun downScalingImage(times: Float, photo: ImageView, curBitmap:Bitmap){
+private fun downScalingImage(times: Float, photo: ImageView, curBitmap: Bitmap){
     val oldHeight: Int = curBitmap.height
     val oldWidth:Int = curBitmap.width
     val newHeight:Int = (oldHeight.toFloat()/times).toInt()
@@ -206,7 +153,7 @@ private fun downScalingImage(times: Float, photo: ImageView, curBitmap:Bitmap){
 
 }
 
-private fun mashtab(koef: Float, bmap:Bitmap, photo:ImageView) {
+private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView) {
 /*
     val aspectRatio: Float = bmap.height.toFloat() / bmap.width
     val displayMetrics  = DisplayMetrics()
@@ -227,4 +174,5 @@ private fun mashtab(koef: Float, bmap:Bitmap, photo:ImageView) {
             bmp.setPixel(x, y, r)
         }
     photo.setImageBitmap(bmp);
+
 }

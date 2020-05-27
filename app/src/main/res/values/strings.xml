@@ -6,7 +6,7 @@
     <string name="name_txt">Name</string>
     <string name="accept_txt">accept</string>
     <string name="_3_text">3</string>
-    <string name="filtering_txt">Filtering</string>
+    <string name="imageScalingTxt">Image Scaling</string>
 
     <string name="button_txt">Button</string>
     <string name="_0_txt">0</string>
