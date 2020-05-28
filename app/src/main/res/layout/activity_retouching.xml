@@ -144,5 +144,17 @@
         app:layout_constraintTop_toTopOf="@+id/guideline33"
         app:layout_constraintVertical_bias="0.0" />
 
+    <Button
+        android:id="@+id/doRetouchButton"
+        android:layout_width="44dp"
+        android:layout_height="41dp"
+        android:text="DO"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.895"
+        app:layout_constraintStart_toStartOf="@+id/guideline35"
+        app:layout_constraintTop_toTopOf="@+id/guideline33"
+        app:layout_constraintVertical_bias="0.485" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -108,7 +108,6 @@ class ImageRotationActivity : AppCompatActivity() {
         var mTextView = findViewById<TextView>(R.id.Scale_Text);
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
-        var angle = 0.0
         var isRotatedRight = false
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
