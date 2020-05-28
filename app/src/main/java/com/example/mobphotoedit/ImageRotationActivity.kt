@@ -7,12 +7,17 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.*
+import kotlinx.android.synthetic.main.activity_desktop.photo
+import kotlinx.android.synthetic.main.activity_image_rotation.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.no
+import kotlinx.android.synthetic.main.activity_main.yes
 import java.lang.Math.*
 
 
@@ -83,6 +88,26 @@ fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap) {
     currentImage.setImageBitmap(newBitmap)
 }
 
+fun rotateAround(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap, angle:Double) {
+    var degrees: Double = angle % 360.0
+    var workBP = b_p.copy(b_p.config,true)
+    if (abs(degrees) > 90)
+    {
+        if(degrees > 0) {
+            degrees -= 90.0
+            workBP = getRotated(workBP,90.0)
+        }
+        else {
+            degrees += 90.0
+            workBP = getRotated(workBP,-90.0)
+        }
+
+    }
+    var newBitmap: Bitmap = getRotated(workBP, degrees)
+    currentImage.setImageBitmap(newBitmap)
+}
+
+
 class ImageRotationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +117,7 @@ class ImageRotationActivity : AppCompatActivity() {
         var mTextView = findViewById<TextView>(R.id.Scale_Text);
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
+        var angle = 0.0
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
@@ -110,6 +136,10 @@ class ImageRotationActivity : AppCompatActivity() {
 
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
+        Rotate_right.setOnClickListener{
+            angle+=90.0
+            rotateAround(skbar, photo, b_p, angle)
+        }
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
             switchActivity(newUri)
