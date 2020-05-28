@@ -67,12 +67,6 @@ fun  getRotated(src:Bitmap, degrees:Double):Bitmap
     return rotatedBitmap
 }
 
-/*fun setNewBitmap(currentImage: ImageView, b_p: Bitmap)
-{
-    var bmp = getDecodedBitmap(b_p)
-    currentImage.setImageBitmap(bmp)
-}*/
-
 fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap,isRotatedRight:Boolean=false) {
     var degrees: Double = (skbar.getProgress() - 180).toDouble()
     var workBP:Bitmap
