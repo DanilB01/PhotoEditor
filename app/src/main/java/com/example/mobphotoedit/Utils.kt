@@ -45,7 +45,8 @@ fun saveImageToInternalStorage(currentImage: ImageView, appContext: Context): Ur
 }
 
 
-class Pixel(val x: Float, val y: Float, val color: Int)
+class Pixel(val x: Float, val y: Float, val color: Int) {
+}
 
 // class to work with bitmap history
 class BitmapStore {

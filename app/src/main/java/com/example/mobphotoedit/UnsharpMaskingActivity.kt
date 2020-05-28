@@ -110,7 +110,7 @@ private fun unsharp(ivPhoto: Bitmap, radius: Int, amount:Float, threshold: Int, 
     unsharpMask(ivPhoto,originalPixels, blurredPixels, amount, threshold, photomy)
 }
 
-private fun boxBlur(bitmap: Bitmap, range: Int): Bitmap? {
+fun boxBlur(bitmap: Bitmap, range: Int): Bitmap? {
     assert(range and 1 == 0) { "Range must be odd." }
 
     val width = bitmap.width

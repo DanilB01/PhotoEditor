@@ -2,6 +2,7 @@ package com.example.mobphotoedit
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -84,7 +85,6 @@ class RetouchingActivity : AppCompatActivity() {
                 val pixels = IntArray(height*width)
                 work_b_p.getPixels(pixels,0,width,0,0,width,height)
 
-
                 for (i in -rad..rad) {
                     for (j in -rad..rad) {
                        if (0 > curX + i || curX + i >= b_p.getWidth().toFloat()) {
@@ -98,20 +98,35 @@ class RetouchingActivity : AppCompatActivity() {
                        }
                     }
                 }
-                mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
+                //mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
                 photo.setImageBitmap(work_b_p)
                 // Perform tasks here
                 return true
             }
         })
-
+        //Retouching Applying
         doRetouchButton.setOnClickListener(object: View.OnClickListener
         {
             override fun onClick(v: View?) {
-                mPaint!!.setColor(Color.MAGENTA)
-                mCanvas!!.drawCircle(b_p.width/2.0f, b_p.height/2.0f, 50f, mPaint!!)
+                // blurred bitmap
+                var resBitmap = b_p.copy(b_p.config,true)
+                // blurred bitmap
+                var rad:Int = skbar_blur_radius.getProgress() + 1
                 mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
-                photo.setImageBitmap(work_b_p)
+                var blurred_b_p = boxBlur(resBitmap,rad)
+                for (i in MemPixels.indices) {
+                    val e: Pixel = MemPixels.get(i)
+                    if (blurred_b_p != null) {
+                        resBitmap.setPixel(
+                            e.x.toInt(),
+                            e.y.toInt(), blurred_b_p.getPixel(
+                                e.x.toInt(),
+                                e.y.toInt()
+                            )
+                        )
+                    }
+                }
+                photo.setImageBitmap(resBitmap)
             }
         })
 
