@@ -1,16 +1,18 @@
 package com.example.mobphotoedit
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.util.Log
 import android.widget.ImageView
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
+import java.io.*
 import java.util.*
+import java.util.function.DoubleToLongFunction
+
 
 fun saveImageToInternalStorage(currentImage: ImageView, appContext: Context): Uri {
     var reloadBitmap = (currentImage.getDrawable() as BitmapDrawable).bitmap
@@ -42,6 +44,17 @@ fun saveImageToInternalStorage(currentImage: ImageView, appContext: Context): Ur
     // Return the saved image uri
     return Uri.parse(file.absolutePath)
 }
+
+/*
+fun getDecodedBitmap(b_p: Bitmap): Bitmap? {
+    val stream = ByteArrayOutputStream()
+    var new_b_p = b_p.copy(b_p.config,true)
+    new_b_p.compress(Bitmap.CompressFormat.PNG,50,stream)
+    val byteArray: ByteArray = stream.toByteArray()
+    val compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+   return compressedBitmap
+}
+*/
 
 // class to work with bitmap history
 class BitmapStore {

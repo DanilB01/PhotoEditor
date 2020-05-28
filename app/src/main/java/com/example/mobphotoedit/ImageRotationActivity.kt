@@ -4,18 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_desktop.photo
 import kotlinx.android.synthetic.main.activity_image_rotation.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.no
 import kotlinx.android.synthetic.main.activity_main.yes
 import java.lang.Math.*
@@ -69,9 +67,22 @@ fun  getRotated(src:Bitmap, degrees:Double):Bitmap
     return rotatedBitmap
 }
 
-fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap) {
+/*fun setNewBitmap(currentImage: ImageView, b_p: Bitmap)
+{
+    var bmp = getDecodedBitmap(b_p)
+    currentImage.setImageBitmap(bmp)
+}*/
+
+fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap,isRotatedRight:Boolean=false) {
     var degrees: Double = (skbar.getProgress() - 180).toDouble()
-    var workBP = b_p.copy(b_p.config,true)
+    var workBP:Bitmap
+    if (isRotatedRight) {
+        workBP = (currentImage.getDrawable() as BitmapDrawable).bitmap
+    }
+    else
+    {
+        workBP = b_p.copy(b_p.config, true)
+    }
     if (abs(degrees) > 90)
     {
         if(degrees > 0) {
@@ -82,31 +93,17 @@ fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap) {
             degrees += 90.0
             workBP = getRotated(workBP,-90.0)
         }
-
     }
     var newBitmap: Bitmap = getRotated(workBP, degrees)
     currentImage.setImageBitmap(newBitmap)
 }
 
-fun rotateAround(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap, angle:Double) {
-    var degrees: Double = angle % 360.0
-    var workBP = b_p.copy(b_p.config,true)
-    if (abs(degrees) > 90)
-    {
-        if(degrees > 0) {
-            degrees -= 90.0
-            workBP = getRotated(workBP,90.0)
-        }
-        else {
-            degrees += 90.0
-            workBP = getRotated(workBP,-90.0)
-        }
-
-    }
+fun rotateRight(currentImage: ImageView) {
+    var degrees: Double = 90.0
+    var workBP = (currentImage.getDrawable() as BitmapDrawable).bitmap
     var newBitmap: Bitmap = getRotated(workBP, degrees)
     currentImage.setImageBitmap(newBitmap)
 }
-
 
 class ImageRotationActivity : AppCompatActivity() {
 
@@ -118,11 +115,12 @@ class ImageRotationActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         var angle = 0.0
+        var isRotatedRight = false
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
-
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -130,15 +128,16 @@ class ImageRotationActivity : AppCompatActivity() {
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                rotateImage(skbar, photo, b_p)
+                rotateImage(skbar, photo, b_p,isRotatedRight)
             }
         }
 
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
         Rotate_right.setOnClickListener{
-            angle+=90.0
-            rotateAround(skbar, photo, b_p, angle)
+            isRotatedRight=true
+            rotateRight(photo)
+            skbar.progress=180
         }
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
