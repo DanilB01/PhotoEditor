@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -18,7 +19,7 @@ import java.lang.Math.abs
 
 
 class UnsharpMaskingActivity : AppCompatActivity() {
-
+    private var imageUriUri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_unsharp_masking)
@@ -26,6 +27,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        imageUriUri = imageUri
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
             switchActivity(newUri)
@@ -84,6 +86,22 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         i.putExtra("newImageUri", imageUri.toString())
         setResult(Activity.RESULT_OK, i)
         finish()
+    }
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

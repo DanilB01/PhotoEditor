@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -93,7 +94,7 @@ fun rotateRight(currentImage: ImageView) {
 }
 
 class ImageRotationActivity : AppCompatActivity() {
-
+    var imageUriUri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_rotation)
@@ -102,6 +103,7 @@ class ImageRotationActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         var isRotatedRight = false
+        imageUriUri = imageUri
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
@@ -129,7 +131,7 @@ class ImageRotationActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            quitDialog()
         }
     }
     private fun switchActivity(imageUri: Uri){
@@ -137,6 +139,22 @@ class ImageRotationActivity : AppCompatActivity() {
         i.putExtra("newImageUri", imageUri.toString())
         setResult(Activity.RESULT_OK, i)
         finish()
+    }
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

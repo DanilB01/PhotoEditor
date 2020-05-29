@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
@@ -15,6 +16,8 @@ import kotlinx.android.synthetic.main.activity_correction.*
 
 class CorrectionActivity : AppCompatActivity() {
     val constbit:Bitmap = imageView2Bitmap(photo)
+
+    private var imageUriUri: Uri? = null
 
     private val itemAdapter2 by lazy {
         ItemAdapter2 { position: Int, item: Item1 ->
@@ -51,6 +54,7 @@ class CorrectionActivity : AppCompatActivity() {
 
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
+        imageUriUri = imageUri
         photo.setImageURI(imageUri)
 
 
@@ -59,7 +63,7 @@ class CorrectionActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            quitDialog()
         }
         val dontforgetfirstbit = imageView2Bitmap(photo)
 
@@ -89,6 +93,23 @@ class CorrectionActivity : AppCompatActivity() {
         i.putExtra("newImageUri", imageUri.toString())
         setResult(Activity.RESULT_OK, i)
         finish()
+    }
+
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
     }
 }
 //negative

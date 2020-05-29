@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,19 +9,21 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.os.Handler
+import android.os.Message
 import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_desktop.photo
 import kotlinx.android.synthetic.main.activity_image_scalling.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.pow
+
 
 class ImageScalingActivity : AppCompatActivity() {
 
@@ -28,6 +31,7 @@ class ImageScalingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_scalling)
 
+        pBar.visibility = View.GONE
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
@@ -42,14 +46,19 @@ class ImageScalingActivity : AppCompatActivity() {
 
         var curBitmap = imageView2Bitmap(photo)
         val but1: Button = findViewById(R.id.button20)
-
+        //bigpicture(mykoefnorm2, photo, curBitmap)
         but1.setOnClickListener {
             val mykoefstring2 = editText.text.toString()
             val mykoefnorm2 = mykoefstring2.toFloat()
             if(mykoefnorm2 <= 3 && mykoefnorm2 > 0){
-                bigpicture(mykoefnorm2, photo, curBitmap )
+                pBar.visibility = View.VISIBLE
+                CoroutineScope(Dispatchers.Default).async {
+                    bigpicture(mykoefnorm2, photo, curBitmap)
+                    launch(Dispatchers.Main) {
+                        curBitmap = imageView2Bitmap(photo)
+                        pBar.visibility = View.GONE }
+                }
                 Toast.makeText(this, "$mykoefnorm2", Toast.LENGTH_LONG).show()
-                curBitmap = imageView2Bitmap(photo)
             }
             else{
                 Toast.makeText(this, R.string.wrongVal, Toast.LENGTH_LONG).show()
@@ -76,6 +85,7 @@ class ImageScalingActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, i)
         finish()
     }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish()

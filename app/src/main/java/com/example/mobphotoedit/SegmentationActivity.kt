@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -29,7 +30,7 @@ class SegmentationActivity : AppCompatActivity() {
     var orig: Mat? = null
     var cascadeClassifier : CascadeClassifier? = null
     private var absoluteFaceSize : Double? = null
-
+    private var imageUriUri: Uri? = null
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
         override fun onManagerConnected(status: Int) {
@@ -50,6 +51,7 @@ class SegmentationActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        imageUriUri = imageUri
 
         if(OpenCVLoader.initDebug()){
             Toast.makeText(this, "openCv successfully loaded", Toast.LENGTH_SHORT).show();
@@ -111,9 +113,26 @@ class SegmentationActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            quitDialog()
         }
 
+    }
+
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
     }
 
     public override fun onResume() {
