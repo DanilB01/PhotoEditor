@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
+var bitmapStore:BitmapStore = BitmapStore()
+
 class MainActivity : AppCompatActivity() {
 
    companion object {

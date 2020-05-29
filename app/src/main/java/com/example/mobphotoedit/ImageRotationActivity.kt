@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -20,7 +19,7 @@ import java.lang.Math.*
 
 fun  getRotated(src:Bitmap, degrees:Double):Bitmap
 {
-    var rads: Double = (degrees*Math.PI) / 180.0
+    var rads: Double = (degrees* PI) / 180.0
     val width:Int = src.width
     val height:Int = src.height
 
@@ -106,15 +105,16 @@ class ImageRotationActivity : AppCompatActivity() {
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
         var b_p = (photo.drawable as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p, this)
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                mTextView.setText("Angle: ${(skbar.getProgress().toFloat() - 180).toString()}°")
+                mTextView.text = "Angle: ${(skbar.getProgress().toFloat() - 180)}°"
+                rotateImage(skbar, photo, b_p,isRotatedRight)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                rotateImage(skbar, photo, b_p,isRotatedRight)
             }
         }
 
@@ -126,6 +126,7 @@ class ImageRotationActivity : AppCompatActivity() {
         }
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {

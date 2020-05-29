@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_segmentation.*
+import kotlinx.android.synthetic.main.activity_segmentation.photo
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
@@ -21,7 +23,6 @@ import org.opencv.objdetect.CascadeClassifier
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-
 
 class SegmentationActivity : AppCompatActivity() {
     var imageBitmap: Bitmap? = null
@@ -108,6 +109,7 @@ class SegmentationActivity : AppCompatActivity() {
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
@@ -134,4 +136,3 @@ class SegmentationActivity : AppCompatActivity() {
         return super.onKeyDown(keyCode, event)
     }
 }
-

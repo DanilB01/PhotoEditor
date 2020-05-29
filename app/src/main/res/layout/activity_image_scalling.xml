@@ -38,7 +38,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="20dp"
-        android:adjustViewBounds="true"
         android:contentDescription="@string/pic"
         android:src="@drawable/ic_image_black_24dp"
         android:visibility="visible"

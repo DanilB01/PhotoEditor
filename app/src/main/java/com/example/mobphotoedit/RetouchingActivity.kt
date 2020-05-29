@@ -20,11 +20,9 @@ import kotlinx.android.synthetic.main.activity_main.yes
 import kotlinx.android.synthetic.main.activity_retouching.*
 import java.util.*
 
-
 private var mCanvas: Canvas? = null
 private var mPaint: Paint? = null
 private val MemPixels: ArrayList<Pixel> = ArrayList<Pixel>()
-
 
 class RetouchingActivity : AppCompatActivity() {
 
@@ -40,6 +38,7 @@ class RetouchingActivity : AppCompatActivity() {
         var radTextView = findViewById<TextView>(R.id.radiusText);
         var brushSizeTextView = findViewById<TextView>(R.id.brushText);
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p, this)
         var work_b_p = b_p.copy(b_p.config,true)
         val viewCoords = IntArray(2)
         photo.getLocationOnScreen(viewCoords)
@@ -143,6 +142,7 @@ class RetouchingActivity : AppCompatActivity() {
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
