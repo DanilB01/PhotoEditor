@@ -14,19 +14,20 @@ import kotlinx.android.synthetic.main.activity_correction.*
 
 
 class CorrectionActivity : AppCompatActivity() {
+    val constbit:Bitmap = imageView2Bitmap(photo)
 
     private val itemAdapter2 by lazy {
         ItemAdapter2 { position: Int, item: Item1 ->
 
             when (position) {
-                0 -> filter1(imageView2Bitmap(photo), photo)
-                1 -> changeBrightness(imageView2Bitmap(photo), 100F, photo)
-                2 -> adjustSaturation(imageView2Bitmap(photo), 50F, photo)
-                3 -> updateSaturation(imageView2Bitmap(photo),10F,photo)
-                4 -> grassFilter(imageView2Bitmap(photo),photo)
-                5 -> movieFilter(imageView2Bitmap(photo), photo)
-                6 -> rubyFilter(imageView2Bitmap(photo),photo)
-                7 -> lagunaFilter(imageView2Bitmap(photo),photo)
+                0 -> filter1(constbit,photo)
+                1 -> changeBrightness(constbit,100F, photo)
+                2 -> adjustSaturation( constbit,50F, photo)
+                3 -> updateSaturation(constbit,10F,photo)
+                4 -> grassFilter(constbit,photo)
+                5 -> movieFilter( constbit,photo)
+                6 -> rubyFilter(constbit,photo)
+                7 -> lagunaFilter(constbit,photo)
             }
 
             item_list.smoothScrollToPosition(position) //сглаживание анимации
@@ -34,14 +35,14 @@ class CorrectionActivity : AppCompatActivity() {
     }
 
     private val possibleItems = listOf( //список возможных иконок
-        Item1("negative", R.drawable.ic_photo_filter),
-        Item1("brightness", R.drawable.ic_photo_filter),
-        Item1("saturation", R.drawable.ic_photo_filter),
-        Item1("saturation2", R.drawable.ic_photo_filter),
-        Item1("grass", R.drawable.ic_photo_filter),
-        Item1("movie", R.drawable.ic_photo_filter),
-        Item1("ruby", R.drawable.ic_photo_filter),
-        Item1("laguna", R.drawable.ic_photo_filter)
+        Item1("negative", R.mipmap.ic_negativelast),
+        Item1("brightness", R.mipmap.ic_brightlast),
+        Item1("saturation", R.mipmap.ic_seturation1last),
+        Item1("saturation2", R.mipmap.ic_setuarationlast2),
+        Item1("grass", R.mipmap.ic_grasslast),
+        Item1("movie", R.mipmap.ic_movie),
+        Item1("ruby", R.mipmap.ic_rubulast),
+        Item1("laguna", R.mipmap.ic_laguna)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +52,7 @@ class CorrectionActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
@@ -93,12 +95,12 @@ class CorrectionActivity : AppCompatActivity() {
 fun filter1(bitmold: Bitmap,photo: ImageView) {
 
     var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
-//val originalPixels = Array(bitmold.width, {IntArray(bitmold.height)})
+    //val originalPixels =  Array(bitmold.width, {IntArray(bitmold.height)})
     val originalPixels = IntArray(bitmold.width*bitmold.height,{0})
     bitmold.getPixels(originalPixels,0,bitmold.width,0,0,bitmold.width,bitmold.height)//////////работает????
     for (y in 0 until bitmold.height) {
         for (x in 0 until bitmold.width) {
-            val oldPixel = originalPixels[y*bitmold.width+x]
+            val oldPixel = originalPixels[y*(bitmold.width)+x]
 
             val r = 255 - Color.red(oldPixel)
             val g = 255 - Color.green(oldPixel)
@@ -141,7 +143,8 @@ private fun imageView2Bitmap(view: ImageView):Bitmap{
     return bitmap
 }
 
-fun changeBrightness(bmp: Bitmap, brightness: Float, photo: ImageView) {
+fun changeBrightness(bmp: Bitmap,brightness: Float, photo: ImageView) {
+
     val cm = ColorMatrix(
         floatArrayOf(
             1f,
@@ -238,9 +241,12 @@ fun updateSaturation(src: Bitmap, settingSat: Float, photo: ImageView) {
 fun grassFilter(sentBitmap: Bitmap, photo: ImageView) {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
+    val originalPixels = IntArray(sentBitmap.width*sentBitmap.height,{0})
+    sentBitmap.getPixels(originalPixels,0,sentBitmap.width,0,0,sentBitmap.width,sentBitmap.height)
     for (i in 0 until sentBitmap.width) {
         for (j in 0 until sentBitmap.height) {
-            val p = sentBitmap.getPixel(i, j)
+           // val p = sentBitmap.getPixel(i, j)
+            val p = originalPixels[j*(sentBitmap.width)+i]
             var r = Color.red(p)
             var g = Color.green(p)
             var b = Color.blue(p)
