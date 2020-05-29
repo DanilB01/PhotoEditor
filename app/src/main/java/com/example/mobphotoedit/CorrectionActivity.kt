@@ -19,7 +19,7 @@ class CorrectionActivity : AppCompatActivity() {
         ItemAdapter2 { position: Int, item: Item1 ->
 
             when (position) {
-                0 -> filter1(photo)
+                0 -> filter1(imageView2Bitmap(photo), photo)
                 1 -> changeBrightness(imageView2Bitmap(photo), 100F, photo)
                 2 -> adjustSaturation(imageView2Bitmap(photo), 50F, photo)
                 3 -> updateSaturation(imageView2Bitmap(photo),10F,photo)
@@ -90,12 +90,15 @@ class CorrectionActivity : AppCompatActivity() {
     }
 }
 //negative
-fun filter1(photo: ImageView) {
-    var bitmold = imageView2Bitmap(photo)
+fun filter1(bitmold: Bitmap,photo: ImageView) {
+
     var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
+//val originalPixels = Array(bitmold.width, {IntArray(bitmold.height)})
+    val originalPixels = IntArray(bitmold.width*bitmold.height,{0})
+    bitmold.getPixels(originalPixels,0,bitmold.width,0,0,bitmold.width,bitmold.height)//////////работает????
     for (y in 0 until bitmold.height) {
         for (x in 0 until bitmold.width) {
-            val oldPixel = bitmold.getPixel(x, y)
+            val oldPixel = originalPixels[y*bitmold.width+x]
 
             val r = 255 - Color.red(oldPixel)
             val g = 255 - Color.green(oldPixel)

@@ -39,8 +39,8 @@
         android:id="@+id/photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:cropToPadding="false"
-        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_margin="20dp"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline33"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
@@ -117,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="109dp" />
+        app:layout_constraintGuide_percent="0.8508892" />
 
     <SeekBar
         android:id="@+id/skbar_blur_radius"
