@@ -5,17 +5,30 @@
     android:layout_height="match_parent"
     android:background="@drawable/back">
 
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:cropToPadding="false"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_image_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline40"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintStart_toStartOf="@+id/guideline39"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
     <view
         android:id="@+id/Filtering"
         class="com.example.mobphotoedit.FilteringActivity$MySurfaceView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline40"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline39"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
         android:id="@+id/yes"
@@ -35,7 +48,7 @@
         android:background="@drawable/custom_button_no"
         android:src="@drawable/ic_clear_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
-        app:layout_constraintEnd_toEndOf="@+id/Filtering"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
@@ -109,9 +122,9 @@
 
     <Button
         android:id="@+id/startpoints"
+        style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="@style/textStyle"
         android:background="@null"
         android:text="@string/start_points"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -121,26 +134,40 @@
 
     <Button
         android:id="@+id/filter"
+        style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="@style/textStyle"
-        android:background="@null"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/custom_button_all"
         android:text="@string/filter"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline43"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline42"
-        app:layout_constraintTop_toBottomOf="@+id/Filtering" />
+        app:layout_constraintTop_toTopOf="@+id/guideline40"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/finishpoints"
+        style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="@style/textStyle"
         android:background="@null"
         android:text="@string/finish_points"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline43"
         app:layout_constraintTop_toTopOf="@+id/guideline40" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline39"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.08" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
