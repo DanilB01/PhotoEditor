@@ -50,6 +50,7 @@ class ImageScalingActivity : AppCompatActivity() {
                 bigpicture(mykoefnorm2, photo, curBitmap )
                 Toast.makeText(this, "$mykoefnorm2", Toast.LENGTH_LONG).show()
                 curBitmap = imageView2Bitmap(photo)
+                curBitmap = checkBitmap(curBitmap, this)
             }
             else{
                 Toast.makeText(this, R.string.wrongVal, Toast.LENGTH_LONG).show()

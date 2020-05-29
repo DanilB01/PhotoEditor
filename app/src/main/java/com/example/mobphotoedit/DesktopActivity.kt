@@ -58,6 +58,9 @@ class DesktopActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        var b_p = (photo.drawable as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p, this)
+        photo.setImageBitmap(b_p)
         item_list.initialize(itemAdapter)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())

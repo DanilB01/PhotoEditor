@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -106,6 +105,7 @@ class ImageRotationActivity : AppCompatActivity() {
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
         var b_p = (photo.drawable as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p,this)
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
@@ -117,7 +117,6 @@ class ImageRotationActivity : AppCompatActivity() {
                 rotateImage(skbar, photo, b_p,isRotatedRight)
             }
         }
-
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
         Rotate_right.setOnClickListener{

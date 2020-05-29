@@ -33,7 +33,8 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         no.setOnClickListener {
             switchActivity(imageUri)
         }
-        val kick808 = imageView2Bitmap(photo)
+        var kick808 = imageView2Bitmap(photo)
+        kick808 = checkBitmap(kick808,this)
         val imgWidth = kick808.width
         val imgHeight = kick808.height
         /*

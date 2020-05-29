@@ -40,6 +40,7 @@ class RetouchingActivity : AppCompatActivity() {
         var radTextView = findViewById<TextView>(R.id.radiusText);
         var brushSizeTextView = findViewById<TextView>(R.id.brushText);
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p, this)
         var work_b_p = b_p.copy(b_p.config,true)
         val viewCoords = IntArray(2)
         photo.getLocationOnScreen(viewCoords)

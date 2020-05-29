@@ -12,6 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_margin="20dp"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,14 +40,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/custom_button_no"
+        android:contentDescription="@string/no"
         android:src="@drawable/ic_clear_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
-        app:layout_constraintEnd_toEndOf="@+id/photo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
-        app:layout_constraintVertical_bias="0.0"
-        android:contentDescription="@string/no" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/activityName"
