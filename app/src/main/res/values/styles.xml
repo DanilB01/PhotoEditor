@@ -2,14 +2,12 @@
 
     <!-- Base application theme. -->
     <style name="NoActBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="WithActBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -18,10 +16,21 @@
     <style name="textStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
-        <item name="android:textSize">27sp</item>
         <item name="android:textColor">@color/lightPink</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="buttons">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@drawable/custom_button_all</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/lightPink</item>
     </style>
 
 

@@ -8,20 +8,19 @@
     android:paddingStart="16dp"
     android:paddingTop="16dp"
     android:paddingEnd="16dp"
-    android:paddingBottom="28dp">
+    android:paddingBottom="16dp">
 
     <ImageView
         android:id="@+id/list_item_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/list_item_text"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/iconFunc" />
 
     <TextView
         android:id="@+id/list_item_text"
@@ -33,7 +32,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        />
+        tools:ignore="SmallSp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

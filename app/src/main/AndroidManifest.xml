@@ -12,8 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true">
-        <activity android:name=".LastActivity"
-            android:theme="@style/NoActBar" />
+
         <activity
             android:name=".CubeActivity"
             android:theme="@style/NoActBar" />

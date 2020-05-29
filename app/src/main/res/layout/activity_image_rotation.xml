@@ -57,6 +57,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:layout_margin="20dp"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/lower_guideline"
@@ -116,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="382dp" />
+        app:layout_constraintGuide_percent="0.9294404" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline30"
@@ -131,6 +132,7 @@
         android:layout_height="42dp"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
+        android:background="@null"
         android:src="@drawable/ic_rotate_right"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toStartOf="@+id/guideline31"

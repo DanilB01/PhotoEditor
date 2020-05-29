@@ -1,5 +1,6 @@
 package com.example.mobphotoedit
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
@@ -95,8 +96,8 @@ class DesktopActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(){
-        val i = Intent(this, LastActivity::class.java)
-        startActivity(i)
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
     override fun onActivityResult(
@@ -120,7 +121,7 @@ class DesktopActivity : AppCompatActivity() {
         val quitDialog = AlertDialog.Builder(this)
         quitDialog.setTitle(resources.getString(R.string.exit))
         quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
-                dialog, which -> finish()
+                dialog, which -> switchActivity()
         }
         quitDialog.setNegativeButton(resources.getString(R.string.no)){
                 dialog, which ->

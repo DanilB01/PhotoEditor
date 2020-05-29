@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_main.no
 import kotlinx.android.synthetic.main.activity_main.yes
 import java.lang.Math.*
 
-
 fun  getRotated(src:Bitmap, degrees:Double):Bitmap
 {
     var rads: Double = (degrees*Math.PI) / 180.0
@@ -70,13 +69,7 @@ fun  getRotated(src:Bitmap, degrees:Double):Bitmap
 fun rotateImage(skbar: SeekBar, currentImage: ImageView, b_p: Bitmap,isRotatedRight:Boolean=false) {
     var degrees: Double = (skbar.getProgress() - 180).toDouble()
     var workBP:Bitmap
-    if (isRotatedRight) {
-        workBP = (currentImage.getDrawable() as BitmapDrawable).bitmap
-    }
-    else
-    {
-        workBP = b_p.copy(b_p.config, true)
-    }
+    workBP = b_p.copy(b_p.config, true)
     if (abs(degrees) > 90)
     {
         if(degrees > 0) {
@@ -112,7 +105,7 @@ class ImageRotationActivity : AppCompatActivity() {
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
-        var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+        var b_p = (photo.drawable as BitmapDrawable).bitmap
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
@@ -128,7 +121,6 @@ class ImageRotationActivity : AppCompatActivity() {
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
         Rotate_right.setOnClickListener{
-            isRotatedRight=true
             rotateRight(photo)
             skbar.progress=180
         }

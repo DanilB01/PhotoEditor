@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline26"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName" />
+        app:layout_constraintTop_toBottomOf="@+id/activityName"
+        android:contentDescription="@string/pic" />
 
     <ImageButton
         android:id="@+id/yes"
@@ -26,7 +27,8 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toTopOf="@+id/guideline17" />
+        app:layout_constraintTop_toTopOf="@+id/guideline17"
+        android:contentDescription="@string/yes" />
 
     <ImageButton
         android:id="@+id/no"
@@ -37,14 +39,15 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
         app:layout_constraintEnd_toEndOf="@+id/photo"
         app:layout_constraintStart_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toTopOf="@+id/guideline16" />
+        app:layout_constraintTop_toTopOf="@+id/guideline16"
+        android:contentDescription="@string/no" />
 
     <TextView
         android:id="@+id/activityName"
         style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Segmentation"
+        android:text="@string/segmentation"
         app:layout_constraintBottom_toTopOf="@+id/high_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +92,8 @@
         android:id="@+id/find"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Find"
+        android:text="@string/findFaces"
+        style="@style/buttons"
         app:layout_constraintBottom_toTopOf="@+id/guideline27"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintHorizontal_bias="1.0"

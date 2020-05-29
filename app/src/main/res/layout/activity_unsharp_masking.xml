@@ -4,20 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ImageRotationActivity"
-    android:background="@drawable/back">
+    android:background="@drawable/back"
+    tools:context=".ImageRotationActivity">
 
     <ImageView
         android:id="@+id/photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/pic"
+        android:adjustViewBounds="true"
         android:src="@drawable/ic_image_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline40"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityName"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/activityName" />
 
     <SeekBar
         android:id="@+id/seek_bar"
@@ -26,7 +27,7 @@
         android:layout_margin="25dp"
         android:max="8"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/activityName"
+        app:layout_constraintTop_toTopOf="@+id/guideline40"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="50dp" />
 
@@ -36,11 +37,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:layout_marginTop="615dp"
         android:max="400"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/photo"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
@@ -48,6 +48,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/custom_button_yes"
+        android:contentDescription="@string/yes"
         android:src="@drawable/ic_check_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,6 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/custom_button_no"
+        android:contentDescription="@string/no"
         android:src="@drawable/ic_clear_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
         app:layout_constraintEnd_toEndOf="@+id/photo"
@@ -70,7 +72,7 @@
         style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Unsharp Masking"
+        android:text="@string/unsharp_masking"
         app:layout_constraintBottom_toTopOf="@+id/high_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -112,4 +114,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
        private val IMAGE_CAPTURE_CODE = 1002
        private val IMAGE_PICK_CODE = 1001
        private val PERMISSION_CODE = 1000
+       private val RETURN_CODE = 2000
    }
     var imageUri: Uri? = null
     var flagCamera: Boolean = false
@@ -34,17 +35,14 @@ class MainActivity : AppCompatActivity() {
         no.visibility = View.GONE
 
         yes.setOnClickListener {
-            val intent = Intent(MainActivity@this, DesktopActivity::class.java)
+            val intent = Intent(this, DesktopActivity::class.java)
             intent.putExtra("ImageUri", imageUri.toString())
             intent.putExtra("ImagePath", imagePath)
-            startActivity(intent)
+            startActivityForResult(intent, RETURN_CODE)
         }
+
         no.setOnClickListener {
-            imageUri = null
-            pic.setImageResource(R.drawable.ic_image_black_24dp)
-            yes.visibility = View.GONE
-            no.visibility = View.GONE
-            message.text = getString(R.string.add)
+            setDefaultInterface()
         }
 
         takePhotoButton.setOnClickListener{
@@ -90,6 +88,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun setDefaultInterface(){
+        imageUri = null
+        pic.setImageResource(R.drawable.ic_image_black_24dp)
+        yes.visibility = View.GONE
+        no.visibility = View.GONE
+        message.text = getString(R.string.add)
+    }
+
     override fun onStart() {
         super.onStart()
         stars.onStart()
@@ -98,10 +104,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         stars.onStop()
         super.onStop()
-        pic.setImageResource(R.drawable.ic_image_black_24dp)
-        yes.visibility = View.GONE
-        no.visibility = View.GONE
-        message.text = getString(R.string.add)
+        setDefaultInterface()
     }
 
     private fun openCamera() {
@@ -150,14 +153,20 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         //вызывается когда изображение с камеры получено
         if(resultCode == Activity.RESULT_OK){
-            if(requestCode == IMAGE_PICK_CODE){
-                imageUri = data?.data
-                imagePath = data?.data?.path
+            when(requestCode){
+                IMAGE_PICK_CODE -> {
+                    imageUri = data?.data
+                    imagePath = data?.data?.path
+                    pic.setImageURI(imageUri)
+                    yes.visibility = View.VISIBLE
+                    no.visibility = View.VISIBLE
+                    message.text = getString(R.string.cont)
+                }
+
+                RETURN_CODE-> {
+                    setDefaultInterface()
+                }
             }
-            pic.setImageURI(imageUri)
-            yes.visibility = View.VISIBLE
-            no.visibility = View.VISIBLE
-            message.text = getString(R.string.cont)
         }
     }
 

@@ -2,7 +2,6 @@ package com.example.mobphotoedit
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -24,9 +23,6 @@ import java.util.*
 
 private var mCanvas: Canvas? = null
 private var mPaint: Paint? = null
-
-private val mBrushSize = 1
-private val mBlurRadius = 1
 private val MemPixels: ArrayList<Pixel> = ArrayList<Pixel>()
 
 
@@ -45,6 +41,8 @@ class RetouchingActivity : AppCompatActivity() {
         var brushSizeTextView = findViewById<TextView>(R.id.brushText);
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
         var work_b_p = b_p.copy(b_p.config,true)
+        val viewCoords = IntArray(2)
+        photo.getLocationOnScreen(viewCoords)
 
         mCanvas = Canvas(work_b_p)
         mPaint = Paint()
@@ -75,13 +73,23 @@ class RetouchingActivity : AppCompatActivity() {
 
         photo.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
-                var curX = m.x
-                var curY = m.y
-                var rad:Int = skbar_blur_radius.getProgress() + 1
-                mCanvas!!.drawCircle(curX.toFloat(), curY.toFloat(), rad.toFloat(), mPaint!!)
+                val bitmapWidth: Float = work_b_p.getWidth().toFloat()
+                val bitmapHeight: Float = work_b_p.getHeight().toFloat()
 
-                val width:Int = work_b_p.width
-                val height:Int = work_b_p.height
+                val imageWidth: Float = photo.getWidth().toFloat()
+                val imageHeight: Float = photo.getHeight().toFloat()
+
+                val proportionateWidth = bitmapWidth / imageWidth
+                val proportionateHeight = bitmapHeight / imageHeight
+
+                val curX = (m.getX() * proportionateWidth)
+                val curY = (m.getY() * proportionateHeight)
+
+                var width:Int = work_b_p.width
+                var height:Int = work_b_p.height
+                var rad:Int = skbar_brush_size.getProgress() + 1
+                mCanvas!!.drawCircle(curX, curY, rad.toFloat(), mPaint!!)
+
                 val pixels = IntArray(height*width)
                 work_b_p.getPixels(pixels,0,width,0,0,width,height)
 
@@ -98,9 +106,7 @@ class RetouchingActivity : AppCompatActivity() {
                        }
                     }
                 }
-                //mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
                 photo.setImageBitmap(work_b_p)
-                // Perform tasks here
                 return true
             }
         })
@@ -114,19 +120,24 @@ class RetouchingActivity : AppCompatActivity() {
                 var rad:Int = skbar_blur_radius.getProgress() + 1
                 mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
                 var blurred_b_p = boxBlur(resBitmap,rad)
+                val width: Int? = blurred_b_p?.width
+                val height:Int? = blurred_b_p?.height
+                val blurredPixels = IntArray(height!! * width!!)
+                blurred_b_p?.getPixels(blurredPixels,0,width,0,0,width,height)
+
+                var resPixels = IntArray(resBitmap.width*resBitmap.height)
+                resBitmap.getPixels(resPixels,0,width,0,0,width,height)
                 for (i in MemPixels.indices) {
-                    val e: Pixel = MemPixels.get(i)
+                    val e: Pixel = MemPixels[i]
                     if (blurred_b_p != null) {
-                        resBitmap.setPixel(
-                            e.x.toInt(),
-                            e.y.toInt(), blurred_b_p.getPixel(
-                                e.x.toInt(),
-                                e.y.toInt()
-                            )
-                        )
+                        resPixels[e.x.toInt()+ e.y.toInt()*width ] = blurredPixels[e.x.toInt()+ e.y.toInt()*width ]
+                        //resBitmap.setPixel(e.x.toInt(),e.y.toInt(), blurred_b_p.getPixel(e.x.toInt(),e.y.toInt()))
                     }
                 }
+                resBitmap.setPixels(resPixels,0,width,0,0,width,height)
                 photo.setImageBitmap(resBitmap)
+                work_b_p = resBitmap
+                mCanvas = Canvas(work_b_p)
             }
         })
 
@@ -150,8 +161,5 @@ class RetouchingActivity : AppCompatActivity() {
         }
         return super.onKeyDown(keyCode, event)
     }
-
-
-
 
 }

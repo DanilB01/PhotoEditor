@@ -12,7 +12,7 @@
         style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Line Drawing"
+        android:text="@string/lnDraw"
         app:layout_constraintBottom_toTopOf="@+id/high_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -38,7 +38,8 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline38"
         app:layout_constraintEnd_toStartOf="@+id/guideline35"
         app:layout_constraintStart_toStartOf="@+id/guideline36"
-        app:layout_constraintTop_toTopOf="@+id/guideline37" />
+        app:layout_constraintTop_toTopOf="@+id/guideline37"
+        android:contentDescription="@string/cleanScr" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/high_guideline"

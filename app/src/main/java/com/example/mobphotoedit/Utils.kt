@@ -12,7 +12,6 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.*
 
-
 fun saveImageToInternalStorage(currentImage: ImageView, appContext: Context): Uri {
     var reloadBitmap = (currentImage.getDrawable() as BitmapDrawable).bitmap
     // Get the context wrapper instance
@@ -43,7 +42,6 @@ fun saveImageToInternalStorage(currentImage: ImageView, appContext: Context): Ur
     // Return the saved image uri
     return Uri.parse(file.absolutePath)
 }
-
 
 class Pixel(val x: Float, val y: Float, val color: Int) {
 }
@@ -121,3 +119,5 @@ class BitmapStore {
         mBuffer = Stack()
     }
 }
+
+
