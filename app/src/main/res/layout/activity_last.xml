@@ -45,8 +45,7 @@
         style="@style/textStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="Thanks for using our app!
-        Repeat?"
+        android:text="@string/thanks_for_using_our_app_repeat"
         app:layout_constraintBottom_toTopOf="@+id/guideline24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +55,7 @@
         android:id="@+id/repeat"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/custom_button_camera"
+        android:background="@null"
         android:src="@drawable/ic_repeat"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
         app:layout_constraintEnd_toStartOf="@+id/guideline22"
