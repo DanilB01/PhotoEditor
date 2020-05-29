@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
     tools:context=".RetouchingActivity">
 
     <TextView
@@ -12,8 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="19dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/brush_size"
-        android:textColor="@color/lightPink"
+        android:text="Brush Size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/skbar_brush_size"
         app:layout_constraintHorizontal_bias="0.733"
@@ -38,8 +36,9 @@
         android:id="@+id/photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="20dp"
         android:cropToPadding="false"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline33"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
@@ -74,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="658dp" />
+        app:layout_constraintGuide_percent="0.10123119" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
@@ -109,14 +108,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.08029197" />
+        app:layout_constraintGuide_percent="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline33"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_end="109dp" />
 
     <SeekBar
         android:id="@+id/skbar_blur_radius"
@@ -139,8 +138,7 @@
         android:layout_height="26dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="4dp"
-        android:text="@string/radius"
-        android:textColor="@color/lightPink"
+        android:text="Radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/skbar_blur_radius"
         app:layout_constraintHorizontal_bias="0.75"
@@ -150,13 +148,12 @@
 
     <Button
         android:id="@+id/doRetouchButton"
-        style="@style/buttons"
         android:layout_width="44dp"
         android:layout_height="41dp"
-        android:text="@string/doBut"
+        android:text="DO"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.952"
+        app:layout_constraintHorizontal_bias="0.895"
         app:layout_constraintStart_toStartOf="@+id/guideline35"
         app:layout_constraintTop_toTopOf="@+id/guideline33"
         app:layout_constraintVertical_bias="0.485" />

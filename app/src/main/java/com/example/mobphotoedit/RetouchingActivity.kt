@@ -2,7 +2,6 @@ package com.example.mobphotoedit
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -45,6 +44,8 @@ class RetouchingActivity : AppCompatActivity() {
         var brushSizeTextView = findViewById<TextView>(R.id.brushText);
         var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
         var work_b_p = b_p.copy(b_p.config,true)
+        val viewCoords = IntArray(2)
+        photo.getLocationOnScreen(viewCoords)
 
         mCanvas = Canvas(work_b_p)
         mPaint = Paint()
@@ -75,13 +76,15 @@ class RetouchingActivity : AppCompatActivity() {
 
         photo.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
-                var curX = m.x
-                var curY = m.y
-                var rad:Int = skbar_blur_radius.getProgress() + 1
-                mCanvas!!.drawCircle(curX.toFloat(), curY.toFloat(), rad.toFloat(), mPaint!!)
+                var curX = m.x //+ viewCoords[0]// относительно или экрана или начала (0,0)
+                var curY = m.y //+ viewCoords[1]
 
-                val width:Int = work_b_p.width
-                val height:Int = work_b_p.height
+
+                var width:Int = work_b_p.width
+                var height:Int = work_b_p.height
+                var rad:Int = skbar_brush_size.getProgress() + 1
+                mCanvas!!.drawCircle(curX, curY, rad.toFloat(), mPaint!!)
+
                 val pixels = IntArray(height*width)
                 work_b_p.getPixels(pixels,0,width,0,0,width,height)
 
@@ -105,26 +108,30 @@ class RetouchingActivity : AppCompatActivity() {
             }
         })
         //Retouching Applying
-        doRetouchButton.setOnClickListener { // blurred bitmap
-            var resBitmap = b_p.copy(b_p.config,true)
-            // blurred bitmap
-            var rad:Int = skbar_blur_radius.getProgress() + 1
-            mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
-            var blurred_b_p = boxBlur(resBitmap,rad)
-            for (i in MemPixels.indices) {
-                val e: Pixel = MemPixels.get(i)
-                if (blurred_b_p != null) {
-                    resBitmap.setPixel(
-                        e.x.toInt(),
-                        e.y.toInt(), blurred_b_p.getPixel(
+        doRetouchButton.setOnClickListener(object: View.OnClickListener
+        {
+            override fun onClick(v: View?) {
+                // blurred bitmap
+                var resBitmap = b_p.copy(b_p.config,true)
+                // blurred bitmap
+                var rad:Int = skbar_blur_radius.getProgress() + 1
+                mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
+                var blurred_b_p = boxBlur(resBitmap,rad)
+                for (i in MemPixels.indices) {
+                    val e: Pixel = MemPixels[i]
+                    if (blurred_b_p != null) {
+                        resBitmap.setPixel(
                             e.x.toInt(),
-                            e.y.toInt()
+                            e.y.toInt(), blurred_b_p.getPixel(
+                                e.x.toInt(),
+                                e.y.toInt()
+                            )
                         )
-                    )
+                    }
                 }
+                photo.setImageBitmap(resBitmap)
             }
-            photo.setImageBitmap(resBitmap)
-        }
+        })
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
@@ -146,8 +153,5 @@ class RetouchingActivity : AppCompatActivity() {
         }
         return super.onKeyDown(keyCode, event)
     }
-
-
-
 
 }

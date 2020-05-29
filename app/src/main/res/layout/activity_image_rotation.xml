@@ -57,6 +57,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:layout_margin="20dp"
         android:src="@drawable/ic_image_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/lower_guideline"
