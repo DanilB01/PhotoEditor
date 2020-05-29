@@ -18,6 +18,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.experience.AffineTrans
 import kotlinx.android.synthetic.main.activity_filtering.*
+import kotlinx.android.synthetic.main.activity_filtering.no
+import kotlinx.android.synthetic.main.activity_filtering.photo
+import kotlinx.android.synthetic.main.activity_filtering.yes
+import kotlinx.android.synthetic.main.activity_segmentation.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -57,8 +61,12 @@ class FilteringActivity : AppCompatActivity() {
             (Filtering as MySurfaceView).invalidate()
         }
 
-        filter.setOnClickListener{
-           filterFun()
+        filter.setOnClickListener {
+            filterFun(this)
+            photo.setImageBitmap(imageBitmap)
+            (Filtering as MySurfaceView).removePoints()
+            countSt = 0
+            countFin = 0
         }
 
         yes.setOnClickListener {
@@ -213,7 +221,7 @@ class FilteringActivity : AppCompatActivity() {
         return ABx * ACx + ABy * ACy
     }
 
-    private fun filterFun(): Bitmap? {
+    private fun filterFun(context: Context): Bitmap? {
         var StartPoints = mutableListOf<Points>()
         var FinishPoints = mutableListOf<Points>()
         StartPoints = (Filtering as MySurfaceView).getStartPoint()
@@ -258,7 +266,7 @@ class FilteringActivity : AppCompatActivity() {
         } else {
             resizeBicubic(
                 btmp.copy(Bitmap.Config.ARGB_8888, true), w,
-                photo.context
+                context
             )
         }
     }
