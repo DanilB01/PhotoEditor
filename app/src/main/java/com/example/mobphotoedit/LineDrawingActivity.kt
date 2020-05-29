@@ -34,7 +34,7 @@ class LineDrawingActivity : AppCompatActivity(){
     }
 
     class MySurfaceView (context: Context, attrs: AttributeSet? = null) : View(context, attrs){
-        private val cur = mutableListOf<Points>() // массив точек
+        private val cur = mutableListOf<DPoint>() // массив точек
         private var flag : Boolean = false
         private var count = 0
         private var N : Int? = null
@@ -65,7 +65,7 @@ class LineDrawingActivity : AppCompatActivity(){
             if (action == MotionEvent.ACTION_DOWN) {
                 ind = searchPoint(event.x, event.y)
                 if(!flag){
-                    cur.add(Points(event.x, event.y))
+                    cur.add(DPoint(event.x, event.y))
                     count = 0
                     path1?.addCircle(event.x, event.y, 5F, Path.Direction.CW)
                     path2?.addCircle(event.x, event.y, 50F, Path.Direction.CW)
@@ -98,7 +98,7 @@ class LineDrawingActivity : AppCompatActivity(){
                     if(!flag) {
                         flag = true
                     } else {
-                        cur.add(Points(event.x, event.y))
+                        cur.add(DPoint(event.x, event.y))
                         count++
                         if(count == 1){
                             path?.moveTo(cur[0].x, cur[0].y)
@@ -124,12 +124,12 @@ class LineDrawingActivity : AppCompatActivity(){
             return true
         }
 
-        private fun thomasAlgorithm(): MutableList<Points> {
-            val D = mutableListOf<Points>()
+        private fun thomasAlgorithm(): MutableList<DPoint> {
+            val D = mutableListOf<DPoint>()
             val B = mutableListOf<Float>()
-            val dX = mutableListOf<Points>()
+            val dX = mutableListOf<DPoint>()
             for (i in 0 until this!!.N!!) {
-                dX.add(Points(0F, 0F))
+                dX.add(DPoint(0F, 0F))
                 B.add(0F)
             }
             B[0] = 2F
@@ -152,12 +152,12 @@ class LineDrawingActivity : AppCompatActivity(){
             //D(N) / B(N)
             var xnnx = D[N!! - 1].x / B[N!! - 1]
             var xnny = D[N!! - 1].y / B[N!! - 1]
-            dX[N!! - 1] = Points(xnnx, xnny)
+            dX[N!! - 1] = DPoint(xnnx, xnny)
             for (i in N!! - 2 downTo 0) {
                 //X(i) = (D(i) - C(i) * X(i + 1)) / B(i)
                 xnnx = (D[i].x - c(i) * dX[i + 1].x) / B[i]
                 xnny = (D[i].y - c(i) * dX[i + 1].y) / B[i]
-                dX[i] = Points(xnnx, xnny)
+                dX[i] = DPoint(xnnx, xnny)
             }
             return dX
         }
@@ -169,17 +169,17 @@ class LineDrawingActivity : AppCompatActivity(){
             // 1 * P(1, i-1) + 4 * P(1, i ) + 1 * P(1, i+1) = 4*mPointsArray(i)+2*mPointsArray(i+1), for i in [1, N-2]
             //                 2 * P(1,N-2) + 7 * P(1, N-1) = 8*mPointsArray(N-1)+mPointsArray(N)
             N = cur.size - 1
-            var P1: MutableList<Points> = thomasAlgorithm()
-            var P2: MutableList<Points> = otherMath(P1)
-            drawSpline(P1, P2 as ArrayList<Points>)
+            var P1: MutableList<DPoint> = thomasAlgorithm()
+            var P2: MutableList<DPoint> = otherMath(P1)
+            drawSpline(P1, P2 as ArrayList<DPoint>)
         }
 
-        private fun pntSum(a: Points, b: Points): Points {
-            return Points(a.x + b.x, a.y + b.y)
+        private fun pntSum(a: DPoint, b: DPoint): DPoint {
+            return DPoint(a.x + b.x, a.y + b.y)
         }
 
-        private fun pntMul(a: Float, b: Points): Points {
-            return Points(a * b.x, a * b.y)
+        private fun pntMul(a: Float, b: DPoint): DPoint {
+            return DPoint(a * b.x, a * b.y)
         }
 
         private fun a(ind: Int): Float {
@@ -198,8 +198,8 @@ class LineDrawingActivity : AppCompatActivity(){
         }
 
         private fun drawSpline(
-            p1: MutableList<Points>,
-            p2: MutableList<Points>
+            p1: MutableList<DPoint>,
+            p2: MutableList<DPoint>
         ) {
             for (i in 0 until N!!) {
                 val step = 1000
@@ -219,16 +219,16 @@ class LineDrawingActivity : AppCompatActivity(){
             }
         }
 
-        private fun otherMath(P1: MutableList<Points>): MutableList<Points> {
-            val answer = mutableListOf<Points>()
+        private fun otherMath(P1: MutableList<DPoint>): MutableList<DPoint> {
+            val answer = mutableListOf<DPoint>()
             for (i in 0..N!! - 2) {
                 val nx: Float = 2 * cur[i + 1].x - P1[i + 1].x
                 val ny: Float = 2 * cur[i + 1].y - P1[i + 1].y
-                answer.add(Points(nx, ny))
+                answer.add(DPoint(nx, ny))
             }
             val nx: Float = (cur[N!!].x + P1[N!! - 1].x) / 2
             val ny: Float = (cur[N!!].y + P1[N!! - 1].y) / 2
-            answer.add(Points(nx, ny))
+            answer.add(DPoint(nx, ny))
             return answer
         }
 
@@ -268,7 +268,7 @@ class LineDrawingActivity : AppCompatActivity(){
     }
 }
 
-class Points {
+class DPoint {
     var x = 0F
     var y = 0F
 

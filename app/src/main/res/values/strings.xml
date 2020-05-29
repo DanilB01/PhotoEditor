@@ -17,17 +17,4 @@
     <string name="undo">Are you sure you want to undo the latest changes?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="add_the_photo">add the photo</string>
-    <string name="MPE" />
-    <string name="image_view">image view</string>
-    <string name="effects">Effects</string>
-    <string name="turn" />
-    <string name="change_tfigure">Change\tFigure</string>
-    <string name="filtering">Filtering</string>
-    <string name="start_points">Start Points</string>
-    <string name="filter">Filter</string>
-    <string name="finish_points">Finish Points</string>
-    <string name="setangle">SetAngle</string>
-    <string name="thanks_for_using_our_app_repeat">Thanks for using our app! Repeat?</string>
-    <string name="reset" />
 </resources>

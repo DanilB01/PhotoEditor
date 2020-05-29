@@ -12,15 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:starsView_bigStarThreshold="10dp"
-        app:starsView_maxStarSize="16dp"
         app:starsView_meteoritesColors="@array/meteoritesColors"
         app:starsView_meteoritesEnabled="true"
         app:starsView_meteoritesInterval="2000"
+        app:starsView_maxStarSize="16dp"
         app:starsView_minStarSize="1dp"
         app:starsView_starColors="@array/starColors"
-        app:starsView_starCount="50"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="99dp" />
+        app:starsView_starCount="50" />
 
     <ImageView
         android:id="@+id/logo"
@@ -38,7 +36,7 @@
         android:id="@+id/takePhotoButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@null"
+        android:background="@drawable/custom_button_camera"
         android:src="@drawable/ic_photo_camera_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -50,7 +48,7 @@
         android:id="@+id/fromGalleryButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@null"
+        android:background="@drawable/custom_button_library"
         android:src="@drawable/ic_photo_library_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
@@ -62,10 +60,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/ic_image_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toTopOf="@+id/message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline11"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
     <ImageButton
         android:id="@+id/yes"
@@ -95,12 +93,10 @@
         android:id="@+id/message"
         style="@style/textStyle"
         android:text="@string/add"
-        app:layout_constraintBottom_toBottomOf="@+id/stars"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline14"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -149,7 +145,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline26"
