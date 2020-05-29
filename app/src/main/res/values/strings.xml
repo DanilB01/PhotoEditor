@@ -4,7 +4,7 @@
     <string name="cont">Ready to continue?</string>
     <string name="title_activity_desktop">DesktopActivity</string>
     <string name="name_txt">Name</string>
-    <string name="accept_txt">accept</string>
+    <string name="accept_txt">Accept</string>
     <string name="_3_text">3</string>
     <string name="imageScalingTxt">Image Scaling</string>
 
@@ -13,21 +13,44 @@
     <string name="rand_txt">rand</string>
     <string name="_1_txt">1</string>
 
+    <string name="pic">Picture</string>
     <string name="exit">Are you sure you want to exit?</string>
     <string name="undo">Are you sure you want to undo the latest changes?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="add_the_photo">add the photo</string>
-    <string name="MPE" />
-    <string name="image_view">image view</string>
-    <string name="effects">Effects</string>
-    <string name="turn" />
-    <string name="change_tfigure">Change\tFigure</string>
-    <string name="filtering">Filtering</string>
-    <string name="start_points">Start Points</string>
+    <string name="info">Information</string>
+    <string name="ok">OK, clear!</string>
+    <string name="wrongVal">Wrong value. Please, enter another one</string>
+    <string name="start_points">Start\nPoints</string>
     <string name="filter">Filter</string>
-    <string name="finish_points">Finish Points</string>
-    <string name="setangle">SetAngle</string>
-    <string name="thanks_for_using_our_app_repeat">Thanks for using our app! Repeat?</string>
-    <string name="reset" />
+    <string name="finish_points">Finish\nPoints</string>
+
+    <string name="infoScaling">
+        To use the scaling function, values are entered in the range from 0.1 to 3. In other cases, the program will report an incorrect value.
+    </string>
+    <string name="filtering">Filtering</string>
+    <string name="cubeFig">3D Figures</string>
+    <string name="effects">Effects</string>
+    <string name="turnClock">Clockwise turning</string>
+    <string name="turnCounterClock">Counter clockwise turning</string>
+    <string name="figChange">Change\nFigure</string>
+    <string name="logo">Logotype</string>
+    <string name="logopic">Logo Picture</string>
+    <string name="repeat">Thanks for using our app!\nRepeat?</string>
+    <string name="repBut">Repeat button</string>
+    <string name="lnDraw">Line Drawing</string>
+    <string name="cleanScr">Clean the screen</string>
+    <string name="logoName">Logo name</string>
+    <string name="takePic">Take picture from camera</string>
+    <string name="picGallery">Download picture from gallery</string>
+    <string name="retouching">Retouching</string>
+    <string name="segmentation">Segmentation</string>
+    <string name="findFaces">Find faces</string>
+    <string name="appName">Mobile Photo Editor</string>
+    <string name="startPhrase">Just one step and you can start creating great artwork from your photos</string>
+    <string name="iconFunc">Function icon</string>
+    <string name="unsharp_masking">Unsharp Masking</string>
+    <string name="doBut">Do</string>
+    <string name="radius">Radius</string>
+    <string name="brush_size">Brush Size</string>
 </resources>

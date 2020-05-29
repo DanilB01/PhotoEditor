@@ -18,14 +18,15 @@
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline4"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_launcher" />
+        app:srcCompat="@drawable/ic_launcher"
+        android:contentDescription="@string/logopic" />
 
     <TextView
         android:id="@+id/MobilePhotoEditor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="Mobile Photo Editor"
+        android:text="@string/appName"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
@@ -70,7 +71,7 @@
         android:layout_width="268dp"
         android:layout_height="41dp"
         android:fontFamily="sans-serif"
-        android:text="Just one step and you can start creating great artwork from your photos"
+        android:text="@string/startPhrase"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"

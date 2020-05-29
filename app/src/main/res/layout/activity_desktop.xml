@@ -18,7 +18,8 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:contentDescription="@string/pic" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
@@ -36,19 +37,25 @@
         app:layout_constraintGuide_percent="0.1" />
 
 
-    <com.example.mobphotoedit.HorizontalCarouselRecyclerView
-
-        android:id="@+id/item_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline9">
 
-    </com.example.mobphotoedit.HorizontalCarouselRecyclerView>
+        <com.example.mobphotoedit.HorizontalCarouselRecyclerView
+            android:id="@+id/item_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never">
+
+        </com.example.mobphotoedit.HorizontalCarouselRecyclerView>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

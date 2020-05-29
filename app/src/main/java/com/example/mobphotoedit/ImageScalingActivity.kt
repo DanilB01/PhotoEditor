@@ -1,13 +1,17 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -42,11 +46,30 @@ class ImageScalingActivity : AppCompatActivity() {
         but1.setOnClickListener {
             val mykoefstring2 = editText.text.toString()
             val mykoefnorm2 = mykoefstring2.toFloat()
-            bigpicture(mykoefnorm2, photo, curBitmap )
-            Toast.makeText(this, "$mykoefnorm2", Toast.LENGTH_LONG).show()
-            curBitmap = imageView2Bitmap(photo)
+            if(mykoefnorm2 <= 3 && mykoefnorm2 > 0){
+                bigpicture(mykoefnorm2, photo, curBitmap )
+                Toast.makeText(this, "$mykoefnorm2", Toast.LENGTH_LONG).show()
+                curBitmap = imageView2Bitmap(photo)
+            }
+            else{
+                Toast.makeText(this, R.string.wrongVal, Toast.LENGTH_LONG).show()
+            }
+        }
+        infoBut.setOnClickListener {
+            infoDialog()
         }
     }
+
+    private fun infoDialog() {
+        val infoDialog = AlertDialog.Builder(this)
+        infoDialog.setTitle(resources.getString(R.string.info))
+        infoDialog.setMessage(resources.getString(R.string.infoScaling))
+        infoDialog.setPositiveButton(resources.getString(R.string.ok)) {
+                dialog, which ->
+        }
+        infoDialog.show()
+    }
+
     private fun switchActivity(imageUri: Uri){
         val i = Intent()
         i.putExtra("newImageUri", imageUri.toString())

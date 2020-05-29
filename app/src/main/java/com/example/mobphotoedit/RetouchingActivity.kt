@@ -105,30 +105,26 @@ class RetouchingActivity : AppCompatActivity() {
             }
         })
         //Retouching Applying
-        doRetouchButton.setOnClickListener(object: View.OnClickListener
-        {
-            override fun onClick(v: View?) {
-                // blurred bitmap
-                var resBitmap = b_p.copy(b_p.config,true)
-                // blurred bitmap
-                var rad:Int = skbar_blur_radius.getProgress() + 1
-                mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
-                var blurred_b_p = boxBlur(resBitmap,rad)
-                for (i in MemPixels.indices) {
-                    val e: Pixel = MemPixels.get(i)
-                    if (blurred_b_p != null) {
-                        resBitmap.setPixel(
+        doRetouchButton.setOnClickListener { // blurred bitmap
+            var resBitmap = b_p.copy(b_p.config,true)
+            // blurred bitmap
+            var rad:Int = skbar_blur_radius.getProgress() + 1
+            mCanvas!!.drawBitmap(work_b_p,work_b_p.width.toFloat(),work_b_p.height.toFloat(), mPaint)
+            var blurred_b_p = boxBlur(resBitmap,rad)
+            for (i in MemPixels.indices) {
+                val e: Pixel = MemPixels.get(i)
+                if (blurred_b_p != null) {
+                    resBitmap.setPixel(
+                        e.x.toInt(),
+                        e.y.toInt(), blurred_b_p.getPixel(
                             e.x.toInt(),
-                            e.y.toInt(), blurred_b_p.getPixel(
-                                e.x.toInt(),
-                                e.y.toInt()
-                            )
+                            e.y.toInt()
                         )
-                    }
+                    )
                 }
-                photo.setImageBitmap(resBitmap)
             }
-        })
+            photo.setImageBitmap(resBitmap)
+        }
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)

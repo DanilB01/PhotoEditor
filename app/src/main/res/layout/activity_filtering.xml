@@ -91,29 +91,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9001368" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.28" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline43"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.73" />
+        app:layout_constraintGuide_percent="0.65" />
 
     <Button
         android:id="@+id/startpoints"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="@style/textStyle"
-        android:background="@null"
         android:text="@string/start_points"
+        style="@style/buttons"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline42"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,9 +123,9 @@
         android:id="@+id/filter"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="@style/textStyle"
-        android:background="@null"
         android:text="@string/filter"
+        style="@style/buttons"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline43"
         app:layout_constraintStart_toStartOf="@+id/guideline42"
@@ -135,9 +135,9 @@
         android:id="@+id/finishpoints"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="@style/textStyle"
-        android:background="@null"
+        style="@style/buttons"
         android:text="@string/finish_points"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline43"

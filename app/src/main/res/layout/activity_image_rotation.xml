@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="382dp" />
+        app:layout_constraintGuide_percent="0.9294404" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline30"
@@ -131,6 +131,7 @@
         android:layout_height="42dp"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
+        android:background="@null"
         android:src="@drawable/ic_rotate_right"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toStartOf="@+id/guideline31"
