@@ -26,7 +26,8 @@ import kotlin.math.pow
 
 
 class ImageScalingActivity : AppCompatActivity() {
-
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_scalling)
@@ -34,6 +35,7 @@ class ImageScalingActivity : AppCompatActivity() {
         pBar.visibility = View.GONE
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
+        imageUriUri = imageUri
         photo.setImageURI(imageUri)
 
         yes.setOnClickListener {
@@ -41,20 +43,25 @@ class ImageScalingActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
 
         var curBitmap = imageView2Bitmap(photo)
         val but1: Button = findViewById(R.id.button20)
         //bigpicture(mykoefnorm2, photo, curBitmap)
         but1.setOnClickListener {
+            isChanged = true
             val mykoefstring2 = editText.text.toString()
             val mykoefnorm2 = mykoefstring2.toFloat()
             if(mykoefnorm2 <= 3 && mykoefnorm2 > 0){
                 pBar.visibility = View.VISIBLE
                 CoroutineScope(Dispatchers.Default).async {
-                    bigpicture(mykoefnorm2, photo, curBitmap)
+                    val b_m = bigpicture(mykoefnorm2, photo, curBitmap)
                     launch(Dispatchers.Main) {
+                        photo.setImageBitmap(b_m)
                         curBitmap = imageView2Bitmap(photo)
                         pBar.visibility = View.GONE }
                 }
@@ -86,9 +93,25 @@ class ImageScalingActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
         }
         return super.onKeyDown(keyCode, event)
     }
@@ -101,7 +124,7 @@ private fun imageView2Bitmap(view: ImageView): Bitmap {
 }
 
 
-private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap){
+private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap): Bitmap{
 
     val oldh =  curBitmap.height
     val oldw = curBitmap.width
@@ -112,7 +135,7 @@ private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap){
     //  val newh = (oldh*koef).toInt()
     // val neww = (oldw*koef).toInt()
     if (koef<= 1){
-        mashtab(koef,curBitmap,photo)
+        return mashtab(koef,curBitmap,photo)
     }
     else{
         /*
@@ -157,8 +180,8 @@ private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap){
 
             }
         }
-        photo.setImageBitmap(finishbit)
-
+        return finishbit
+        //photo.setImageBitmap(finishbit)
 
     }
 }
@@ -197,7 +220,7 @@ private fun downScalingImage(times: Float, photo: ImageView, curBitmap: Bitmap){
 
 }
 
-private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView) {
+private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView): Bitmap {
 /*
     val aspectRatio: Float = bmap.height.toFloat() / bmap.width
     val displayMetrics  = DisplayMetrics()
@@ -217,6 +240,7 @@ private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView) {
             val r = bmap.getPixel((x / koef).toInt(), (y/koef).toInt())
             bmp.setPixel(x, y, r)
         }
-    photo.setImageBitmap(bmp);
+    return bmp
+    //photo.setImageBitmap(bmp);
 
 }

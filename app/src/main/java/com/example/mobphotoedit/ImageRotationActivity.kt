@@ -94,7 +94,8 @@ fun rotateRight(currentImage: ImageView) {
 }
 
 class ImageRotationActivity : AppCompatActivity() {
-    var imageUriUri: Uri? = null
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_rotation)
@@ -116,6 +117,7 @@ class ImageRotationActivity : AppCompatActivity() {
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
+                isChanged = true
                 rotateImage(skbar, photo, b_p,isRotatedRight)
             }
         }
@@ -123,6 +125,7 @@ class ImageRotationActivity : AppCompatActivity() {
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
         Rotate_right.setOnClickListener{
+            isChanged = true
             rotateRight(photo)
             skbar.progress=180
         }
@@ -131,7 +134,10 @@ class ImageRotationActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            quitDialog()
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
     }
     private fun switchActivity(imageUri: Uri){
@@ -139,9 +145,6 @@ class ImageRotationActivity : AppCompatActivity() {
         i.putExtra("newImageUri", imageUri.toString())
         setResult(Activity.RESULT_OK, i)
         finish()
-    }
-    override fun onBackPressed() {
-        quitDialog()
     }
 
     private fun quitDialog() {
@@ -158,7 +161,10 @@ class ImageRotationActivity : AppCompatActivity() {
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
         }
         return super.onKeyDown(keyCode, event)
     }

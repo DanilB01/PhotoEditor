@@ -20,6 +20,8 @@ import java.lang.Math.abs
 
 class UnsharpMaskingActivity : AppCompatActivity() {
     private var imageUriUri: Uri? = null
+    private var isChanged = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_unsharp_masking)
@@ -33,7 +35,10 @@ class UnsharpMaskingActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
         val kick808 = imageView2Bitmap(photo)
         val imgWidth = kick808.width
@@ -62,6 +67,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
+                isChanged = true
                 val znachsik = skbar.progress.toFloat()
                 val rad = skbarrad.progress
                 unsharp(kick808,rad,znachsik,3,photo)
@@ -105,7 +111,10 @@ class UnsharpMaskingActivity : AppCompatActivity() {
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
         }
         return super.onKeyDown(keyCode, event)
     }

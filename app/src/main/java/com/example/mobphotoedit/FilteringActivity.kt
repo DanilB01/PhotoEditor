@@ -19,7 +19,7 @@ import kotlin.math.abs
 class FilteringActivity : AppCompatActivity() {
 
     private var imageUriUri: Uri? = null
-
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filtering)
@@ -31,7 +31,10 @@ class FilteringActivity : AppCompatActivity() {
             switchActivity(imageUri)
         }
         no.setOnClickListener {
-            quitDialog()
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
 
         startpoints.setOnClickListener{
@@ -45,6 +48,7 @@ class FilteringActivity : AppCompatActivity() {
         }
 
         filter.setOnClickListener{
+            isChanged = true
             //(Filtering as MySurfaceView).filterFun
         }
     }
@@ -270,7 +274,7 @@ class FilteringActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            quitDialog()
         }
         return super.onKeyDown(keyCode, event)
     }

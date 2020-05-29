@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -27,13 +28,15 @@ private val MemPixels: ArrayList<Pixel> = ArrayList<Pixel>()
 
 
 class RetouchingActivity : AppCompatActivity() {
-
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_retouching)
 
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
+        imageUriUri = imageUri
         photo.setImageURI(imageUri)
         val skbar_blur_radius = findViewById<SeekBar>(R.id.skbar_blur_radius)
         val skbar_brush_size = findViewById<SeekBar>(R.id.skbar_brush_size)
@@ -114,6 +117,7 @@ class RetouchingActivity : AppCompatActivity() {
         doRetouchButton.setOnClickListener(object: View.OnClickListener
         {
             override fun onClick(v: View?) {
+                isChanged = true
                 // blurred bitmap
                 var resBitmap = b_p.copy(b_p.config,true)
                 // blurred bitmap
@@ -146,7 +150,10 @@ class RetouchingActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
     }
     private fun switchActivity(imageUri: Uri){
@@ -155,9 +162,24 @@ class RetouchingActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, i)
         finish()
     }
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
         }
         return super.onKeyDown(keyCode, event)
     }
