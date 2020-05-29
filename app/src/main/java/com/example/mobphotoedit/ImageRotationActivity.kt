@@ -105,7 +105,7 @@ class ImageRotationActivity : AppCompatActivity() {
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
-        var b_p = (photo.getDrawable() as BitmapDrawable).bitmap
+        var b_p = (photo.drawable as BitmapDrawable).bitmap
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
@@ -121,7 +121,6 @@ class ImageRotationActivity : AppCompatActivity() {
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
         Rotate_right.setOnClickListener{
-            isRotatedRight=true
             rotateRight(photo)
             skbar.progress=180
         }
