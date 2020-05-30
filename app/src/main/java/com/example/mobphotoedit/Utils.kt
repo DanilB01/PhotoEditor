@@ -5,7 +5,9 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.renderscript.*
 import android.widget.ImageView
+import android.widget.Toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -54,6 +56,12 @@ class BitmapStore {
     private var mOriginalBitmap: Bitmap? = null
     private var mCounter = 0
 
+    fun Empty():Boolean
+    {
+        if (mCounter == 0)
+            return true
+        return false
+    }
     fun addBitmap(bitmap: Bitmap) {
         mHistory.push(bitmap.copy(Bitmap.Config.ARGB_8888, true))
         mCounter += 1
@@ -120,4 +128,59 @@ class BitmapStore {
     }
 }
 
+fun checkBitmap(b_p: Bitmap, context: Context):Bitmap
+{
+    var ch_bp = b_p.copy(b_p.config,true)
+    if (b_p.byteCount > 10000000)
+    {
+        ch_bp = resizeBitmap2(ch_bp,ch_bp.width/2, context)
+        val toast = Toast.makeText(context, "Sorry, dude! But we use Resize to work with your image!", Toast.LENGTH_SHORT).show()
+    }
+    return ch_bp
+}
 
+//BigImageProcessing
+fun resizeBitmap2(src: Bitmap, dstWidth: Int, context: Context): Bitmap? {
+    val rs = RenderScript.create(context)
+    val bitmapConfig = src.config
+    val srcWidth = src.width
+    val srcHeight = src.height
+    val srcAspectRatio = srcWidth.toFloat() / srcHeight
+    val dstHeight = (dstWidth / srcAspectRatio).toInt()
+    val resizeRatio = srcWidth.toFloat() / dstWidth
+
+    /* Calculate gaussian's radius */
+    val sigma = resizeRatio / Math.PI.toFloat()
+    // https://android.googlesource.com/platform/frameworks/rs/+/master/cpu_ref/rsCpuIntrinsicBlur.cpp
+    var radius = 2.5f * sigma - 1.5f
+    radius = Math.min(25f, Math.max(0.0001f, radius))
+
+    /* Gaussian filter */
+    val tmpIn = Allocation.createFromBitmap(rs, src)
+    val tmpFiltered = Allocation.createTyped(rs, tmpIn.type)
+    val blurInstrinsic = ScriptIntrinsicBlur.create(rs, tmpIn.element)
+    blurInstrinsic.setRadius(radius)
+    blurInstrinsic.setInput(tmpIn)
+    blurInstrinsic.forEach(tmpFiltered)
+    tmpIn.destroy()
+    blurInstrinsic.destroy()
+
+    /* Resize */
+    val dst = Bitmap.createBitmap(dstWidth, dstHeight, bitmapConfig)
+    val t: Type = Type.createXY(rs, tmpFiltered.element, dstWidth, dstHeight)
+    val tmpOut = Allocation.createTyped(rs, t)
+    val resizeIntrinsic = ScriptIntrinsicResize.create(rs)
+    resizeIntrinsic.setInput(tmpFiltered)
+    resizeIntrinsic.forEach_bicubic(tmpOut)
+    tmpOut.copyTo(dst)
+    tmpFiltered.destroy()
+    tmpOut.destroy()
+    resizeIntrinsic.destroy()
+    return dst
+}
+
+fun imageView2Bitmap(view: ImageView):Bitmap{
+    var bitmap: Bitmap
+    bitmap =(view.getDrawable() as BitmapDrawable).bitmap
+    return bitmap
+}

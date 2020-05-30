@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_line_drawing.*
 import kotlin.math.*
 import java.util.*
 
-
 class LineDrawingActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

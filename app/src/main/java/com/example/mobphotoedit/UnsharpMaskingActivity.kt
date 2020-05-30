@@ -6,17 +6,18 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.photo
 import kotlinx.android.synthetic.main.activity_unsharp_masking.*
+import kotlinx.android.synthetic.main.activity_unsharp_masking.no
+import kotlinx.android.synthetic.main.activity_unsharp_masking.yes
 import java.lang.Math.abs
-
 
 class UnsharpMaskingActivity : AppCompatActivity() {
     private var imageUriUri: Uri? = null
@@ -32,6 +33,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         imageUriUri = imageUri
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
@@ -40,51 +42,43 @@ class UnsharpMaskingActivity : AppCompatActivity() {
             else
                 switchActivity(imageUri)
         }
-        val kick808 = imageView2Bitmap(photo)
-        val imgWidth = kick808.width
-        val imgHeight = kick808.height
-        /*
-        val blurredPixels =
-            Array(imgWidth) { IntArray(imgHeight) }
-        val boxWidth = 20
-        val boxHeight = 20
-        val left = 50
-        val top = 50
-        val right = imgWidth - left
-        val bottom = imgHeight - top
-        val usmAmount = 0.6F
-        val usmThrehold = 3
+        var workBitmap = imageView2Bitmap(photo)
+        workBitmap = checkBitmap(workBitmap,this)
+        val skbarAmount = findViewById<SeekBar>(R.id.amountSeekBar)
+        val skbarRad = findViewById<SeekBar>(R.id.radiusSeekBar)
 
-         */
-        val skbar = findViewById<SeekBar>(R.id.seek_bar)
-        val skbarrad = findViewById<SeekBar>(R.id.seek_bar2)
-
-        var OnUnsharpChangeListener: SeekBar.OnSeekBarChangeListener = object :
+        var radiusListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-
+                radTextView.text = "Radius: ${(skbarRad.getProgress().toFloat())}"
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                isChanged = true
-                val znachsik = skbar.progress.toFloat()
-                val rad = skbarrad.progress
-                unsharp(kick808,rad,znachsik,3,photo)
-                // ReloadImage(skbar,photo,b_p)
-                //CheckSize(photo,b_p)
+              isChanged = true
             }
         }
-        skbar.setOnSeekBarChangeListener(OnUnsharpChangeListener)
-        skbarrad.setOnSeekBarChangeListener(OnUnsharpChangeListener)
-        // boxCar(kick808,blurredPixels,left,top,right,bottom,boxWidth,boxHeight)
-        //  val skimaskbit = unsharpMask(kick808,blurredPixels,left,top,right,bottom,usmAmount,usmThrehold)
-        //  photo.setImageBitmap(skimaskbit)
 
-        //unsharp(kick808, 200,2F,3,photo)
+        var amountListener: SeekBar.OnSeekBarChangeListener = object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                amountTextView.text = "Amount: ${(skbarAmount.getProgress().toFloat())}"
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+            }
+        }
 
-        //  val kick809 = unsharpMask(kick808,50,50,kick808.width-50,kick808.height-50,0.6F,3)
-        //  photo.setImageBitmap(kick809)
+        skbarAmount.setOnSeekBarChangeListener(amountListener)
+        skbarRad.setOnSeekBarChangeListener(radiusListener)
+        //Retouching Applying
+        doUnsharp.setOnClickListener(object: View.OnClickListener
+        {
+            override fun onClick(v: View?) {
+                val amount = skbarAmount.progress.toFloat()
+                val rad = skbarRad.progress
+                unsharp(workBitmap,rad,amount,3,photo)
+            }
+        })
     }
 
     private fun switchActivity(imageUri: Uri){
@@ -93,6 +87,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, i)
         finish()
     }
+
     override fun onBackPressed() {
         quitDialog()
     }
@@ -109,6 +104,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         }
         quitDialog.show()
     }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if(isChanged)
@@ -119,7 +115,6 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         return super.onKeyDown(keyCode, event)
     }
 }
-
 
 private fun unsharp(ivPhoto: Bitmap, radius: Int, amount:Float, threshold: Int, photomy : ImageView){
     val blurredPhoto = boxBlur(ivPhoto!!, radius)
@@ -155,7 +150,6 @@ fun boxBlur(bitmap: Bitmap, range: Int): Bitmap? {
     canvas.drawBitmap(pixels, 0, width, 0.0f, 0.0f, width, height, true, null)
     return blurred
 }
-
 
 private fun boxBlurHorizontal(pixels: IntArray, w: Int, h: Int, halfRange: Int) {
     var index = 0
@@ -198,7 +192,6 @@ private fun boxBlurHorizontal(pixels: IntArray, w: Int, h: Int, halfRange: Int) 
         index += w
     }
 }
-
 
 private fun boxBlurVertical(pixels: IntArray, w: Int, h: Int, halfRange: Int) {
     val newColors = IntArray(h)
@@ -244,18 +237,9 @@ private fun boxBlurVertical(pixels: IntArray, w: Int, h: Int, halfRange: Int) {
     }
 }
 
-
-private fun unsharpMask(
-    ivPhoto: Bitmap,
-    origPixels: Array<IntArray>,
-    blurredPixels: Array<IntArray>,
-    amount: Float,
-    threshold: Int,
-    photomy: ImageView
-) {
-
+private fun unsharpMask(ivPhoto: Bitmap, origPixels: Array<IntArray>, blurredPixels: Array<IntArray>, amount: Float, threshold: Int, photomy: ImageView)
+{
     val newBitmap = Bitmap.createBitmap(ivPhoto!!.width, ivPhoto!!.height, Bitmap.Config.ARGB_8888)
-
     var orgRed = 0
     var orgGreen = 0
     var orgBlue = 0
@@ -293,11 +277,5 @@ private fun unsharpMask(
         }
     }
     photomy.setImageBitmap(newBitmap)
+}
 
-    //activity!!.ivPhoto!!.setImageBitmap(newBitmap)
-}
-private fun imageView2Bitmap(view: ImageView):Bitmap{
-    var bitmap: Bitmap
-    bitmap =(view.getDrawable() as BitmapDrawable).bitmap
-    return bitmap
-}

@@ -37,9 +37,11 @@ class ImageScalingActivity : AppCompatActivity() {
         var imageUri = Uri.parse(string)
         imageUriUri = imageUri
         photo.setImageURI(imageUri)
+        var b_p = imageView2Bitmap(photo)
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
@@ -117,6 +119,7 @@ class ImageScalingActivity : AppCompatActivity() {
     }
 }
 
+
 private fun imageView2Bitmap(view: ImageView): Bitmap {
     var bitmap: Bitmap
     bitmap =(view.getDrawable() as BitmapDrawable).bitmap
@@ -187,50 +190,7 @@ private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap): Bitmap{
 }
 
 
-
-private fun downScalingImage(times: Float, photo: ImageView, curBitmap: Bitmap){
-    val oldHeight: Int = curBitmap.height
-    val oldWidth:Int = curBitmap.width
-    val newHeight:Int = (oldHeight.toFloat()/times).toInt()
-    val newWidth:Int = (oldWidth.toFloat()/times).toInt()
-    val newBitmap = Bitmap.createBitmap(newHeight, newWidth, Bitmap.Config.ARGB_8888)
-    for (j in 0 until newWidth){
-        for (i in 0 until newHeight){
-            val x = (j.toFloat()*times).toInt()
-            val y = (i.toFloat()*times).toInt()
-            var red:Int = 0
-            var blue:Int = 0
-            var green:Int = 0
-            for (xi in 0 until ceil(times).toInt()) {
-                for (yi in 0 until ceil(times).toInt()) {
-                    val color = curBitmap.getPixel(x+xi,y+yi)
-                    red += Color.red(color)
-                    green += Color.green(color)
-                    blue += Color.blue(color)
-                }
-            }
-            val r = red/((ceil(times).pow(2)).toInt())
-            val g = green/((ceil(times).pow(2)).toInt())
-            val b = blue/((ceil(times).pow(2)).toInt())
-            val color = Color.rgb(r,g,b)
-            newBitmap.setPixel(j,i,color)
-        }
-    }
-    photo.setImageBitmap(newBitmap)
-
-}
-
 private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView): Bitmap {
-/*
-    val aspectRatio: Float = bmap.height.toFloat() / bmap.width
-    val displayMetrics  = DisplayMetrics()
-      //  resources.displayMetrics
-    val mImageWidth = displayMetrics.widthPixels
-    val mImageHeight = (mImageWidth * aspectRatio).roundToInt()
-    val mBitmap = Bitmap.createScaledBitmap(bmap, mImageWidth, mImageHeight, false)
-
- */
-
     val nWidth: Int = (bmap.width * koef).toInt()
     val nHeight: Int = (bmap.height * koef).toInt()
     val bmp: Bitmap = Bitmap.createBitmap(nWidth, nHeight,  Bitmap.Config.ARGB_8888)
@@ -241,6 +201,4 @@ private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView): Bitmap {
             bmp.setPixel(x, y, r)
         }
     return bmp
-    //photo.setImageBitmap(bmp);
-
 }
