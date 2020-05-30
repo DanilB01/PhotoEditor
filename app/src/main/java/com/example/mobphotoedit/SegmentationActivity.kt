@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_segmentation.*
 import kotlinx.android.synthetic.main.activity_segmentation.photo
 import org.opencv.android.BaseLoaderCallback

@@ -1,16 +1,13 @@
 package com.example.mobphotoedit
 
-import android.annotation.SuppressLint
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.view.KeyEvent
 import android.view.View
 import android.widget.*
@@ -20,9 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.pow
 
 
 class ImageScalingActivity : AppCompatActivity() {
@@ -37,7 +32,6 @@ class ImageScalingActivity : AppCompatActivity() {
         var imageUri = Uri.parse(string)
         imageUriUri = imageUri
         photo.setImageURI(imageUri)
-        var b_p = imageView2Bitmap(photo)
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
@@ -53,7 +47,6 @@ class ImageScalingActivity : AppCompatActivity() {
 
         var curBitmap = imageView2Bitmap(photo)
         val but1: Button = findViewById(R.id.button20)
-        //bigpicture(mykoefnorm2, photo, curBitmap)
         but1.setOnClickListener {
             isChanged = true
             val mykoefstring2 = editText.text.toString()
@@ -61,7 +54,7 @@ class ImageScalingActivity : AppCompatActivity() {
             if(mykoefnorm2 <= 3 && mykoefnorm2 > 0){
                 pBar.visibility = View.VISIBLE
                 CoroutineScope(Dispatchers.Default).async {
-                    val b_m = bigpicture(mykoefnorm2, photo, curBitmap)
+                    val b_m = bigpicture(mykoefnorm2, curBitmap)
                     launch(Dispatchers.Main) {
                         photo.setImageBitmap(b_m)
                         curBitmap = imageView2Bitmap(photo)
@@ -120,34 +113,17 @@ class ImageScalingActivity : AppCompatActivity() {
 }
 
 
-/*private fun imageView2Bitmap(view: ImageView): Bitmap {
-    var bitmap: Bitmap
-    bitmap =(view.getDrawable() as BitmapDrawable).bitmap
-    return bitmap
-}*/
-
-
-private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap): Bitmap{
+private fun bigpicture(koef:Float, curBitmap: Bitmap): Bitmap{
 
     val oldh =  curBitmap.height
     val oldw = curBitmap.width
     val newh:Int = (oldh.toFloat()*koef).toInt()
     val neww:Int = (oldw.toFloat()*koef).toInt()
 
-
-    //  val newh = (oldh*koef).toInt()
-    // val neww = (oldw*koef).toInt()
     if (koef<= 1){
-        return mashtab(koef,curBitmap,photo)
+        return mashtab(koef,curBitmap)
     }
     else{
-        /*
-    val newh: Int = curBitmap.height
-    val neww:Int = curBitmap.width
-    val oldh:Int = (newh.toFloat()/koef).toInt()
-    val oldw:Int = (neww.toFloat()/koef).toInt()
-
-         */
         var finishbit = Bitmap.createBitmap(neww, newh, Bitmap.Config.ARGB_8888)
         for (i in 0 until newh){
             var tmp = i.toFloat()/((newh-1).toFloat())*(oldh-1)
@@ -184,13 +160,11 @@ private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap): Bitmap{
             }
         }
         return finishbit
-        //photo.setImageBitmap(finishbit)
-
     }
 }
 
 
-private fun mashtab(koef: Float, bmap: Bitmap, photo: ImageView): Bitmap {
+private fun mashtab(koef: Float, bmap: Bitmap): Bitmap {
     val nWidth: Int = (bmap.width * koef).toInt()
     val nHeight: Int = (bmap.height * koef).toInt()
     val bmp: Bitmap = Bitmap.createBitmap(nWidth, nHeight,  Bitmap.Config.ARGB_8888)

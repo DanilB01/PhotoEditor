@@ -2,7 +2,6 @@ package com.example.mobphotoedit
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.os.Bundle
@@ -61,20 +60,6 @@ class CubeActivity : AppCompatActivity() {
             floatArrayOf( 200f,  200f, -200f),
             floatArrayOf( 200f,  200f,  200f)
         )
-        val cubeEdges = arrayOf(
-            intArrayOf(0, 1),
-            intArrayOf(1, 3),
-            intArrayOf(3, 2),
-            intArrayOf(2, 0),
-            intArrayOf(4, 5),
-            intArrayOf(5, 7),
-            intArrayOf(7, 6),
-            intArrayOf(6, 4),
-            intArrayOf(0, 4),
-            intArrayOf(1, 5),
-            intArrayOf(2, 6),
-            intArrayOf(3, 7)
-        )
         val cube = arrayOf( //грани
             surfacePlan(arrayOf(0,1,3,2), Paint()),
             surfacePlan(arrayOf(4,5,7,6), Paint()),
@@ -104,7 +89,7 @@ class CubeActivity : AppCompatActivity() {
             intArrayOf(3, 2)
         )
 
-        var octNodes = arrayOf(//tetra nodes, fig[1][0]
+        var octNodes = arrayOf(
             floatArrayOf(230f, 230f, 0f),
             floatArrayOf(230f, -230f, 0f),
             floatArrayOf(-230f, -230f, 0f),

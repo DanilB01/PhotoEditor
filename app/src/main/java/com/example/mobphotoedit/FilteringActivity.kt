@@ -7,15 +7,12 @@ import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.renderscript.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.experience.AffineTrans
 import kotlinx.android.synthetic.main.activity_filtering.*
@@ -37,13 +34,8 @@ class FilteringActivity : AppCompatActivity() {
 
     private val StartPoints = mutableListOf<Points>()
     private val FinishPoints = mutableListOf<Points>()
-    var flag : Boolean = false
     private var countSt = 0
     private var countFin = 0
-    private var paints = arrayOf(Paint(), Paint(), Paint())
-    private var pathSt = arrayOf(Path(), Path(), Path())
-    private var pathFin= arrayOf(Path(), Path(), Path())
-    var ind = -1
   
     private var imageUriUri: Uri? = null
     private var isChanged = false
@@ -100,11 +92,6 @@ class FilteringActivity : AppCompatActivity() {
             else {
                 Toast.makeText(this, "Set 3 start and 3 finish points", Toast.LENGTH_LONG).show()
             }
-            /*(Filtering as MySurfaceView).removePoints()
-            countSt = 0
-            countFin = 0
-            StartPoints.clear()
-            FinishPoints.clear()*/
         }
     }
 
@@ -228,14 +215,6 @@ class FilteringActivity : AppCompatActivity() {
             }
         }
 
-        /*fun removePoints(){
-            for (i in 0..2){
-                pathSt[i].reset()
-                pathFin[i].reset()
-            }
-            invalidate()
-        }*/
-
         fun getStartPoint(): MutableList<Points> {
             return StartPoints
         }
@@ -279,8 +258,8 @@ class FilteringActivity : AppCompatActivity() {
         for (i in 0 until imageBitmap!!.width) {
             for (j in 0 until imageBitmap!!.height) {
                 val image: Points? = solver.calc(i, j)
-                val w = (image?.x!!).roundToInt().toInt()
-                val h = (image.y).roundToInt().toInt()
+                val w = (image?.x!!).roundToInt()
+                val h = (image.y).roundToInt()
                 if (0 > w || w >= btmp!!.width) continue
                 if (0 > h || h >= btmp!!.height) continue
                 btmp!!.setPixel(i, j, imageBitmap!!.getPixel(w, h))

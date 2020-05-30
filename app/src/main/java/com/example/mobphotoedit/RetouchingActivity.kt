@@ -15,7 +15,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.photo
 import kotlinx.android.synthetic.main.activity_main.no
@@ -149,7 +148,6 @@ class RetouchingActivity : AppCompatActivity() {
                         if (blurred_b_p != null) {
                             resPixels[e.x.toInt() + e.y.toInt() * width] =
                                 blurredPixels[e.x.toInt() + e.y.toInt() * width]
-                            //resBitmap.setPixel(e.x.toInt(),e.y.toInt(), blurred_b_p.getPixel(e.x.toInt(),e.y.toInt()))
                         }
                     }
                 } catch(e:ArrayIndexOutOfBoundsException)

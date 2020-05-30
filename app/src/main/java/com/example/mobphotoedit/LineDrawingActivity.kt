@@ -2,7 +2,6 @@ package com.example.mobphotoedit
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.os.Bundle
@@ -243,7 +242,6 @@ class LineDrawingActivity : AppCompatActivity(){
         override fun onDraw(canvas: Canvas) {
             if(path != null) {
                 canvas.drawPath(path!!, paint)
-                //path?.reset()
             }
             if(path1 != null){
                 canvas.drawPath(path1!!, paint1)

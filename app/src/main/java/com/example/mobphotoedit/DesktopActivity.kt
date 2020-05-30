@@ -111,14 +111,11 @@ class DesktopActivity : AppCompatActivity() {
         val str = data.getStringExtra("newImageUri")
         imageUri = Uri.parse(str)
         photo.setImageURI(imageUri)
-        //bitmapStore.clearAllAndSetOriginal(imageView2Bitmap(photo))
     }
 
     override fun onBackPressed() {
         quitDialog()
     }
-
-
 
     private fun quitDialog() {
         val quitDialog = AlertDialog.Builder(this)
@@ -138,7 +135,6 @@ class DesktopActivity : AppCompatActivity() {
         quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
                 dialog, which ->
             run {
-                //Здесь прописать, куда переходить и что делать при откате изменений назад!!!!!!!
                 var mBitmap = bitmapStore.popBitmap()
                 if (mBitmap == null) {
                     Toast.makeText(this, "It`s original image, dude!", Toast.LENGTH_LONG).show()

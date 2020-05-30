@@ -7,16 +7,13 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.view.KeyEvent
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_correction.*
 import kotlinx.android.synthetic.main.activity_correction.item_list
 import kotlinx.android.synthetic.main.activity_correction.photo
-import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -44,11 +41,13 @@ class CorrectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correction)
-        pBarEf.visibility = View.GONE
+
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
-        photo.setImageURI(imageUri)
         var b_p =(photo.getDrawable() as BitmapDrawable).bitmap
+
+        pBarEf.visibility = View.GONE
+        photo.setImageURI(imageUri)
         b_p = checkBitmap(b_p,this)
         imageUriUri = imageUri
 
@@ -63,7 +62,6 @@ class CorrectionActivity : AppCompatActivity() {
             else
                 switchActivity(imageUri)
         }
-
         val itemAdapter2 by lazy {
             ItemAdapter2 { position: Int, item: Item1 ->
                 pBarEf.visibility = View.VISIBLE
@@ -83,16 +81,6 @@ class CorrectionActivity : AppCompatActivity() {
                         photo.setImageBitmap(b_m)
                         pBarEf.visibility = View.GONE }
                 }
-                /*when (position) {
-                    0 -> negativeFilter(b_p, photo)
-                    1 -> changeBrightnessFilter(b_p, 100F, photo)
-                    2 -> adjustSaturationFilter(b_p, 50F, photo)
-                    3 -> updateSaturationFilter(b_p,10F,photo)
-                    4 -> grassFilter(b_p,photo)
-                    5 -> movieFilter(b_p, photo)
-                    6 -> rubyFilter(b_p,photo)
-                    7 -> lagunaFilter(b_p,photo)
-                }*/
                 isChanged = true
                 item_list.smoothScrollToPosition(position) //сглаживание анимации
             }
@@ -186,7 +174,6 @@ fun changeBrightnessFilter(bmp: Bitmap, brightness: Float): Bitmap {
     val canvas = Canvas(ret)
     val paint = Paint()
     paint.setColorFilter(ColorMatrixColorFilter(cm))
-    // canvas.drawBitmap(bmp, 0, 0, paint)
     canvas.drawBitmap(bmp,0F,0F,paint)
     return ret
 }
