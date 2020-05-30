@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.activity_filtering.*
 import kotlinx.android.synthetic.main.activity_filtering.no
 import kotlinx.android.synthetic.main.activity_filtering.photo
 import kotlinx.android.synthetic.main.activity_filtering.yes
-import kotlinx.android.synthetic.main.activity_segmentation.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -29,7 +28,7 @@ import kotlin.math.sqrt
 class FilteringActivity : AppCompatActivity() {
 
     var imageBitmap : Bitmap? = null
-    var workImageBitmap : Bitmap? = null
+    var btmp: Bitmap? = null
 
     private val StartPoints = mutableListOf<Points>()
     private val FinishPoints = mutableListOf<Points>()
@@ -49,7 +48,7 @@ class FilteringActivity : AppCompatActivity() {
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
         imageBitmap = (photo.getDrawable() as BitmapDrawable).bitmap
-        workImageBitmap = imageBitmap!!.copy(imageBitmap!!.config, true)
+        //workImageBitmap = imageBitmap!!.copy(imageBitmap!!.config, true)
 
         startpoints.setOnClickListener {
             (Filtering as MySurfaceView).flag = false
@@ -63,10 +62,12 @@ class FilteringActivity : AppCompatActivity() {
 
         filter.setOnClickListener {
             filterFun(this)
-            photo.setImageBitmap(imageBitmap)
+            photo.setImageBitmap(btmp)
             (Filtering as MySurfaceView).removePoints()
             countSt = 0
             countFin = 0
+            StartPoints.clear()
+            FinishPoints.clear()
         }
 
         yes.setOnClickListener {
@@ -90,14 +91,6 @@ class FilteringActivity : AppCompatActivity() {
         private var pw = 0f
         private var ph = 0f
         var ind = -1
-
-        fun removePoints(){
-            for (i in 0..2){
-                pathSt[i].reset()
-                pathFin[i].reset()
-            }
-            invalidate()
-        }
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
             pw = (width - paddingLeft - paddingRight).toFloat()
@@ -198,6 +191,14 @@ class FilteringActivity : AppCompatActivity() {
             }
         }
 
+        fun removePoints(){
+            for (i in 0..2){
+                pathSt[i].reset()
+                pathFin[i].reset()
+            }
+            invalidate()
+        }
+
         fun getStartPoint(): MutableList<Points> {
             return StartPoints
         }
@@ -233,19 +234,19 @@ class FilteringActivity : AppCompatActivity() {
         if (!solver.prepare()) {
             return imageBitmap
         }
-        val btmp: Bitmap = imageBitmap!!.copy(
+        btmp = imageBitmap!!.copy(
             Bitmap.Config.ARGB_8888, true
         )
-        btmp.eraseColor(Color.WHITE)
+        btmp!!.eraseColor(Color.WHITE)
         var cnt = 0
         for (i in 0 until imageBitmap!!.width) {
             for (j in 0 until imageBitmap!!.height) {
                 val image: Points? = solver.calc(i, j)
                 val w = (image?.x!!).roundToInt().toInt()
                 val h = (image.y).roundToInt().toInt()
-                if (0 > w || w >= btmp.width) continue
-                if (0 > h || h >= btmp.height) continue
-                btmp.setPixel(i, j, imageBitmap!!.getPixel(w, h))
+                if (0 > w || w >= btmp!!.width) continue
+                if (0 > h || h >= btmp!!.height) continue
+                btmp!!.setPixel(i, j, imageBitmap!!.getPixel(w, h))
                 if (w != i && h != j) cnt++
             }
         }
@@ -257,7 +258,7 @@ class FilteringActivity : AppCompatActivity() {
         val h = sqrt(((a1?.x!! - a2?.x!!) * (a1?.x!! - a2?.x!!) + (a1?.y!! - a2?.y!!) * (a1.y - a2.y)).toDouble()).toInt()
         return if (ScalarProduct(StartPoints[0], StartPoints[1], StartPoints[2]) < ScalarProduct(FinishPoints[0], FinishPoints[1], FinishPoints[2])) {
             resizeBilinear(
-                btmp.copy(
+                btmp!!.copy(
                     Bitmap.Config.ARGB_8888,
                     true
                 ), imageBitmap!!.width,
@@ -265,7 +266,7 @@ class FilteringActivity : AppCompatActivity() {
             )
         } else {
             resizeBicubic(
-                btmp.copy(Bitmap.Config.ARGB_8888, true), w,
+                btmp!!.copy(Bitmap.Config.ARGB_8888, true), w,
                 context
             )
         }
@@ -340,6 +341,8 @@ class FilteringActivity : AppCompatActivity() {
                 )
             }
         }
+        StartPoints.clear()
+        FinishPoints.clear()
         return temp
     }
 
