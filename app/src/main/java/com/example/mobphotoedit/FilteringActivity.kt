@@ -91,11 +91,11 @@ class FilteringActivity : AppCompatActivity() {
                     pBarFil.visibility = View.GONE }
             }
             isChanged = true
-            (Filtering as MySurfaceView).removePoints()
+            /*(Filtering as MySurfaceView).removePoints()
             countSt = 0
             countFin = 0
             StartPoints.clear()
-            FinishPoints.clear()
+            FinishPoints.clear()*/
         }
     }
 
@@ -211,13 +211,13 @@ class FilteringActivity : AppCompatActivity() {
             }
         }
 
-        fun removePoints(){
+        /*fun removePoints(){
             for (i in 0..2){
                 pathSt[i].reset()
                 pathFin[i].reset()
             }
             invalidate()
-        }
+        }*/
 
         fun getStartPoint(): MutableList<Points> {
             return StartPoints
