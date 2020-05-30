@@ -52,79 +52,38 @@ class Pixel(val x: Float, val y: Float, val color: Int) {
 class BitmapStore {
 
     private val mHistory: Stack<Bitmap>
-    private val mBuffer: Stack<Bitmap>
     private var mOriginalBitmap: Bitmap? = null
     private var mCounter = 0
 
-    fun Empty():Boolean
-    {
-        if (mCounter == 0)
-            return true
-        return false
-    }
     fun addBitmap(bitmap: Bitmap) {
         mHistory.push(bitmap.copy(Bitmap.Config.ARGB_8888, true))
         mCounter += 1
         if (mCounter == STACK_SIZE) dropStack()
-        mBuffer.clear()
     }
 
-    // put current bitmap in mBuffer
+  //get top
     fun popBitmap(): Bitmap? {
-        val bitmap: Bitmap
+        var bitmap: Bitmap
         bitmap = try {
+            bitmap = mHistory.peek()
             mHistory.pop() // if mHistory is empty
         } // return original
         catch (e: EmptyStackException) {
             return mOriginalBitmap
         }
-        mBuffer.push(bitmap)
         mCounter -= 1
         return bitmap
     }
-
-    fun takeFromBuffer(): Bitmap? {
-        val bitmap: Bitmap
-        bitmap = try {
-            mBuffer.pop()
-        } catch (e: EmptyStackException) {
-            return null
-        }
-        mHistory.push(bitmap.copy(Bitmap.Config.ARGB_8888, true))
-        mCounter += 1
-        if (mCounter == STACK_SIZE) dropStack()
-        return bitmap
-    }
-
-    fun showHead(): Bitmap? {
-        val bitmap: Bitmap
-        bitmap = try {
-            mHistory.peek()
-        } catch (e: EmptyStackException) {
-            return mOriginalBitmap
-        }
-        return bitmap
-    }
-
-    fun clearAllAndSetOriginal(bitmap: Bitmap) {
-        mHistory.clear()
-        mBuffer.clear()
-        mOriginalBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        mCounter = 1
-    }
-
     private fun dropStack() {
         mOriginalBitmap = mHistory.removeAt(0)
         mCounter -= 1
     }
-
     companion object {
         private const val STACK_SIZE = 9
     }
 
     init {
         mHistory = Stack()
-        mBuffer = Stack()
     }
 }
 
