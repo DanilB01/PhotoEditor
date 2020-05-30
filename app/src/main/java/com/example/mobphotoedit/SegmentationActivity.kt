@@ -33,18 +33,6 @@ class SegmentationActivity : AppCompatActivity() {
     private var imageUriUri: Uri? = null
     private var isChanged = false
 
-    private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
-        override fun onManagerConnected(status: Int) {
-            when (status) {
-                LoaderCallbackInterface.SUCCESS -> {
-                }
-                else -> {
-                    super.onManagerConnected(status)
-                }
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_segmentation)
@@ -140,11 +128,6 @@ class SegmentationActivity : AppCompatActivity() {
 
         }
         quitDialog.show()
-    }
-
-    public override fun onResume() {
-        super.onResume()
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, mLoaderCallback)
     }
 
     private fun switchActivity(imageUri: Uri){

@@ -41,13 +41,11 @@ class CorrectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correction)
-
+        pBarEf.visibility = View.GONE
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
-        var b_p =(photo.getDrawable() as BitmapDrawable).bitmap
-
-        pBarEf.visibility = View.GONE
         photo.setImageURI(imageUri)
+        var b_p =(photo.getDrawable() as BitmapDrawable).bitmap
         b_p = checkBitmap(b_p,this)
         imageUriUri = imageUri
 
@@ -62,6 +60,7 @@ class CorrectionActivity : AppCompatActivity() {
             else
                 switchActivity(imageUri)
         }
+
         val itemAdapter2 by lazy {
             ItemAdapter2 { position: Int, item: Item1 ->
                 pBarEf.visibility = View.VISIBLE
@@ -288,7 +287,7 @@ fun lagunaFilter(sentBitmap: Bitmap): Bitmap {
             bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
         }
     }
-   return bufBitmap
+    return bufBitmap
 }
 
 //just ruby
