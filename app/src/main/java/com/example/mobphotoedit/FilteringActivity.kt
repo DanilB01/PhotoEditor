@@ -5,27 +5,54 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.renderscript.*
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.example.experience.AffineTrans
 import kotlinx.android.synthetic.main.activity_filtering.*
+import kotlinx.android.synthetic.main.activity_filtering.no
+import kotlinx.android.synthetic.main.activity_filtering.photo
+import kotlinx.android.synthetic.main.activity_filtering.yes
 import kotlin.math.abs
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 class FilteringActivity : AppCompatActivity() {
 
+    var imageBitmap : Bitmap? = null
+    var btmp: Bitmap? = null
+
+    private val StartPoints = mutableListOf<Points>()
+    private val FinishPoints = mutableListOf<Points>()
+    var flag : Boolean = false
+    private var countSt = 0
+    private var countFin = 0
+    private var paints = arrayOf(Paint(), Paint(), Paint())
+    private var pathSt = arrayOf(Path(), Path(), Path())
+    private var pathFin= arrayOf(Path(), Path(), Path())
+    var ind = -1
+  
     private var imageUriUri: Uri? = null
     private var isChanged = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filtering)
 
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
+        photo.setImageURI(imageUri)
+        imageBitmap = (photo.getDrawable() as BitmapDrawable).bitmap
+        //workImageBitmap = imageBitmap!!.copy(imageBitmap!!.config, true)
         imageUriUri = imageUri
         yes.setOnClickListener {
             switchActivity(imageUri)
@@ -37,25 +64,31 @@ class FilteringActivity : AppCompatActivity() {
                 switchActivity(imageUri)
         }
 
-        startpoints.setOnClickListener{
+        startpoints.setOnClickListener {
             (Filtering as MySurfaceView).flag = false
             (Filtering as MySurfaceView).invalidate()
         }
 
-        finishpoints.setOnClickListener{
+        finishpoints.setOnClickListener {
             (Filtering as MySurfaceView).flag = true
             (Filtering as MySurfaceView).invalidate()
         }
 
-        filter.setOnClickListener{
+        filter.setOnClickListener {
             isChanged = true
-            //(Filtering as MySurfaceView).filterFun
+            filterFun(this)
+            photo.setImageBitmap(btmp)
+            (Filtering as MySurfaceView).removePoints()
+            countSt = 0
+            countFin = 0
+            StartPoints.clear()
+            FinishPoints.clear()
         }
     }
 
     class MySurfaceView (context: Context, attrs: AttributeSet? = null) : View(context, attrs){
-        private val StartPoints = mutableListOf<Points>() // массив точек
-        private val FinishPoints = mutableListOf<Points>() // массив точек
+        private val StartPoints = mutableListOf<Points>()
+        private val FinishPoints = mutableListOf<Points>()
         var flag : Boolean = false
         private var countSt = 0
         private var countFin = 0
@@ -65,16 +98,6 @@ class FilteringActivity : AppCompatActivity() {
         private var pw = 0f
         private var ph = 0f
         var ind = -1
-
-        fun removePoints(){
-            for (i in 0..2){
-                pathSt[i].reset()
-                pathFin[i].reset()
-            }
-            invalidate()
-        }
-
-
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
             pw = (width - paddingLeft - paddingRight).toFloat()
@@ -175,76 +198,84 @@ class FilteringActivity : AppCompatActivity() {
             }
         }
 
-        private fun ScalarProduct(A: Points, B: Points, C: Points): Float {
-            val ABx: Float = B.x - A.x
-            val ABy: Float = B.y - A.y
-            val ACx: Float = C.x - A.x
-            val ACy: Float = C.y - A.y
-            return ABx * ACx + ABy * ACy
+        fun removePoints(){
+            for (i in 0..2){
+                pathSt[i].reset()
+                pathFin[i].reset()
+            }
+            invalidate()
         }
 
-        //fun filterFun(): Bitmap? {
-        //}
+        fun getStartPoint(): MutableList<Points> {
+            return StartPoints
+        }
 
-
-
-        /*private fun algorithm(): Bitmap? {
-            val solver: AffineSystemeCoord
-            solver = AffineSystemeCoord(
-                p11, p12, p13, p21, p22, p23
-            )
-            if (!solver.prepare()) {
-                Toast.makeText(
-                    mainActivity.getApplicationContext(),
-                    mainActivity.getResources().getString(R.string.points_on_one_line),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return mainActivity.getBitmap()
-            }
-            val btmp: Bitmap = mainActivity.getBitmap().copy(
-                Bitmap.Config.ARGB_8888, true
-            )
-            btmp.eraseColor(Color.WHITE)
-            var cnt = 0
-            for (i in 0 until mainActivity.getBitmap().getWidth()) {
-                for (j in 0 until mainActivity.getBitmap().getHeight()) {
-                    val image: Points = solver.calc(i, j)
-                    val w = Math.round(image.x).toInt()
-                    val h = Math.round(image.y).toInt()
-                    if (0 > w || w >= btmp.width) continue
-                    if (0 > h || h >= btmp.height) continue
-                    btmp.setPixel(i, j, mainActivity.getBitmap().getPixel(w, h))
-                    if (w != i && h != j) cnt++
-                }
-            }
-            var a1: Points = solver.calc(0.0, 0.0)
-            var a2: Points = solver.calc(mainActivity.getBitmap().getWidth(), 0.0)
-            val w =
-                Math.sqrt((a1.x - a2.x) * (a1.x - a2.x) + (a1.y - a2.y) * (a1.y - a2.y)).toInt()
-            a1 = solver.calc(0, 0)
-            a2 = solver.calc(0, mainActivity.getBitmap().getHeight())
-            val h =
-                Math.sqrt((a1.x - a2.x) * (a1.x - a2.x) + (a1.y - a2.y) * (a1.y - a2.y)).toInt()
-            return if (ScalarProduct(p11, p12, p13) < ScalarProduct(p21, p22, p23)) {
-                ColorFIltersCollection.resizeBilinear(
-                    btmp.copy(
-                        Bitmap.Config.ARGB_8888,
-                        true
-                    ), mainActivity.getBitmap().getWidth(),
-                    mainActivity.getBitmap().getHeight(), w, h
-                )
-            } else {
-                ColorFIltersCollection.resizeBicubic(
-                    btmp.copy(Bitmap.Config.ARGB_8888, true), w,
-                    mainActivity.getApplicationContext()
-                )
-            }
-        }*/
+        fun getFinishPoint(): MutableList<Points> {
+            return FinishPoints
+        }
 
         init {
             paints[0].color = Color.RED
             paints[1].color = Color.BLUE
             paints[2].color = Color.GREEN
+        }
+    }
+
+    private fun ScalarProduct(A: Points, B: Points, C: Points): Float {
+        val ABx: Float = B.x - A.x
+        val ABy: Float = B.y - A.y
+        val ACx: Float = C.x - A.x
+        val ACy: Float = C.y - A.y
+        return ABx * ACx + ABy * ACy
+    }
+
+    private fun filterFun(context: Context): Bitmap? {
+        var StartPoints = mutableListOf<Points>()
+        var FinishPoints = mutableListOf<Points>()
+        StartPoints = (Filtering as MySurfaceView).getStartPoint()
+        FinishPoints = (Filtering as MySurfaceView).getFinishPoint()
+        val solver: AffineTrans
+        solver = AffineTrans(
+            StartPoints[0], StartPoints[1], StartPoints[2], FinishPoints[0], FinishPoints[1], FinishPoints[2]
+        )
+        if (!solver.prepare()) {
+            return imageBitmap
+        }
+        btmp = imageBitmap!!.copy(
+            Bitmap.Config.ARGB_8888, true
+        )
+        btmp!!.eraseColor(Color.WHITE)
+        var cnt = 0
+        for (i in 0 until imageBitmap!!.width) {
+            for (j in 0 until imageBitmap!!.height) {
+                val image: Points? = solver.calc(i, j)
+                val w = (image?.x!!).roundToInt().toInt()
+                val h = (image.y).roundToInt().toInt()
+                if (0 > w || w >= btmp!!.width) continue
+                if (0 > h || h >= btmp!!.height) continue
+                btmp!!.setPixel(i, j, imageBitmap!!.getPixel(w, h))
+                if (w != i && h != j) cnt++
+            }
+        }
+        var a1: Points? = solver.calc(0, 0)
+        var a2: Points? = solver.calc(imageBitmap!!.width, 0)
+        val w = sqrt(((a1?.x!! - a2?.x!!) * (a1.x - a2.x) + (a1.y - a2.y) * (a1.y - a2.y)).toDouble()).toInt()
+        a1 = solver.calc(0, 0)
+        a2 = solver.calc(0, imageBitmap!!.height)
+        val h = sqrt(((a1?.x!! - a2?.x!!) * (a1?.x!! - a2?.x!!) + (a1?.y!! - a2?.y!!) * (a1.y - a2.y)).toDouble()).toInt()
+        return if (ScalarProduct(StartPoints[0], StartPoints[1], StartPoints[2]) < ScalarProduct(FinishPoints[0], FinishPoints[1], FinishPoints[2])) {
+            resizeBilinear(
+                btmp!!.copy(
+                    Bitmap.Config.ARGB_8888,
+                    true
+                ), imageBitmap!!.width,
+                imageBitmap!!.height, w, h
+            )
+        } else {
+            resizeBicubic(
+                btmp!!.copy(Bitmap.Config.ARGB_8888, true), w,
+                context
+            )
         }
     }
 
@@ -277,5 +308,110 @@ class FilteringActivity : AppCompatActivity() {
             quitDialog()
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    fun resizeBilinear(pixels: Bitmap, w: Int, h: Int, w2: Int, h2: Int): Bitmap? {
+        val temp = Bitmap.createBitmap(w2, h2, Bitmap.Config.ARGB_8888)
+        var a: Int
+        var b: Int
+        var c: Int
+        var d: Int
+        var x: Int
+        var y: Int
+        val x_ratio = (w - 1).toFloat() / w2
+        val y_ratio = (h - 1).toFloat() / h2
+        var x_diff: Float
+        var y_diff: Float
+        var blue: Float
+        var red: Float
+        var green: Float
+        for (i in 0 until h2) {
+            for (j in 0 until w2) {
+                x = (x_ratio * j).toInt()
+                y = (y_ratio * i).toInt()
+                x_diff = x_ratio * j - x
+                y_diff = y_ratio * i - y
+                try {
+                    a = pixels.getPixel(x, y)
+                    b = pixels.getPixel(x + 1, y)
+                    c = pixels.getPixel(x, y + 1)
+                    d = pixels.getPixel(x + 1, y + 1)
+                } catch (e: ArrayIndexOutOfBoundsException) {
+                    a = pixels.getPixel(x, y)
+                    b = pixels.getPixel(x, y)
+                    c = pixels.getPixel(x, y)
+                    d = pixels.getPixel(x, y)
+                }
+
+                // blue element
+                // Yb = Ab(1-w)(1-h) + Bb(w)(1-h) + Cb(h)(1-w) + Db(wh)
+                blue =
+                    (a and 0xff) * (1 - x_diff) * (1 - y_diff) + (b and 0xff) * x_diff * (1 - y_diff) + (c and 0xff) * y_diff * (1 - x_diff) + (d and 0xff) * (x_diff * y_diff)
+
+                // green element
+                // Yg = Ag(1-w)(1-h) + Bg(w)(1-h) + Cg(h)(1-w) + Dg(wh)
+                green =
+                    (a shr 8 and 0xff) * (1 - x_diff) * (1 - y_diff) + (b shr 8 and 0xff) * x_diff * (1 - y_diff) + (c shr 8 and 0xff) * y_diff * (1 - x_diff) + (d shr 8 and 0xff) * (x_diff * y_diff)
+
+                // red element
+                // Yr = Ar(1-w)(1-h) + Br(w)(1-h) + Cr(h)(1-w) + Dr(wh)
+                red =
+                    (a shr 16 and 0xff) * (1 - x_diff) * (1 - y_diff) + (b shr 16 and 0xff) * x_diff * (1 - y_diff) + (c shr 16 and 0xff) * y_diff * (1 - x_diff) + (d shr 16 and 0xff) * (x_diff * y_diff)
+                temp.setPixel(
+                    j, i, -0x1000000 or
+                            (red.toInt() shl 16 and 0xff0000) or
+                            (green.toInt() shl 8 and 0xff00) or
+                            blue.toInt()
+                )
+            }
+        }
+        StartPoints.clear()
+        FinishPoints.clear()
+        return temp
+    }
+
+    // link: https://medium.com/@petrakeas/alias-free-resize-with-renderscript-5bf15a86ce3
+// firstly apply Gaussian blur to the image
+// and then subsample it using bicubic interpolation
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun resizeBicubic(src: Bitmap, dstWidth: Int, context: Context?): Bitmap? {
+        val rs = RenderScript.create(context)
+        val bitmapConfig = src.config
+        val srcWidth = src.width
+        val srcHeight = src.height
+        val srcAspectRatio = srcWidth.toFloat() / srcHeight
+        val dstHeight = (dstWidth / srcAspectRatio).toInt()
+        val resizeRatio = srcWidth.toFloat() / dstWidth
+
+        /* Calculate gaussian's radius */
+        val sigma = resizeRatio / Math.PI.toFloat()
+        // https://android.googlesource.com/platform/frameworks/rs/+/master/cpu_ref/rsCpuIntrinsicBlur.cpp
+        var radius = 2.5f * sigma - 1.5f
+        radius = Math.min(25f, Math.max(0.0001f, radius))
+
+        /* Gaussian filter */
+        val tmpIn = Allocation.createFromBitmap(rs, src)
+        val tmpFiltered = Allocation.createTyped(rs, tmpIn.type)
+        val blurInstrinsic = ScriptIntrinsicBlur.create(rs, tmpIn.element)
+        blurInstrinsic.setRadius(radius)
+        blurInstrinsic.setInput(tmpIn)
+        blurInstrinsic.forEach(tmpFiltered)
+        tmpIn.destroy()
+        blurInstrinsic.destroy()
+
+        /* Resize */
+        val dst = Bitmap.createBitmap(dstWidth, dstHeight, bitmapConfig)
+        val t =
+            Type.createXY(rs, tmpFiltered.element, dstWidth, dstHeight)
+        val tmpOut = Allocation.createTyped(rs, t)
+        // ScriptIntrinsicResize uses bicubic interpolation
+        val resizeIntrinsic = ScriptIntrinsicResize.create(rs)
+        resizeIntrinsic.setInput(tmpFiltered)
+        resizeIntrinsic.forEach_bicubic(tmpOut)
+        tmpOut.copyTo(dst)
+        tmpFiltered.destroy()
+        tmpOut.destroy()
+        resizeIntrinsic.destroy()
+        return dst
     }
 }
