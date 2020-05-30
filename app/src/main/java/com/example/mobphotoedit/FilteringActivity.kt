@@ -30,6 +30,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+
 class FilteringActivity : AppCompatActivity() {
 
     var imageBitmap : Bitmap? = null
@@ -82,15 +83,24 @@ class FilteringActivity : AppCompatActivity() {
         }
 
         filter.setOnClickListener {
+            countSt = (Filtering as MySurfaceView).getcountSt()
+            countFin = (Filtering as MySurfaceView).getcountFin()
 
-            pBarFil.visibility = View.VISIBLE
-            CoroutineScope(Dispatchers.Default).async {
-                filterFun(this@FilteringActivity)
-                launch(Dispatchers.Main) {
-                    photo.setImageBitmap(btmp)
-                    pBarFil.visibility = View.GONE }
+            if (countSt == 3 && countFin == 3)
+            {
+                pBarFil.visibility = View.VISIBLE
+                CoroutineScope(Dispatchers.Default).async {
+                    filterFun(this@FilteringActivity)
+                    launch(Dispatchers.Main) {
+                        photo.setImageBitmap(btmp)
+                        pBarFil.visibility = View.GONE
+                    }
+                }
+                isChanged = true
             }
-            isChanged = true
+            else {
+                Toast.makeText(this, "Set 3 start and 3 finish points", Toast.LENGTH_LONG).show()
+            }
             /*(Filtering as MySurfaceView).removePoints()
             countSt = 0
             countFin = 0
@@ -103,14 +113,22 @@ class FilteringActivity : AppCompatActivity() {
         private val StartPoints = mutableListOf<Points>()
         private val FinishPoints = mutableListOf<Points>()
         var flag : Boolean = false
-        private var countSt = 0
-        private var countFin = 0
         private var paints = arrayOf(Paint(), Paint(), Paint())
         private var pathSt = arrayOf(Path(), Path(), Path())
         private var pathFin= arrayOf(Path(), Path(), Path())
         private var pw = 0f
         private var ph = 0f
+        private var countSt = 0
+        private var countFin = 0
         var ind = -1
+
+        fun getcountSt(): Int {
+            return countSt
+        }
+
+        fun getcountFin(): Int {
+            return countFin
+        }
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
             pw = (width - paddingLeft - paddingRight).toFloat()
@@ -285,7 +303,7 @@ class FilteringActivity : AppCompatActivity() {
                 imageBitmap!!.height, w, h
             )
         } else {
-            resizeBicubic(
+            resizeBitmap2(
                 btmp!!.copy(Bitmap.Config.ARGB_8888, true), w,
                 context
             )
@@ -383,48 +401,4 @@ class FilteringActivity : AppCompatActivity() {
         return temp
     }
 
-    // link: https://medium.com/@petrakeas/alias-free-resize-with-renderscript-5bf15a86ce3
-// firstly apply Gaussian blur to the image
-// and then subsample it using bicubic interpolation
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun resizeBicubic(src: Bitmap, dstWidth: Int, context: Context?): Bitmap? {
-        val rs = RenderScript.create(context)
-        val bitmapConfig = src.config
-        val srcWidth = src.width
-        val srcHeight = src.height
-        val srcAspectRatio = srcWidth.toFloat() / srcHeight
-        val dstHeight = (dstWidth / srcAspectRatio).toInt()
-        val resizeRatio = srcWidth.toFloat() / dstWidth
-
-        /* Calculate gaussian's radius */
-        val sigma = resizeRatio / Math.PI.toFloat()
-        // https://android.googlesource.com/platform/frameworks/rs/+/master/cpu_ref/rsCpuIntrinsicBlur.cpp
-        var radius = 2.5f * sigma - 1.5f
-        radius = Math.min(25f, Math.max(0.0001f, radius))
-
-        /* Gaussian filter */
-        val tmpIn = Allocation.createFromBitmap(rs, src)
-        val tmpFiltered = Allocation.createTyped(rs, tmpIn.type)
-        val blurInstrinsic = ScriptIntrinsicBlur.create(rs, tmpIn.element)
-        blurInstrinsic.setRadius(radius)
-        blurInstrinsic.setInput(tmpIn)
-        blurInstrinsic.forEach(tmpFiltered)
-        tmpIn.destroy()
-        blurInstrinsic.destroy()
-
-        /* Resize */
-        val dst = Bitmap.createBitmap(dstWidth, dstHeight, bitmapConfig)
-        val t =
-            Type.createXY(rs, tmpFiltered.element, dstWidth, dstHeight)
-        val tmpOut = Allocation.createTyped(rs, t)
-        // ScriptIntrinsicResize uses bicubic interpolation
-        val resizeIntrinsic = ScriptIntrinsicResize.create(rs)
-        resizeIntrinsic.setInput(tmpFiltered)
-        resizeIntrinsic.forEach_bicubic(tmpOut)
-        tmpOut.copyTo(dst)
-        tmpFiltered.destroy()
-        tmpOut.destroy()
-        resizeIntrinsic.destroy()
-        return dst
-    }
 }

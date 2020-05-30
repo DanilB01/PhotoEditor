@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -43,6 +44,7 @@ fun  getRotated(src:Bitmap, degrees:Double):Bitmap
     var curWidth:Int = maxX - minX
     var curHeight:Int = maxY - minY
     var rotatedBitmap = Bitmap.createBitmap(curWidth,  curHeight, src.config)
+    rotatedBitmap!!.eraseColor(Color.WHITE)
 
     val pixels = IntArray(height*width)
     src.getPixels(pixels,0,width,0,0,width,height)
