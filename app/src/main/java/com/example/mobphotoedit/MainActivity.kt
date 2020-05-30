@@ -18,12 +18,12 @@ var bitmapStore:BitmapStore = BitmapStore()
 
 class MainActivity : AppCompatActivity() {
 
-   companion object {
-       private val IMAGE_CAPTURE_CODE = 1002
-       private val IMAGE_PICK_CODE = 1001
-       private val PERMISSION_CODE = 1000
-       private val RETURN_CODE = 2000
-   }
+    companion object {
+        private val IMAGE_CAPTURE_CODE = 1002
+        private val IMAGE_PICK_CODE = 1001
+        private val PERMISSION_CODE = 1000
+        private val RETURN_CODE = 2000
+    }
     var imageUri: Uri? = null
     var flagCamera: Boolean = false
     var flagGallery: Boolean = false
@@ -91,7 +91,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setDefaultInterface(){
-        imageUri = null
         pic.setImageResource(R.drawable.ic_image_black_24dp)
         yes.visibility = View.GONE
         no.visibility = View.GONE
@@ -168,14 +167,14 @@ class MainActivity : AppCompatActivity() {
                 RETURN_CODE-> {
                     setDefaultInterface()
                 }
+
+                IMAGE_CAPTURE_CODE->{
+                    pic.setImageURI(imageUri)
+                    yes.visibility = View.VISIBLE
+                    no.visibility = View.VISIBLE
+                    message.text = getString(R.string.cont)
+                }
             }
         }
     }
-
-
-
-
 }
-
-
-
