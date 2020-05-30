@@ -19,6 +19,7 @@
         <item name="android:textColor">@color/lightPink</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">27sp</item>
     </style>
 
     <style name="buttons">

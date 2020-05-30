@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
@@ -17,17 +18,23 @@ import kotlin.math.abs
 
 class FilteringActivity : AppCompatActivity() {
 
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filtering)
 
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
+        imageUriUri = imageUri
         yes.setOnClickListener {
             switchActivity(imageUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
 
         startpoints.setOnClickListener{
@@ -41,6 +48,7 @@ class FilteringActivity : AppCompatActivity() {
         }
 
         filter.setOnClickListener{
+            isChanged = true
             //(Filtering as MySurfaceView).filterFun
         }
     }
@@ -247,9 +255,26 @@ class FilteringActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            quitDialog()
         }
         return super.onKeyDown(keyCode, event)
     }

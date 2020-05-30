@@ -1,11 +1,14 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.view.KeyEvent
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +34,8 @@ private val possibleItems = listOf( //список возможных иконо
 )
 
 class CorrectionActivity : AppCompatActivity() {
-
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correction)
@@ -41,6 +45,7 @@ class CorrectionActivity : AppCompatActivity() {
         photo.setImageURI(imageUri)
         var b_p =(photo.getDrawable() as BitmapDrawable).bitmap
         b_p = checkBitmap(b_p,this)
+        imageUriUri = imageUri
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
@@ -48,7 +53,10 @@ class CorrectionActivity : AppCompatActivity() {
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
 
         val itemAdapter2 by lazy {
@@ -64,7 +72,7 @@ class CorrectionActivity : AppCompatActivity() {
                     6 -> rubyFilter(b_p,photo)
                     7 -> lagunaFilter(b_p,photo)
                 }
-
+                isChanged = true
                 item_list.smoothScrollToPosition(position) //сглаживание анимации
             }
         }
@@ -85,6 +93,27 @@ class CorrectionActivity : AppCompatActivity() {
         i.putExtra("newImageUri", imageUri.toString())
         setResult(Activity.RESULT_OK, i)
         finish()
+    }
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
 

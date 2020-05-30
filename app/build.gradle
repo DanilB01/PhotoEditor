@@ -37,4 +37,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
    // implementation 'org.tensorflow:tensorflow-android:1.2.0-rc0'
     implementation project(path: ':openCVLibrary343')
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
 }
