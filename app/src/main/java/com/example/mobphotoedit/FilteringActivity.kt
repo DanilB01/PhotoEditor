@@ -30,7 +30,6 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-
 class FilteringActivity : AppCompatActivity() {
 
     var imageBitmap : Bitmap? = null

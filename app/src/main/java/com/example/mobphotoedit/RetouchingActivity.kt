@@ -9,11 +9,13 @@ import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.photo
 import kotlinx.android.synthetic.main.activity_main.no
@@ -95,18 +97,29 @@ class RetouchingActivity : AppCompatActivity() {
                 val pixels = IntArray(height*width)
                 work_b_p.getPixels(pixels,0,width,0,0,width,height)
 
-                for (i in -rad..rad) {
-                    for (j in -rad..rad) {
-                       if (0 > curX + i || curX + i >= b_p.getWidth().toFloat()) {
-                            continue
+                try {
+                    for (i in -rad..rad) {
+                        for (j in -rad..rad) {
+                            if (0 > curX + i || curX + i >= b_p.getWidth().toFloat()) {
+                                continue
+                            }
+                            if (0 > curY + j || curY + j >= b_p.getHeight().toFloat()) {
+                                continue
+                            }
+                            if (Math.sqrt(i * i + j * j.toDouble()) <= rad) {
+                                MemPixels.add(
+                                    Pixel(
+                                        curX + i,
+                                        curY + j,
+                                        pixels[((curX + i) * width + (curY + j)).toInt()]
+                                    )
+                                )
+                            }
                         }
-                        if (0 > curY + j || curY + j >= b_p.getHeight().toFloat()) {
-                            continue
-                        }
-                       if (Math.sqrt(i * i + j * j.toDouble()) <= rad) {
-                           MemPixels.add( Pixel(curX + i, curY + j, pixels[((curX + i)*width +  (curY + j)).toInt()]))
-                       }
                     }
+                } catch(e:ArrayIndexOutOfBoundsException)
+                {
+                    Log.v("a","Check")
                 }
                 photo.setImageBitmap(work_b_p)
                 return true
@@ -130,12 +143,18 @@ class RetouchingActivity : AppCompatActivity() {
 
                 var resPixels = IntArray(resBitmap.width*resBitmap.height)
                 resBitmap.getPixels(resPixels,0,width,0,0,width,height)
-                for (i in MemPixels.indices) {
-                    val e: Pixel = MemPixels[i]
-                    if (blurred_b_p != null) {
-                        resPixels[e.x.toInt()+ e.y.toInt()*width ] = blurredPixels[e.x.toInt()+ e.y.toInt()*width ]
-                        //resBitmap.setPixel(e.x.toInt(),e.y.toInt(), blurred_b_p.getPixel(e.x.toInt(),e.y.toInt()))
+                try {
+                    for (i in MemPixels.indices) {
+                        val e: Pixel = MemPixels[i]
+                        if (blurred_b_p != null) {
+                            resPixels[e.x.toInt() + e.y.toInt() * width] =
+                                blurredPixels[e.x.toInt() + e.y.toInt() * width]
+                            //resBitmap.setPixel(e.x.toInt(),e.y.toInt(), blurred_b_p.getPixel(e.x.toInt(),e.y.toInt()))
+                        }
                     }
+                } catch(e:ArrayIndexOutOfBoundsException)
+                {
+                    Log.v("a","Check")
                 }
                 resBitmap.setPixels(resPixels,0,width,0,0,width,height)
                 photo.setImageBitmap(resBitmap)
