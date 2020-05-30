@@ -1,10 +1,10 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -20,7 +20,7 @@ import java.lang.Math.*
 
 fun  getRotated(src:Bitmap, degrees:Double):Bitmap
 {
-    var rads: Double = (degrees*Math.PI) / 180.0
+    var rads: Double = (degrees* PI) / 180.0
     val width:Int = src.width
     val height:Int = src.height
 
@@ -93,7 +93,8 @@ fun rotateRight(currentImage: ImageView) {
 }
 
 class ImageRotationActivity : AppCompatActivity() {
-
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_rotation)
@@ -102,18 +103,22 @@ class ImageRotationActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         var isRotatedRight = false
+        imageUriUri = imageUri
 
         val skbar = findViewById<SeekBar>(R.id.seekBar)
         photo.setImageURI(imageUri)
         var b_p = (photo.drawable as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p, this)
 
         var OnRotateChangeListener: SeekBar.OnSeekBarChangeListener = object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                mTextView.setText("Angle: ${(skbar.getProgress().toFloat() - 180).toString()}°")
+                mTextView.text = "Angle: ${(skbar.getProgress().toFloat() - 180)}°"
+                rotateImage(skbar, photo, b_p,isRotatedRight)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
+                isChanged = true
                 rotateImage(skbar, photo, b_p,isRotatedRight)
             }
         }
@@ -121,15 +126,20 @@ class ImageRotationActivity : AppCompatActivity() {
         skbar.setOnSeekBarChangeListener(OnRotateChangeListener)
 
         Rotate_right.setOnClickListener{
+            isChanged = true
             rotateRight(photo)
             skbar.progress=180
         }
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
     }
     private fun switchActivity(imageUri: Uri){
@@ -138,9 +148,25 @@ class ImageRotationActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, i)
         finish()
     }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
         }
         return super.onKeyDown(keyCode, event)
     }

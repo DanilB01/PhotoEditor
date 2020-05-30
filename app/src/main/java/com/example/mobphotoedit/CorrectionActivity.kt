@@ -1,49 +1,41 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.view.KeyEvent
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_correction.*
+import kotlinx.android.synthetic.main.activity_correction.item_list
+import kotlinx.android.synthetic.main.activity_correction.photo
+import kotlinx.android.synthetic.main.activity_desktop.*
 
+data class Item1( //класс объекта
+    val title: String,
+    @DrawableRes val icon: Int
+)
+
+private val possibleItems = listOf( //список возможных иконок
+    Item1("negative", R.mipmap.ic_negativelast),
+    Item1("brightness", R.mipmap.ic_brightlast),
+    Item1("saturation", R.mipmap.ic_seturation1last),
+    Item1("saturation2", R.mipmap.ic_setuarationlast2),
+    Item1("grass", R.mipmap.ic_grasslast),
+    Item1("movie", R.mipmap.ic_movie),
+    Item1("ruby", R.mipmap.ic_rubulast),
+    Item1("laguna", R.mipmap.ic_laguna)
+)
 
 class CorrectionActivity : AppCompatActivity() {
-
-    private val itemAdapter2 by lazy {
-        ItemAdapter2 { position: Int, item: Item1 ->
-
-            when (position) {
-                0 -> filter1(imageView2Bitmap(photo), photo)
-                1 -> changeBrightness(imageView2Bitmap(photo), 100F, photo)
-                2 -> adjustSaturation(imageView2Bitmap(photo), 50F, photo)
-                3 -> updateSaturation(imageView2Bitmap(photo),10F,photo)
-                4 -> grassFilter(imageView2Bitmap(photo),photo)
-                5 -> movieFilter(imageView2Bitmap(photo), photo)
-                6 -> rubyFilter(imageView2Bitmap(photo),photo)
-                7 -> lagunaFilter(imageView2Bitmap(photo),photo)
-            }
-
-            item_list.smoothScrollToPosition(position) //сглаживание анимации
-        }
-    }
-
-    private val possibleItems = listOf( //список возможных иконок
-        Item1("negative", R.drawable.ic_photo_filter),
-        Item1("brightness", R.drawable.ic_photo_filter),
-        Item1("saturation", R.drawable.ic_photo_filter),
-        Item1("saturation2", R.drawable.ic_photo_filter),
-        Item1("grass", R.drawable.ic_photo_filter),
-        Item1("movie", R.drawable.ic_photo_filter),
-        Item1("ruby", R.drawable.ic_photo_filter),
-        Item1("laguna", R.drawable.ic_photo_filter)
-    )
-
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correction)
@@ -51,28 +43,43 @@ class CorrectionActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        var b_p =(photo.getDrawable() as BitmapDrawable).bitmap
+        b_p = checkBitmap(b_p,this)
+        imageUriUri = imageUri
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
-        val dontforgetfirstbit = imageView2Bitmap(photo)
+
+        val itemAdapter2 by lazy {
+            ItemAdapter2 { position: Int, item: Item1 ->
+
+                when (position) {
+                    0 -> negativeFilter(b_p, photo)
+                    1 -> changeBrightnessFilter(b_p, 100F, photo)
+                    2 -> adjustSaturationFilter(b_p, 50F, photo)
+                    3 -> updateSaturationFilter(b_p,10F,photo)
+                    4 -> grassFilter(b_p,photo)
+                    5 -> movieFilter(b_p, photo)
+                    6 -> rubyFilter(b_p,photo)
+                    7 -> lagunaFilter(b_p,photo)
+                }
+                isChanged = true
+                item_list.smoothScrollToPosition(position) //сглаживание анимации
+            }
+        }
 
         item_list.initialize(itemAdapter2)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter2.setItems(getLargeListOfItems())
-        // filter2(photo)
-        // val bitmap2 = imageView2Bitmap(photo)
-        // val bitmap3= changeBrightness(bitmap2,100F)
-        // photo.setImageBitmap(bitmap3)
-        //adjustSaturation(bitmap2,300F)
-        // val bitmap4 = updateSaturation(bitmap2, 20F)
-        //  photo.setImageBitmap(bitmap4)
-
-
     }
     private fun getLargeListOfItems(): List<Item1> {
         val items = mutableListOf<Item1>()
@@ -81,21 +88,40 @@ class CorrectionActivity : AppCompatActivity() {
         }
         return items
     }
-
     private fun switchActivity(imageUri: Uri){
         val i = Intent()
         i.putExtra("newImageUri", imageUri.toString())
         setResult(Activity.RESULT_OK, i)
         finish()
     }
-}
-//negative
-fun filter1(bitmold: Bitmap,photo: ImageView) {
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
 
+        }
+        quitDialog.show()
+    }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+}
+
+//negative
+fun negativeFilter(bitmold: Bitmap,photo: ImageView) {
     var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
-//val originalPixels = Array(bitmold.width, {IntArray(bitmold.height)})
     val originalPixels = IntArray(bitmold.width*bitmold.height,{0})
-    bitmold.getPixels(originalPixels,0,bitmold.width,0,0,bitmold.width,bitmold.height)//////////работает????
+    bitmold.getPixels(originalPixels,0,bitmold.width,0,0,bitmold.width,bitmold.height)
     for (y in 0 until bitmold.height) {
         for (x in 0 until bitmold.width) {
             val oldPixel = originalPixels[y*bitmold.width+x]
@@ -107,41 +133,10 @@ fun filter1(bitmold: Bitmap,photo: ImageView) {
             bitmnew.setPixel(x, y, Color.rgb(r, g ,b))
         }
     }
-
-    photo.setImageBitmap(bitmnew)
-}
-//yellow filter
-fun filter2(photo: ImageView) {
-    var bitmold = imageView2Bitmap(photo)
-    var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
-    for (y in 0 until bitmold.height  ) {
-        for (x in 0 until bitmold.width ) {
-            val oldPixel = bitmold.getPixel(x, y)
-
-            val r = Color.red(oldPixel)  + Color.LTGRAY
-            val g =  Color.green(oldPixel)+ Color.LTGRAY
-            val b = Color.blue(oldPixel) + Color.LTGRAY
-
-            bitmnew.setPixel(x, y, Color.rgb(r, g ,b))
-        }
-    }
-
     photo.setImageBitmap(bitmnew)
 }
 
-
-data class Item1( //класс объекта
-    val title: String,
-    @DrawableRes val icon: Int
-)
-
-private fun imageView2Bitmap(view: ImageView):Bitmap{
-    var bitmap: Bitmap
-    bitmap =(view.getDrawable() as BitmapDrawable).bitmap
-    return bitmap
-}
-
-fun changeBrightness(bmp: Bitmap, brightness: Float, photo: ImageView) {
+fun changeBrightnessFilter(bmp: Bitmap, brightness: Float, photo: ImageView) {
     val cm = ColorMatrix(
         floatArrayOf(
             1f,
@@ -171,15 +166,11 @@ fun changeBrightness(bmp: Bitmap, brightness: Float, photo: ImageView) {
     val paint = Paint()
     paint.setColorFilter(ColorMatrixColorFilter(cm))
     // canvas.drawBitmap(bmp, 0, 0, paint)
-
-
     canvas.drawBitmap(bmp,0F,0F,paint)
     photo.setImageBitmap(ret)
 }
 
-fun adjustSaturation(bmp: Bitmap, value: Float, photo: ImageView) {
-
-
+fun adjustSaturationFilter(bmp: Bitmap, value: Float, photo: ImageView) {
     val x = 1 +  3 * value / 100
     val lumR = 0.3086f
     val lumG = 0.6094f
@@ -220,7 +211,7 @@ fun adjustSaturation(bmp: Bitmap, value: Float, photo: ImageView) {
     photo.setImageBitmap(ret)
 }
 
-fun updateSaturation(src: Bitmap, settingSat: Float, photo: ImageView) {
+fun updateSaturationFilter(src: Bitmap, settingSat: Float, photo: ImageView) {
     val width = src.width
     val height = src.height
     val bitmapResult = Bitmap
@@ -235,6 +226,7 @@ fun updateSaturation(src: Bitmap, settingSat: Float, photo: ImageView) {
     photo.setImageBitmap(bitmapResult)
 }
 
+//grass effect
 fun grassFilter(sentBitmap: Bitmap, photo: ImageView) {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
@@ -254,6 +246,7 @@ fun grassFilter(sentBitmap: Bitmap, photo: ImageView) {
     photo.setImageBitmap(bufBitmap)
 }
 
+//as in movie
 fun movieFilter(sentBitmap: Bitmap, photo: ImageView) {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
@@ -271,6 +264,7 @@ fun movieFilter(sentBitmap: Bitmap, photo: ImageView) {
     photo.setImageBitmap(bufBitmap)
 }
 
+//underwater
 fun lagunaFilter(sentBitmap: Bitmap, photo:ImageView) {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
@@ -289,6 +283,7 @@ fun lagunaFilter(sentBitmap: Bitmap, photo:ImageView) {
     photo.setImageBitmap(bufBitmap)
 }
 
+//just ruby
 fun rubyFilter(sentBitmap: Bitmap,photo: ImageView) {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)

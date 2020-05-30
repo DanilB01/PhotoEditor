@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,7 +11,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_desktop.*
 import kotlinx.android.synthetic.main.activity_segmentation.*
+import kotlinx.android.synthetic.main.activity_segmentation.photo
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
@@ -22,14 +25,14 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-
 class SegmentationActivity : AppCompatActivity() {
     var imageBitmap: Bitmap? = null
     var src: Mat? = null
     var orig: Mat? = null
     var cascadeClassifier : CascadeClassifier? = null
     private var absoluteFaceSize : Double? = null
-
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
         override fun onManagerConnected(status: Int) {
@@ -50,6 +53,7 @@ class SegmentationActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        imageUriUri = imageUri
 
         if(OpenCVLoader.initDebug()){
             Toast.makeText(this, "openCv successfully loaded", Toast.LENGTH_SHORT).show();
@@ -57,6 +61,7 @@ class SegmentationActivity : AppCompatActivity() {
             Toast.makeText(this, "openCv cannot be loaded", Toast.LENGTH_SHORT).show();
         }
         find.setOnClickListener {
+            isChanged = true
             val `is`: InputStream = resources.openRawResource(R.raw.haarcascade_frontalface_alt2)
             val cascadeDir: File = getDir("cascade", Context.MODE_PRIVATE)
             val mCascadeFile = File(cascadeDir, "haarcascade_frontalface_alt2.xml")
@@ -108,12 +113,33 @@ class SegmentationActivity : AppCompatActivity() {
 
         yes.setOnClickListener {
             var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
             switchActivity(newUri)
         }
         no.setOnClickListener {
-            switchActivity(imageUri)
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
         }
 
+    }
+
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
     }
 
     public override fun onResume() {
@@ -129,9 +155,11 @@ class SegmentationActivity : AppCompatActivity() {
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            if(isChanged)
+                quitDialog()
+            else
+                finish()
         }
         return super.onKeyDown(keyCode, event)
     }
 }
-

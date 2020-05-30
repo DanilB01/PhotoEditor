@@ -1,6 +1,7 @@
 package com.example.mobphotoedit
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
@@ -39,6 +40,9 @@ class FilteringActivity : AppCompatActivity() {
     private var pathSt = arrayOf(Path(), Path(), Path())
     private var pathFin= arrayOf(Path(), Path(), Path())
     var ind = -1
+  
+    private var imageUriUri: Uri? = null
+    private var isChanged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +53,16 @@ class FilteringActivity : AppCompatActivity() {
         photo.setImageURI(imageUri)
         imageBitmap = (photo.getDrawable() as BitmapDrawable).bitmap
         //workImageBitmap = imageBitmap!!.copy(imageBitmap!!.config, true)
+        imageUriUri = imageUri
+        yes.setOnClickListener {
+            switchActivity(imageUri)
+        }
+        no.setOnClickListener {
+            if(isChanged)
+                quitDialog()
+            else
+                switchActivity(imageUri)
+        }
 
         startpoints.setOnClickListener {
             (Filtering as MySurfaceView).flag = false
@@ -61,6 +75,7 @@ class FilteringActivity : AppCompatActivity() {
         }
 
         filter.setOnClickListener {
+            isChanged = true
             filterFun(this)
             photo.setImageBitmap(btmp)
             (Filtering as MySurfaceView).removePoints()
@@ -68,14 +83,6 @@ class FilteringActivity : AppCompatActivity() {
             countFin = 0
             StartPoints.clear()
             FinishPoints.clear()
-        }
-
-        yes.setOnClickListener {
-            switchActivity(imageUri)
-        }
-
-        no.setOnClickListener {
-            switchActivity(imageUri)
         }
     }
 
@@ -279,9 +286,26 @@ class FilteringActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onBackPressed() {
+        quitDialog()
+    }
+
+    private fun quitDialog() {
+        val quitDialog = AlertDialog.Builder(this)
+        quitDialog.setTitle(resources.getString(R.string.leave))
+        quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
+                dialog, which -> switchActivity(imageUriUri!!)
+        }
+        quitDialog.setNegativeButton(resources.getString(R.string.no)){
+                dialog, which ->
+
+        }
+        quitDialog.show()
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
+            quitDialog()
         }
         return super.onKeyDown(keyCode, event)
     }

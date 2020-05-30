@@ -2702,10 +2702,6 @@ public class Imgproc {
     }
 
 
-    //
-    // C++:  void cv::filter2D(Mat src, Mat& dst, int ddepth, Mat kernel, Point anchor = Point(-1,-1), double delta = 0, int borderType = BORDER_DEFAULT)
-    //
-
     //javadoc: filter2D(src, dst, ddepth, kernel, anchor, delta, borderType)
     public static void filter2D(Mat src, Mat dst, int ddepth, Mat kernel, Point anchor, double delta, int borderType)
     {

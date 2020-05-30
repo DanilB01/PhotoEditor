@@ -7,6 +7,28 @@
     android:background="@drawable/back"
     tools:context=".ImageRotationActivity">
 
+    <Button
+        android:id="@+id/doUnsharp"
+        style="@style/buttons"
+        android:layout_width="44dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/doBut"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.913"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radiusSeekBar"
+        app:layout_constraintVertical_bias="0.602" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.08" />
+
     <ImageView
         android:id="@+id/photo"
         android:layout_width="0dp"
@@ -20,28 +42,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activityName" />
 
+
     <SeekBar
-        android:id="@+id/seek_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/amountSeekBar"
+        android:layout_width="242dp"
+        android:layout_height="21dp"
         android:layout_margin="25dp"
         android:max="8"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.905"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline40"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="50dp" />
-
+        app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
-        android:id="@+id/seek_bar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:id="@+id/radiusSeekBar"
+        android:layout_width="242dp"
+        android:layout_height="22dp"
+        android:layout_margin="25dp"
         android:max="400"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seek_bar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/photo"
+        app:layout_constraintVertical_bias="0.37" />
 
     <ImageButton
         android:id="@+id/yes"
@@ -121,4 +147,30 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.8" />
+
+    <TextView
+        android:id="@+id/radTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/radius"
+        android:textColor="@color/lightPink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/amountSeekBar"
+        app:layout_constraintHorizontal_bias="0.355"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline40"
+        app:layout_constraintVertical_bias="0.44" />
+
+    <TextView
+        android:id="@+id/amountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount"
+        android:textColor="@color/lightPink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/radiusSeekBar"
+        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline40"
+        app:layout_constraintVertical_bias="0.196" />
 </androidx.constraintlayout.widget.ConstraintLayout>

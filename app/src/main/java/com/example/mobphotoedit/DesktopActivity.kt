@@ -14,7 +14,6 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_desktop.*
 
-
 class DesktopActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
     private var imagePath: String? = null
@@ -58,6 +57,7 @@ class DesktopActivity : AppCompatActivity() {
         var string: String? = intent.getStringExtra("ImageUri")
         imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
+        bitmapStore.addBitmap(imageView2Bitmap(photo))
         item_list.initialize(itemAdapter)
         item_list.setViewsToChangeColor(listOf(R.id.list_item_text))
         itemAdapter.setItems(getLargeListOfItems())
@@ -111,11 +111,14 @@ class DesktopActivity : AppCompatActivity() {
         val str = data.getStringExtra("newImageUri")
         imageUri = Uri.parse(str)
         photo.setImageURI(imageUri)
+        bitmapStore.clearAllAndSetOriginal(imageView2Bitmap(photo))
     }
 
     override fun onBackPressed() {
         quitDialog()
     }
+
+
 
     private fun quitDialog() {
         val quitDialog = AlertDialog.Builder(this)
@@ -134,8 +137,15 @@ class DesktopActivity : AppCompatActivity() {
         quitDialog.setTitle(resources.getString(R.string.undo))
         quitDialog.setPositiveButton(resources.getString(R.string.yes)) {
                 dialog, which ->
-            {
+            run {
                 //Здесь прописать, куда переходить и что делать при откате изменений назад!!!!!!!
+                var mBitmap = bitmapStore.popBitmap()
+                if (mBitmap == null) {
+                    Toast.makeText(this, "It`s original image, dude!", Toast.LENGTH_LONG).show()
+
+                } else {
+                    photo.setImageBitmap(mBitmap)
+                }
             }
         }
         quitDialog.setNegativeButton(resources.getString(R.string.no)){
