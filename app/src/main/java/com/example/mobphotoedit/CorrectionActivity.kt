@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.KeyEvent
+import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,10 @@ import kotlinx.android.synthetic.main.activity_correction.*
 import kotlinx.android.synthetic.main.activity_correction.item_list
 import kotlinx.android.synthetic.main.activity_correction.photo
 import kotlinx.android.synthetic.main.activity_desktop.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 data class Item1( //класс объекта
     val title: String,
@@ -39,7 +44,7 @@ class CorrectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correction)
-
+        pBarEf.visibility = View.GONE
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
@@ -61,8 +66,24 @@ class CorrectionActivity : AppCompatActivity() {
 
         val itemAdapter2 by lazy {
             ItemAdapter2 { position: Int, item: Item1 ->
-
-                when (position) {
+                pBarEf.visibility = View.VISIBLE
+                CoroutineScope(Dispatchers.Default).async {
+                    var b_m: Bitmap? = null
+                    when(position){
+                        0 -> b_m = negativeFilter(b_p)
+                        1 -> b_m = changeBrightnessFilter(b_p, 100F)
+                        2 -> b_m = adjustSaturationFilter(b_p, 50F)
+                        3 -> b_m = updateSaturationFilter(b_p,10F)
+                        4 -> b_m = grassFilter(b_p)
+                        5 -> b_m =movieFilter(b_p)
+                        6 -> b_m = rubyFilter(b_p)
+                        7 -> b_m = lagunaFilter(b_p)
+                    }
+                    launch(Dispatchers.Main) {
+                        photo.setImageBitmap(b_m)
+                        pBarEf.visibility = View.GONE }
+                }
+                /*when (position) {
                     0 -> negativeFilter(b_p, photo)
                     1 -> changeBrightnessFilter(b_p, 100F, photo)
                     2 -> adjustSaturationFilter(b_p, 50F, photo)
@@ -71,7 +92,7 @@ class CorrectionActivity : AppCompatActivity() {
                     5 -> movieFilter(b_p, photo)
                     6 -> rubyFilter(b_p,photo)
                     7 -> lagunaFilter(b_p,photo)
-                }
+                }*/
                 isChanged = true
                 item_list.smoothScrollToPosition(position) //сглаживание анимации
             }
@@ -118,7 +139,7 @@ class CorrectionActivity : AppCompatActivity() {
 }
 
 //negative
-fun negativeFilter(bitmold: Bitmap,photo: ImageView) {
+fun negativeFilter(bitmold: Bitmap): Bitmap {
     var bitmnew = bitmold.copy(Bitmap.Config.ARGB_8888,true)
     val originalPixels = IntArray(bitmold.width*bitmold.height,{0})
     bitmold.getPixels(originalPixels,0,bitmold.width,0,0,bitmold.width,bitmold.height)
@@ -133,10 +154,10 @@ fun negativeFilter(bitmold: Bitmap,photo: ImageView) {
             bitmnew.setPixel(x, y, Color.rgb(r, g ,b))
         }
     }
-    photo.setImageBitmap(bitmnew)
+    return bitmnew
 }
 
-fun changeBrightnessFilter(bmp: Bitmap, brightness: Float, photo: ImageView) {
+fun changeBrightnessFilter(bmp: Bitmap, brightness: Float): Bitmap {
     val cm = ColorMatrix(
         floatArrayOf(
             1f,
@@ -167,10 +188,10 @@ fun changeBrightnessFilter(bmp: Bitmap, brightness: Float, photo: ImageView) {
     paint.setColorFilter(ColorMatrixColorFilter(cm))
     // canvas.drawBitmap(bmp, 0, 0, paint)
     canvas.drawBitmap(bmp,0F,0F,paint)
-    photo.setImageBitmap(ret)
+    return ret
 }
 
-fun adjustSaturationFilter(bmp: Bitmap, value: Float, photo: ImageView) {
+fun adjustSaturationFilter(bmp: Bitmap, value: Float): Bitmap {
     val x = 1 +  3 * value / 100
     val lumR = 0.3086f
     val lumG = 0.6094f
@@ -208,10 +229,10 @@ fun adjustSaturationFilter(bmp: Bitmap, value: Float, photo: ImageView) {
     val paint = Paint()
     paint.colorFilter = ColorMatrixColorFilter(cm)
     canvas.drawBitmap(bmp, 0F, 0F, paint)
-    photo.setImageBitmap(ret)
+    return ret
 }
 
-fun updateSaturationFilter(src: Bitmap, settingSat: Float, photo: ImageView) {
+fun updateSaturationFilter(src: Bitmap, settingSat: Float): Bitmap {
     val width = src.width
     val height = src.height
     val bitmapResult = Bitmap
@@ -223,11 +244,11 @@ fun updateSaturationFilter(src: Bitmap, settingSat: Float, photo: ImageView) {
     val filter = ColorMatrixColorFilter(colorMatrix)
     paint.colorFilter = filter
     canvasResult.drawBitmap(src, 0F, 0F, paint)
-    photo.setImageBitmap(bitmapResult)
+    return bitmapResult
 }
 
 //grass effect
-fun grassFilter(sentBitmap: Bitmap, photo: ImageView) {
+fun grassFilter(sentBitmap: Bitmap): Bitmap {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
     for (i in 0 until sentBitmap.width) {
@@ -243,11 +264,11 @@ fun grassFilter(sentBitmap: Bitmap, photo: ImageView) {
             bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
         }
     }
-    photo.setImageBitmap(bufBitmap)
+    return bufBitmap
 }
 
 //as in movie
-fun movieFilter(sentBitmap: Bitmap, photo: ImageView) {
+fun movieFilter(sentBitmap: Bitmap): Bitmap {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
     for (i in 0 until sentBitmap.width) {
@@ -261,11 +282,11 @@ fun movieFilter(sentBitmap: Bitmap, photo: ImageView) {
             bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
         }
     }
-    photo.setImageBitmap(bufBitmap)
+    return bufBitmap
 }
 
 //underwater
-fun lagunaFilter(sentBitmap: Bitmap, photo:ImageView) {
+fun lagunaFilter(sentBitmap: Bitmap): Bitmap {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
     for (i in 0 until sentBitmap.width) {
@@ -280,11 +301,11 @@ fun lagunaFilter(sentBitmap: Bitmap, photo:ImageView) {
             bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
         }
     }
-    photo.setImageBitmap(bufBitmap)
+   return bufBitmap
 }
 
 //just ruby
-fun rubyFilter(sentBitmap: Bitmap,photo: ImageView) {
+fun rubyFilter(sentBitmap: Bitmap): Bitmap {
     val bufBitmap =
         Bitmap.createBitmap(sentBitmap.width, sentBitmap.height, sentBitmap.config)
     for (i in 0 until sentBitmap.width) {
@@ -299,5 +320,5 @@ fun rubyFilter(sentBitmap: Bitmap,photo: ImageView) {
             bufBitmap.setPixel(i, j, Color.argb(Color.alpha(p), r, g, b))
         }
     }
-    photo.setImageBitmap(bufBitmap)
+    return bufBitmap
 }

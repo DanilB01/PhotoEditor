@@ -111,7 +111,7 @@ class DesktopActivity : AppCompatActivity() {
         val str = data.getStringExtra("newImageUri")
         imageUri = Uri.parse(str)
         photo.setImageURI(imageUri)
-        bitmapStore.clearAllAndSetOriginal(imageView2Bitmap(photo))
+        //bitmapStore.clearAllAndSetOriginal(imageView2Bitmap(photo))
     }
 
     override fun onBackPressed() {

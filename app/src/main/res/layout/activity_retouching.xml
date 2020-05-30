@@ -11,16 +11,17 @@
     <TextView
         android:id="@+id/brushText"
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:gravity="center"
         android:text="@string/brush_size"
         android:textColor="@color/lightPink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/skbar_brush_size"
-        app:layout_constraintHorizontal_bias="0.733"
+        app:layout_constraintHorizontal_bias="0.81"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:layout_constraintVertical_bias="0.822" />
+        app:layout_constraintVertical_bias="0.863" />
 
     <SeekBar
         android:id="@+id/skbar_brush_size"
@@ -136,7 +137,7 @@
 
     <TextView
         android:id="@+id/radiusText"
-        android:layout_width="79dp"
+        android:layout_width="wrap_content"
         android:layout_height="26dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="4dp"
@@ -157,7 +158,7 @@
         android:text="@string/doBut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.913"
+        app:layout_constraintHorizontal_bias="0.985"
         app:layout_constraintStart_toStartOf="@+id/guideline35"
         app:layout_constraintTop_toTopOf="@+id/guideline33"
         app:layout_constraintVertical_bias="0.602" />

@@ -13,10 +13,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_desktop.photo
 import kotlinx.android.synthetic.main.activity_unsharp_masking.*
 import kotlinx.android.synthetic.main.activity_unsharp_masking.no
 import kotlinx.android.synthetic.main.activity_unsharp_masking.yes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.lang.Math.abs
 
 class UnsharpMaskingActivity : AppCompatActivity() {
@@ -27,6 +30,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_unsharp_masking)
 
+        pBarUM.visibility = View.GONE
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
@@ -71,14 +75,17 @@ class UnsharpMaskingActivity : AppCompatActivity() {
         skbarAmount.setOnSeekBarChangeListener(amountListener)
         skbarRad.setOnSeekBarChangeListener(radiusListener)
         //Retouching Applying
-        doUnsharp.setOnClickListener(object: View.OnClickListener
-        {
-            override fun onClick(v: View?) {
-                val amount = skbarAmount.progress.toFloat()
-                val rad = skbarRad.progress
-                unsharp(workBitmap,rad,amount,3,photo)
+        doUnsharp.setOnClickListener {
+            val amount = skbarAmount.progress.toFloat()
+            val rad = skbarRad.progress
+            pBarUM.visibility = View.VISIBLE
+            CoroutineScope(Dispatchers.Default).async {
+                val b_m = unsharp(workBitmap,rad,amount,3)
+                launch(Dispatchers.Main) {
+                    photo.setImageBitmap(b_m)
+                    pBarUM.visibility = View.GONE }
             }
-        })
+        }
     }
 
     private fun switchActivity(imageUri: Uri){
@@ -116,7 +123,7 @@ class UnsharpMaskingActivity : AppCompatActivity() {
     }
 }
 
-private fun unsharp(ivPhoto: Bitmap, radius: Int, amount:Float, threshold: Int, photomy : ImageView){
+private fun unsharp(ivPhoto: Bitmap, radius: Int, amount:Float, threshold: Int):Bitmap{
     val blurredPhoto = boxBlur(ivPhoto!!, radius)
 
     val originalPixels =  Array(ivPhoto!!.width, {IntArray(ivPhoto!!.height)})
@@ -129,7 +136,7 @@ private fun unsharp(ivPhoto: Bitmap, radius: Int, amount:Float, threshold: Int, 
         }
     }
 
-    unsharpMask(ivPhoto,originalPixels, blurredPixels, amount, threshold, photomy)
+    return unsharpMask(ivPhoto,originalPixels, blurredPixels, amount, threshold)
 }
 
 fun boxBlur(bitmap: Bitmap, range: Int): Bitmap? {
@@ -237,7 +244,7 @@ private fun boxBlurVertical(pixels: IntArray, w: Int, h: Int, halfRange: Int) {
     }
 }
 
-private fun unsharpMask(ivPhoto: Bitmap, origPixels: Array<IntArray>, blurredPixels: Array<IntArray>, amount: Float, threshold: Int, photomy: ImageView)
+private fun unsharpMask(ivPhoto: Bitmap, origPixels: Array<IntArray>, blurredPixels: Array<IntArray>, amount: Float, threshold: Int): Bitmap
 {
     val newBitmap = Bitmap.createBitmap(ivPhoto!!.width, ivPhoto!!.height, Bitmap.Config.ARGB_8888)
     var orgRed = 0
@@ -276,6 +283,6 @@ private fun unsharpMask(ivPhoto: Bitmap, origPixels: Array<IntArray>, blurredPix
             newBitmap.setPixel(i, j, usmPixel)
         }
     }
-    photomy.setImageBitmap(newBitmap)
+    return newBitmap
 }
 

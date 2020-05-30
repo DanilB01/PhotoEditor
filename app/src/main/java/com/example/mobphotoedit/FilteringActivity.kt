@@ -22,6 +22,10 @@ import kotlinx.android.synthetic.main.activity_filtering.*
 import kotlinx.android.synthetic.main.activity_filtering.no
 import kotlinx.android.synthetic.main.activity_filtering.photo
 import kotlinx.android.synthetic.main.activity_filtering.yes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -48,6 +52,7 @@ class FilteringActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filtering)
 
+        pBarFil.visibility = View.GONE
         var string: String? = intent.getStringExtra("ImageUri")
         var imageUri = Uri.parse(string)
         photo.setImageURI(imageUri)
@@ -55,7 +60,9 @@ class FilteringActivity : AppCompatActivity() {
         //workImageBitmap = imageBitmap!!.copy(imageBitmap!!.config, true)
         imageUriUri = imageUri
         yes.setOnClickListener {
-            switchActivity(imageUri)
+            var newUri = saveImageToInternalStorage(photo,this)
+            bitmapStore.addBitmap(imageView2Bitmap(photo))
+            switchActivity(newUri)
         }
         no.setOnClickListener {
             if(isChanged)
@@ -75,9 +82,15 @@ class FilteringActivity : AppCompatActivity() {
         }
 
         filter.setOnClickListener {
+
+            pBarFil.visibility = View.VISIBLE
+            CoroutineScope(Dispatchers.Default).async {
+                filterFun(this@FilteringActivity)
+                launch(Dispatchers.Main) {
+                    photo.setImageBitmap(btmp)
+                    pBarFil.visibility = View.GONE }
+            }
             isChanged = true
-            filterFun(this)
-            photo.setImageBitmap(btmp)
             (Filtering as MySurfaceView).removePoints()
             countSt = 0
             countFin = 0

@@ -120,11 +120,11 @@ class ImageScalingActivity : AppCompatActivity() {
 }
 
 
-private fun imageView2Bitmap(view: ImageView): Bitmap {
+/*private fun imageView2Bitmap(view: ImageView): Bitmap {
     var bitmap: Bitmap
     bitmap =(view.getDrawable() as BitmapDrawable).bitmap
     return bitmap
-}
+}*/
 
 
 private fun bigpicture(koef:Float, photo: ImageView, curBitmap: Bitmap): Bitmap{

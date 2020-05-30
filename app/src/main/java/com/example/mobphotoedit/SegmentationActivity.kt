@@ -103,12 +103,13 @@ class SegmentationActivity : AppCompatActivity() {
                 Scalar(0.0, 255.0, 0.0, 255.0),
                 3
             )
+            val bool = facesArray.isEmpty()
             Imgproc.circle(orig, Point(10.0, 50.0), 50, Scalar(255.0, 0.0, 0.0))
-
             Utils.matToBitmap(orig, imageBitmap)
-
             photo.setImageBitmap(imageBitmap)
 
+            if(bool)
+                Toast.makeText(this, "Sorry, no faces found", Toast.LENGTH_SHORT).show()
         }
 
         yes.setOnClickListener {
